@@ -25,10 +25,11 @@ export default function RootChrome({
   const showNavbar = !isEmployeePortal && !isContactPage
   const showFooter = !isEmployeePortal && !isContactPage
 
-  const mainClassName =
-    isEmployeePortal || isContactPage
+  const baseMainClassName =
+    isEmployeePortal
       ? 'min-h-screen overflow-x-hidden'
       : `min-h-screen ${NAVBAR_OFFSET_CLASS} overflow-x-hidden`
+  const mainClassName = isContactPage ? baseMainClassName : `${baseMainClassName} site-ambient`
 
   return (
     <>

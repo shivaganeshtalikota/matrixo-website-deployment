@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { FaCode, FaGraduationCap, FaRocket } from 'react-icons/fa'
+import { HiOutlineBriefcase, HiOutlineCodeBracketSquare, HiOutlineUserGroup } from 'react-icons/hi2'
 import Features from '@/components/home/Features'
 import Partners from '@/components/home/Partners'
 
@@ -29,22 +29,22 @@ export default function About() {
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {[
               {
-                icon: FaCode,
+                icon: HiOutlineCodeBracketSquare,
                 title: 'Hands-on Training',
                 description: 'Industry-relevant workshops and bootcamps with real coding projects. Learn web development, AI/ML, cloud computing, and more from expert instructors.',
-                gradient: 'from-purple-500 to-fuchsia-500',
+                iconClassName: 'text-[#5B5BF6] dark:text-slate-200',
               },
               {
-                icon: FaGraduationCap,
+                icon: HiOutlineBriefcase,
                 title: 'Career Growth',
                 description: 'Placement preparation, resume building, mock interviews, and mentorship programs designed to help you land your dream tech job.',
-                gradient: 'from-blue-500 to-cyan-500',
+                iconClassName: 'text-[#2563EB] dark:text-slate-200',
               },
               {
-                icon: FaRocket,
+                icon: HiOutlineUserGroup,
                 title: 'Industry Partnerships',
                 description: 'We partner with leading institutions and companies to deliver cutting-edge technical training and create career opportunities for students.',
-                gradient: 'from-green-500 to-emerald-500',
+                iconClassName: 'text-[#059669] dark:text-slate-200',
               },
             ].map((item, index) => (
               <motion.div
@@ -53,10 +53,10 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.15, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-                className="glass-card p-8 hover-lift hover-glow transition-shadow duration-300"
+                className="feature-card p-8"
               >
-                <div className={`w-12 h-12 bg-gradient-to-br ${item.gradient} rounded-xl flex items-center justify-center mb-6 text-white shadow-md`}>
-                  <item.icon size={22} />
+                <div className="feature-card-icon mb-6">
+                  <item.icon className={`h-7 w-7 ${item.iconClassName}`} />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                   {item.title}

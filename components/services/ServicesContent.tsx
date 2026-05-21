@@ -1,45 +1,59 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { FaCode, FaLaptopCode, FaRocket, FaTrophy, FaBriefcase, FaUsers } from 'react-icons/fa'
+import {
+  HiOutlineAcademicCap,
+  HiOutlineBriefcase,
+  HiOutlineCodeBracketSquare,
+  HiOutlineRocketLaunch,
+  HiOutlineTrophy,
+  HiOutlineUserGroup,
+} from 'react-icons/hi2'
+import { FaUsers } from 'react-icons/fa'
 import Link from 'next/link'
 
 const services = [
   {
-    icon: FaCode,
+    icon: HiOutlineCodeBracketSquare,
     title: 'Technical Workshops',
     description: 'Hands-on coding workshops on cutting-edge technologies taught by industry experts.',
     features: ['Web Development', 'Mobile App Development', 'Cloud Computing', 'DevOps & CI/CD', 'Database Management'],
+    iconClassName: 'text-[#5B5BF6] dark:text-slate-200',
   },
   {
-    icon: FaTrophy,
+    icon: HiOutlineTrophy,
     title: 'Hackathons',
     description: 'Competitive coding events where students build real projects and solve industry challenges.',
     features: ['24-48 hour events', 'Industry mentors', 'Real problem statements', 'Prizes & recognition', 'Networking opportunities'],
+    iconClassName: 'text-[#D97706] dark:text-slate-200',
   },
   {
-    icon: FaLaptopCode,
+    icon: HiOutlineAcademicCap,
     title: 'Bootcamps',
     description: 'Intensive multi-week training programs to make students industry-ready.',
     features: ['Full-Stack Development', 'Data Science & ML', 'Cybersecurity', 'Mobile Development', 'Project-based learning'],
+    iconClassName: 'text-[#4F46E5] dark:text-slate-200',
   },
   {
-    icon: FaBriefcase,
+    icon: HiOutlineBriefcase,
     title: 'Career Programs',
     description: 'Placement preparation and career guidance to help students land their dream jobs.',
     features: ['Resume building', 'Interview preparation', 'Mock interviews', 'DSA training', 'Soft skills development'],
+    iconClassName: 'text-[#2563EB] dark:text-slate-200',
   },
   {
-    icon: FaRocket,
+    icon: HiOutlineRocketLaunch,
     title: 'Campus Events',
     description: 'Large-scale technical events, seminars, and conferences hosted at your institution.',
     features: ['Tech talks', 'Industry seminars', 'Career fairs', 'Coding competitions', 'Innovation challenges'],
+    iconClassName: 'text-[#059669] dark:text-slate-200',
   },
   {
-    icon: FaUsers,
+    icon: HiOutlineUserGroup,
     title: 'Corporate Collaboration',
     description: 'Partner with us to train students or host events at your organization.',
     features: ['Custom programs', 'Internship drives', 'Hiring events', 'Brand visibility', 'Talent pipeline'],
+    iconClassName: 'text-[#475569] dark:text-slate-200',
   },
 ]
 
@@ -141,10 +155,10 @@ export default function ServicesContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="glass-card p-8 hover-lift hover-glow"
+                className="feature-card p-8"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 text-white">
-                  <service.icon size={28} />
+                <div className="feature-card-icon mb-6">
+                  <service.icon className={`h-7 w-7 ${service.iconClassName}`} />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                   {service.title}

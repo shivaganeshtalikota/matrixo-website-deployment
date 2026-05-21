@@ -1,0 +1,154 @@
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
+ ⚠ Port 3002 is in use, trying 3003 instead.
+ ⚠ Port 3003 is in use, trying 3004 instead.
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'F:\matriXO\matrixo-website-deployment-beta\.next\cache\webpack\server-development\0.pack.gz_' -> 'F:\matriXO\matrixo-website-deployment-beta\.next\cache\webpack\server-development\0.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'F:\matriXO\matrixo-website-deployment-beta\.next\cache\webpack\client-development\1.pack.gz_' -> 'F:\matriXO\matrixo-website-deployment-beta\.next\cache\webpack\client-development\1.pack.gz'
+ ⨯ Error: Cannot find module './8948.js'
+Require stack:
+- F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+- F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\dev\hot-middleware.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\router-server.js
+- F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1456:15)
+    at F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+    at Module._load (node:internal/modules/cjs/loader:1242:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1556:12)
+    at mod.require (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js:198:28)
+    at F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js:162:22)
+    at F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js:1:17530
+    at Object.<anonymous> (F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js:1:17588)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1556:12)
+    at mod.require (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js:109:84)
+    at F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\base-server.js:818:17)
+    at async F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'F:\\matriXO\\matrixo-website-deployment-beta\\.next\\server\\webpack-runtime.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\.next\\server\\app\\page.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\server\\require.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\server\\load-components.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\build\\utils.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'F:\\matriXO\\matrixo-website-deployment-beta\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat 'F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/@fontsource' in F:\matriXO\matrixo-website-deployment-beta\.next\server for build dependencies doesn't lead to expected result 'F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\@fontsource.js', but to 'Error: Can't resolve './vendor-chunks/@fontsource' in 'F:\matriXO\matrixo-website-deployment-beta\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/@fontsource (expected F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\@fontsource.js)
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/idb' in F:\matriXO\matrixo-website-deployment-beta\.next\server for build dependencies doesn't lead to expected result 'F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\idb.js', but to 'Error: Can't resolve './vendor-chunks/idb' in 'F:\matriXO\matrixo-website-deployment-beta\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/idb (expected F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\idb.js)
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/lodash.camelcase' in F:\matriXO\matrixo-website-deployment-beta\.next\server for build dependencies doesn't lead to expected result 'F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\lodash.camelcase.js', but to 'Error: Can't resolve './vendor-chunks/lodash.camelcase' in 'F:\matriXO\matrixo-website-deployment-beta\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/lodash.camelcase (expected F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\lodash.camelcase.js)
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving './vendor-chunks/@protobufjs' in F:\matriXO\matrixo-website-deployment-beta\.next\server for build dependencies doesn't lead to expected result 'F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\@protobufjs.js', but to 'Error: Can't resolve './vendor-chunks/@protobufjs' in 'F:\matriXO\matrixo-website-deployment-beta\.next\server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ./vendor-chunks/@protobufjs (expected F:\matriXO\matrixo-website-deployment-beta\.next\server\vendor-chunks\@protobufjs.js)
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\webpack-runtime.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\.next\server\app\page.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\require.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\load-components.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\utils.js
+<w>  at file dependencies F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at file F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+<w>  at resolve commonjs F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\build\webpack\loaders\next-route-loader\index.js
+ ⨯ Error: Invariant: missing bootstrap script. This is a bug in Next.js
+    at rP (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:2253)
+    at F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:40:25567
+    at F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\trace\tracer.js:191:62
+    at F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (F:\matriXO\matrixo-website-deployment-beta\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matriXO\matrixo-website-deployment-beta\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NoopTracer.startActiveSpan (F:\matriXO\matrixo-website-deployment-beta\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:54:31)
+    at ProxyTracer.startActiveSpan (F:\matriXO\matrixo-website-deployment-beta\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:27:24)
+    at F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (F:\matriXO\matrixo-website-deployment-beta\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matriXO\matrixo-website-deployment-beta\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NextTracerImpl.trace (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\lib\trace\tracer.js:191:31
+    at ne (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\compiled\next-server\app-page.runtime.dev.js:42:1678)
+    at async doRender (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\base-server.js:1427:30)
+    at async cacheEntry.responseCache.get.routeKind (F:\matriXO\matrixo-website-deployment-beta\node_modules\next\dist\server\base-server.js:1588:28)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'F:\matriXO\matrixo-website-deployment-beta\.next\cache\webpack\client-development\2.pack.gz_' -> 'F:\matriXO\matrixo-website-deployment-beta\.next\cache\webpack\client-development\2.pack.gz'

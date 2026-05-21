@@ -17,36 +17,42 @@ const features = [
     title: 'Technical Workshops',
     description: 'Hands-on coding workshops on cutting-edge technologies taught by industry experts. Web development, AI/ML, cloud, and more.',
     href: '/services',
+    iconClassName: 'text-[#5B5BF6] dark:text-slate-200',
   },
   {
     icon: HiOutlineTrophy,
     title: 'Hackathons',
     description: 'Competitive coding events where students build real projects and solve industry challenges with prizes and recognition.',
     href: '/events',
+    iconClassName: 'text-[#D97706] dark:text-slate-200',
   },
   {
     icon: HiOutlineAcademicCap,
     title: 'Bootcamps',
     description: 'Intensive multi-week training programs covering full-stack development, data science, cybersecurity, and more.',
     href: '/services',
+    iconClassName: 'text-[#4F46E5] dark:text-slate-200',
   },
   {
     icon: HiOutlineBriefcase,
     title: 'Career Programs',
     description: 'Placement preparation, resume building, mock interviews, and DSA training to help you land your dream job.',
     href: '/services',
+    iconClassName: 'text-[#2563EB] dark:text-slate-200',
   },
   {
     icon: HiOutlineRocketLaunch,
     title: 'Campus Events',
     description: 'Large-scale technical events, seminars, and conferences hosted at educational institutions across India.',
     href: '/events',
+    iconClassName: 'text-[#059669] dark:text-slate-200',
   },
   {
     icon: HiOutlineUserGroup,
     title: 'Corporate Collaboration',
     description: 'Partner with us to train students, host events, run internship drives, and build a talent pipeline for your organization.',
     href: '/contact',
+    iconClassName: 'text-[#475569] dark:text-slate-200',
   },
 ]
 
@@ -77,29 +83,26 @@ export default function Features() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-                whileHover={{ y: -4, scale: 1.05 }}
-                className="group h-full cursor-pointer transition-all duration-300 ease-in-out"
+                className="group h-full cursor-pointer"
               >
                 <div
-                  className="relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[#0f172a]/90 p-8 shadow-[0_18px_40px_rgba(2,6,23,0.32)] transition-all duration-300 ease-in-out group-hover:shadow-[0_24px_52px_rgba(2,6,23,0.4)]"
+                  className="feature-card relative flex h-full flex-col overflow-hidden p-8"
                 >
                   <div className="relative flex h-full flex-col">
-                    <div
-                      className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/8 bg-white/[0.04] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                    >
+                    <div className="feature-card-icon mb-6">
                       <feature.icon
-                        className="h-8 w-8 text-gray-100"
+                        className={`h-7 w-7 ${feature.iconClassName}`}
                       />
                     </div>
 
-                    <h3 className="relative mb-3 text-xl font-bold text-white">
+                    <h3 className="relative mb-3 text-xl font-bold text-slate-800 dark:text-white">
                       {feature.title}
                     </h3>
-                    <p className="relative text-[15px] leading-7 text-gray-400">
+                    <p className="relative text-[15px] leading-7 text-gray-600 dark:text-gray-400">
                       {feature.description}
                     </p>
 
-                    <div className="relative mt-6 flex items-center text-sm font-semibold text-gray-300">
+                    <div className="relative mt-6 flex items-center text-sm font-semibold text-slate-700 dark:text-gray-300">
                       <span>Learn more</span>
                       <span className="ml-2 transition-transform duration-300 ease-in-out group-hover:translate-x-1">
                         →

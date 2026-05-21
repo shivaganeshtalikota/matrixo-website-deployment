@@ -3,6 +3,14 @@
 import { memo, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
+import {
+  HiOutlineChartBarSquare,
+  HiOutlineCubeTransparent,
+  HiOutlinePuzzlePiece,
+  HiOutlineSparkles,
+  HiOutlineTrophy,
+  HiOutlineUserCircle,
+} from 'react-icons/hi2'
 
 const features = [
   {
@@ -14,7 +22,8 @@ const features = [
         'Discover your unique skill genome through AI-powered assessment. Our advanced algorithms analyze your technical abilities, learning patterns, and growth trajectory to create a visual DNA map of your capabilities. Understand your strengths, identify gaps, and get personalized recommendations.',
       href: '/skilldna',
       gradient: 'from-purple-500 to-fuchsia-500',
-      icon: '🧬',
+      icon: HiOutlineSparkles,
+      iconClassName: 'text-[#5B5BF6] dark:text-slate-200',
     },
   },
   {
@@ -26,7 +35,8 @@ const features = [
         'Navigate your learning journey with adaptive pathways that evolve with you. Earn XP, unlock achievements, and level up your skills through gamified challenges designed by industry experts. Your personalized grid adapts in real-time based on your progress.',
       href: '/growgrid',
       gradient: 'from-blue-500 to-cyan-500',
-      icon: '🧩',
+      icon: HiOutlinePuzzlePiece,
+      iconClassName: 'text-[#2563EB] dark:text-slate-200',
     },
   },
   {
@@ -38,7 +48,8 @@ const features = [
         'Showcase your achievements with tamper-proof, blockchain-verified credentials. Every badge, certificate, and milestone is permanently recorded and instantly verifiable by employers and peers. Build a credential portfolio that speaks for itself.',
       href: '/playcred',
       gradient: 'from-emerald-500 to-teal-500',
-      icon: '🏅',
+      icon: HiOutlineTrophy,
+      iconClassName: 'text-[#059669] dark:text-slate-200',
     },
   },
   {
@@ -50,7 +61,8 @@ const features = [
         'Get matched with the perfect mentor using our AI-powered compatibility algorithm. Whether you need guidance on career transitions, technical skills, or industry insights, MentorMatrix connects you with experienced professionals who align with your goals.',
       href: '/mentormatrix',
       gradient: 'from-indigo-500 to-violet-500',
-      icon: '🤝',
+      icon: HiOutlineCubeTransparent,
+      iconClassName: 'text-[#4F46E5] dark:text-slate-200',
     },
   },
   {
@@ -62,7 +74,8 @@ const features = [
         'Track your growth with real-time analytics and comprehensive skill gap insights. Visualize your learning progress, benchmark against industry standards, and get actionable recommendations to accelerate your career development.',
       href: '/impactvault',
       gradient: 'from-amber-500 to-orange-500',
-      icon: '📊',
+      icon: HiOutlineChartBarSquare,
+      iconClassName: 'text-[#D97706] dark:text-slate-200',
     },
   },
   {
@@ -74,7 +87,8 @@ const features = [
         'Create your professional identity with customizable public profiles. Set your unique username, control your privacy settings, and share your achievements across platforms. Your matriXO profile becomes your digital career card.',
       href: '/profile',
       gradient: 'from-pink-500 to-rose-500',
-      icon: '👤',
+      icon: HiOutlineUserCircle,
+      iconClassName: 'text-[#475569] dark:text-slate-200',
     },
   },
 ] as const
@@ -149,6 +163,7 @@ export default function BetaFeaturesShowcase() {
   if (!mounted || !isBeta) return null
 
   const activeFeature = features[activeIndex] || features[0]
+  const ActiveIcon = activeFeature.content.icon
 
   return (
     <section id="explore-features" className="section-padding bg-transparent carousel-section">
@@ -193,7 +208,9 @@ export default function BetaFeaturesShowcase() {
                 transition={{ duration: 0.35, ease: 'easeOut' }}
                 className="glass-card min-h-[560px] p-8 md:p-10"
               >
-                <div className="mb-6 text-4xl">{activeFeature.content.icon}</div>
+                <div className="feature-card-icon mb-6">
+                  <ActiveIcon className={`h-7 w-7 ${activeFeature.content.iconClassName}`} />
+                </div>
                 <h3 className="mb-4 text-3xl font-display font-bold lg:text-4xl">
                   <span
                     className={`bg-gradient-to-r ${activeFeature.content.gradient} bg-clip-text text-transparent`}
@@ -239,7 +256,9 @@ export default function BetaFeaturesShowcase() {
               transition={{ duration: 0.35, ease: 'easeOut' }}
               className="glass-card min-h-[520px] p-8 md:p-10"
             >
-              <div className="mb-6 text-4xl">{activeFeature.content.icon}</div>
+              <div className="feature-card-icon mb-6">
+                <ActiveIcon className={`h-7 w-7 ${activeFeature.content.iconClassName}`} />
+              </div>
               <h3 className="mb-4 text-3xl font-display font-bold lg:text-4xl">
                 <span className={`bg-gradient-to-r ${activeFeature.content.gradient} bg-clip-text text-transparent`}>
                   {activeFeature.title}

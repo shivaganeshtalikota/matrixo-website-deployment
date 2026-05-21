@@ -48,10 +48,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <>
+    <div>
       <Hero />
       <Stats />
       <BetaFeaturesShowcase />
-    </>
+    </div>
   )
 }

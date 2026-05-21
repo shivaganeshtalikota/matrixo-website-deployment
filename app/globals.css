@@ -107,6 +107,85 @@
     box-shadow: var(--glass-shadow);
   }
 
+  /* Premium feature/service card system */
+  .feature-card {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    color: #1e293b;
+    transition: all 0.35s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(1, 69, 242, 0.12);
+  }
+
+  .dark .feature-card {
+    background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.88),
+      rgba(17, 24, 39, 0.92)
+    );
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(59, 130, 246, 0.18);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.02),
+      0 20px 60px rgba(1, 69, 242, 0.18);
+    color: #f8fafc;
+  }
+
+  .dark .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 30px rgba(1, 69, 242, 0.22),
+      0 20px 60px rgba(1, 69, 242, 0.18);
+  }
+
+  .feature-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.35s ease;
+  }
+
+  .dark .feature-card-icon {
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    box-shadow: 0 0 20px rgba(1, 69, 242, 0.08);
+  }
+
+  .dark .feature-card-icon svg {
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.18));
+  }
+
+  .feature-card-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feature-card-icon svg * {
+    vector-effect: non-scaling-stroke;
+  }
+
   .glass-card-thick {
     background: var(--glass-bg-thick);
     backdrop-filter: var(--glass-blur-heavy);
@@ -327,6 +406,95 @@
       rgba(139, 92, 246, 0.08) 50%,
       rgba(236, 72, 153, 0.04) 100%
     );
+  }
+
+  /* Ambient background system (light mode focused) */
+  .site-ambient,
+  .landing-ambient {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(circle at top center,
+        rgba(1, 69, 242, 0.18) 0%,
+        rgba(1, 69, 242, 0.08) 25%,
+        transparent 60%),
+      linear-gradient(
+        180deg,
+        #f8f6f0 0%,
+        #f4f7ff 100%
+      );
+    background-color: #f8f6f0;
+    overflow: hidden;
+  }
+
+  .site-ambient::before,
+  .landing-ambient::before {
+    content: "";
+    position: absolute;
+    top: -210px;
+    left: 50%;
+    width: 1020px;
+    height: 600px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle at center,
+      rgba(1, 69, 242, 0.28) 0%,
+      rgba(1, 69, 242, 0.12) 38%,
+      rgba(248, 246, 240, 0.32) 62%,
+      transparent 75%);
+    filter: blur(150px);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .site-ambient > *,
+  .landing-ambient > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dark .site-ambient,
+  .dark .landing-ambient {
+    background:
+      radial-gradient(circle at top center,
+        rgba(59, 130, 246, 0.18) 0%,
+        rgba(59, 130, 246, 0.08) 30%,
+        transparent 65%),
+      linear-gradient(180deg, #0a0a12 0%, #0f1322 100%);
+    background-color: #0a0a12;
+  }
+
+  .dark .site-ambient::before,
+  .dark .landing-ambient::before {
+    background: radial-gradient(circle at center,
+      rgba(59, 130, 246, 0.28) 0%,
+      rgba(59, 130, 246, 0.14) 35%,
+      rgba(12, 12, 18, 0.2) 60%,
+      transparent 75%);
+    opacity: 0.38;
+  }
+
+  /* Floating navbar surface */
+  .navbar-floating {
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  }
+
+  .navbar-floating-scrolled {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .navbar-floating {
+    background: rgba(12, 12, 18, 0.7);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .dark .navbar-floating-scrolled {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
   }
 
   /* iOS 26 Chip / Tag */

@@ -128,7 +128,7 @@ export default function Navbar() {
       className="fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out"
     >
       <div
-        className={`container-custom mx-auto mt-3 sm:mt-4 px-6 lg:px-10 py-1.5 sm:py-2 h-16 max-w-6xl w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] rounded-full border border-gray-200/70 dark:border-white/10 bg-white/70 dark:bg-black/70 bg-gradient-to-r from-white/90 via-white/80 to-white/90 dark:from-[#0f111a]/75 dark:via-[#0f111a]/70 dark:to-[#0f111a]/75 backdrop-blur-md transition-all duration-300 ease-in-out relative isolate overflow-visible before:content-[''] before:absolute before:inset-0 before:rounded-full before:blur-2xl before:transition-all before:duration-300 before:opacity-40 dark:before:opacity-60 before:bg-black/10 dark:before:bg-blue-500/20 before:scale-110 before:transform before:pointer-events-none hover:before:opacity-60 dark:hover:before:opacity-70 ${scrolled ? 'shadow-lg' : 'shadow-md'}`}
+        className={`container-custom mx-auto mt-3 sm:mt-4 px-6 lg:px-10 py-1.5 sm:py-2 h-16 max-w-6xl w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] rounded-full navbar-floating transition-all duration-300 ease-in-out relative isolate overflow-visible before:content-[''] before:absolute before:inset-0 before:rounded-full before:blur-2xl before:transition-all before:duration-300 before:opacity-40 dark:before:opacity-55 before:bg-white/60 dark:before:bg-blue-500/20 before:scale-110 before:transform before:pointer-events-none hover:before:opacity-55 dark:hover:before:opacity-65 ${scrolled ? 'navbar-floating-scrolled' : ''}`}
       >
         <div className="flex items-center justify-between w-full min-w-0">
           <div className="flex items-center gap-2 flex-shrink-0">
