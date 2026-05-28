@@ -71,7 +71,7 @@ Your domain is not added to Firebase authorized domains list.
 4. Make sure ALL these variables are added:
 
 ```
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyAkxv3nLMJZyqivl1QP-cerSCsxSoLYtPQ
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=matrixo-in-auth.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=matrixo-in-auth
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=matrixo-in-auth.firebasestorage.app

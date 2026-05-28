@@ -144,8 +144,9 @@ const requiredFirebaseConfigKeys: Array<keyof typeof firebaseConfig> = [
 const missingKeys = requiredFirebaseConfigKeys.filter((k) => !firebaseConfig[k]);
 
 if (missingKeys.length > 0) {
-  // Fail fast: without these, Firebase Auth/Google sign-in will not work.
-  // More importantly, we do not want to silently fall back to any hardcoded/suspended keys.
+  // Do not initialize Firebase if required keys are missing. Initializing with
+  // empty / placeholder values can cause runtime errors and hard-to-debug
+  // client-side exceptions. Log a clear warning so deploys surface the issue.
   // eslint-disable-next-line no-console
   console.error(
     `[firebaseConfig] Missing required env vars for Firebase (${missingKeys.join(', ')}). ` +
@@ -153,18 +154,22 @@ if (missingKeys.length > 0) {
   );
 }
 
+// Initialize Firebase only when all required keys are present
+let app: any | undefined = undefined;
+if (missingKeys.length === 0) {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+}
 
-// Initialize Firebase (avoid re-initialization)
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+// Initialize Firebase Auth (may be null if not initialized)
+export let auth: Auth | null = null;
+export let storage: any = null;
+export let db: any = null;
 
-// Initialize Firebase Auth
-export const auth: Auth = getAuth(app);
-
-// Initialize Firebase Storage
-export const storage = getStorage(app);
-
-// Initialize Firestore
-export const db = getFirestore(app);
+if (app) {
+  auth = getAuth(app);
+  storage = getStorage(app);
+  db = getFirestore(app);
+}
 
 export { RecaptchaVerifier, signInWithPhoneNumber };
 export type { ConfirmationResult };

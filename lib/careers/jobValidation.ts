@@ -8,22 +8,12 @@
  */
 
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { initializeApp, getApps, getApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import { db } from '@/lib/firebaseConfig'
 import type { JobRole, JobStatus } from './types'
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAkxv3nLMJZyqivl1QP-cerSCsxSoLYtPQ',
-  authDomain: 'matrixo.in',
-  projectId: 'matrixo-in-auth',
-  storageBucket: 'matrixo-in-auth.firebasestorage.app',
-  messagingSenderId: '431287252568',
-  appId: '1:431287252568:web:0bdc2975d8951203bf7c2d',
-}
-
+// Use the shared Firestore instance from `lib/firebaseConfig`
 function getServerDb() {
-  const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
-  return getFirestore(app)
+  return db
 }
 
 export type ValidationResult =
@@ -46,6 +36,10 @@ export async function validateRole(
 ): Promise<ValidationResult> {
   try {
     const db = getServerDb()
+    if (!db) {
+      console.warn('[careers] Firestore not initialized (missing Firebase config). Skipping validation.')
+      return { ok: false, reason: 'not-found' }
+    }
     const roleDoc = await getDoc(doc(db, 'roles', roleId))
 
     if (!roleDoc.exists()) {

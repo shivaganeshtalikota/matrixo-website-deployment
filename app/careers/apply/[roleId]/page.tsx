@@ -1,26 +1,24 @@
 import { Metadata } from 'next'
 import ApplicationForm from '@/components/careers/ApplicationForm'
 import { doc, getDoc } from 'firebase/firestore'
-import { initializeApp, getApps, getApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import { db } from '@/lib/firebaseConfig'
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAkxv3nLMJZyqivl1QP-cerSCsxSoLYtPQ",
-  authDomain: "matrixo-in-auth.firebaseapp.com",
-  projectId: "matrixo-in-auth",
-  storageBucket: "matrixo-in-auth.firebasestorage.app",
-  messagingSenderId: "431287252568",
-  appId: "1:431287252568:web:0bdc2975d8951203bf7c2d",
-}
-
+// Use the shared Firestore instance from `lib/firebaseConfig`
 function getServerDb() {
-  const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
-  return getFirestore(app)
+  return db
 }
 
 export async function generateMetadata({ params }: { params: { roleId: string } }): Promise<Metadata> {
   try {
     const db = getServerDb()
+    if (!db) {
+      console.warn('[careers] Firestore not initialized (missing Firebase config). Using fallback metadata.')
+      return {
+        title: 'Apply - Careers | matriXO',
+        description: 'Submit your application to join the matriXO team.',
+      }
+    }
+
     const roleDoc = await getDoc(doc(db, 'roles', params.roleId))
     if (roleDoc.exists()) {
       const role = roleDoc.data()
