@@ -107,7 +107,16 @@ const pricingPlans = [
   },
 ]
 
+const howItWorksSteps = [
+  { step: '01', title: 'Browse & Choose', desc: 'Explore our workshops, bootcamps, and hackathons to find the perfect program' },
+  { step: '02', title: 'Register Online', desc: 'Quick and secure registration with instant confirmation via email' },
+  { step: '03', title: 'Learn & Build', desc: 'Attend hands-on sessions, work on real projects with industry mentors' },
+  { step: '04', title: 'Get Certified', desc: 'Receive certificates and lifetime access to resources and community' },
+]
+
 export default function ServicesContent() {
+  const pricingButtonClass =
+    'w-full h-12 px-6 rounded-full font-semibold text-base flex items-center justify-center text-center text-[#111827] bg-[#ffffff] dark:bg-[#f8fafc] shadow-[0_4px_12px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.25)] border-0 dark:border dark:border-[rgba(255,255,255,0.08)] transition-all duration-300 ease-in-out hover:-translate-y-[2px] hover:bg-[#f3f4f6] dark:hover:bg-[#e5e7eb]'
   return (
     <div className="min-h-screen pt-0">
       {/* Hero */}
@@ -155,7 +164,7 @@ export default function ServicesContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="feature-card p-8"
+                className="feature-card p-8 h-full flex flex-col"
               >
                 <div className="feature-card-icon mb-6">
                   <service.icon className={`h-7 w-7 ${service.iconClassName}`} />
@@ -174,9 +183,9 @@ export default function ServicesContent() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-6">
+                <div className="mt-auto pt-6">
                   <Link href={`/contact?type=${encodeURIComponent(service.title)}`}>
-                    <button className="btn-primary w-full">
+                    <button className={pricingButtonClass}>
                       Contact Us
                     </button>
                   </Link>
@@ -188,7 +197,7 @@ export default function ServicesContent() {
       </section>
 
       {/* How It Works */}
-      <section className="section-padding bg-white/30 dark:bg-white/[0.01] backdrop-blur-sm">
+      <section className="section-padding bg-[linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)] dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_50%,#0b1120_100%)]">
         <div className="container-custom px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -197,35 +206,44 @@ export default function ServicesContent() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              <HeadingHighlight text="How It Works" />
+              <HeadingHighlight
+                text="How It Works"
+                solidClassName="text-[#0f172a] dark:text-[#f8fafc]"
+                gradientClassName="text-[#2563eb] dark:text-[#60a5fa]"
+              />
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
+            <p className="text-xl text-[#475569] dark:text-[#cbd5e1]">
               From registration to certification - a seamless learning journey
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { step: '01', title: 'Browse & Choose', desc: 'Explore our workshops, bootcamps, and hackathons to find the perfect program' },
-              { step: '02', title: 'Register Online', desc: 'Quick and secure registration with instant confirmation via email' },
-              { step: '03', title: 'Learn & Build', desc: 'Attend hands-on sessions, work on real projects with industry mentors' },
-              { step: '04', title: 'Get Certified', desc: 'Receive certificates and lifetime access to resources and community' },
-            ].map((item, index) => (
+            {howItWorksSteps.map((item, index) => (
               <motion.div
                 key={item.step}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.4 }}
-                className="text-center"
+                className="text-center relative flex flex-col items-center transition-transform duration-300 ease-in-out hover:-translate-y-1"
               >
-                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                {index < howItWorksSteps.length - 1 && (
+                  <span
+                    aria-hidden="true"
+                    className="hidden md:block absolute top-10 left-1/2 w-[calc(100%+2rem)] border-t border-dashed border-[#cbd5e1] dark:border-[rgba(255,255,255,0.2)] pointer-events-none"
+                  />
+                )}
+                <div className="relative z-10 w-20 h-20 mx-auto mb-4 bg-[#e2e8f0] dark:bg-[#f8fafc] border border-[#cbd5e1] dark:border-[rgba(255,255,255,0.1)] rounded-full flex items-center justify-center text-[#1d4ed8] dark:text-[#111827] text-2xl font-bold">
                   {item.step}
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
-                  <HeadingHighlight text={item.title} />
+                <h3 className="text-xl font-bold mb-3">
+                  <HeadingHighlight
+                    text={item.title}
+                    solidClassName="text-[#111827] dark:text-white"
+                    gradientClassName="text-[#2563eb] dark:text-[#60a5fa]"
+                  />
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">{item.desc}</p>
+                <p className="text-[#475569] dark:text-[#cbd5e1]">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -241,10 +259,10 @@ export default function ServicesContent() {
             viewport={{ once: true }}
             className="max-w-5xl mx-auto"
           >
-            <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-[var(--glass-radius-lg)] p-12 text-white text-center relative overflow-hidden">
+            <div className="bg-[linear-gradient(135deg,#f8fafc_0%,#eef2f7_40%,#ffffff_100%)] dark:bg-[linear-gradient(135deg,#111827_0%,#1f2937_50%,#0f172a_100%)] rounded-[var(--glass-radius-lg)] p-12 text-[#111827] dark:text-[#f9fafb] text-center relative overflow-hidden">
               {/* Decorative Elements */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-black/5 dark:bg-white/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 dark:bg-white/5 rounded-full blur-3xl -ml-32 -mb-32"></div>
               
               <div className="relative z-10">
                 <motion.div
@@ -254,15 +272,19 @@ export default function ServicesContent() {
                   transition={{ delay: 0.2 }}
                   className="inline-block mb-6"
                 >
-                  <div className="w-20 h-20 mx-auto bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center">
+                  <div className="w-20 h-20 mx-auto bg-[rgba(255,255,255,0.7)] dark:bg-[rgba(255,255,255,0.08)] backdrop-blur-[10px] rounded-2xl flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
                     <FaUsers size={40} />
                   </div>
                 </motion.div>
 
-                <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-                  <HeadingHighlight text="Partner as Ticketing Partner" solidClassName="text-white" />
+                <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-[#111827] dark:text-[#f9fafb]">
+                  <HeadingHighlight
+                    text="Partner as Ticketing Partner"
+                    solidClassName="text-[#111827] dark:text-[#f9fafb]"
+                    gradientClassName="bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] dark:from-[#60a5fa] dark:to-[#a78bfa]"
+                  />
                 </h2>
-                <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
+                <p className="text-xl text-[#4b5563] dark:text-[#d1d5db] mb-8 max-w-3xl mx-auto">
                   Are you organizing technical events, workshops, or hackathons? Partner with matriXO as your official ticketing platform and enjoy seamless registration management, secure payments, and powerful analytics.
                 </p>
 
@@ -278,13 +300,17 @@ export default function ServicesContent() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.3 + index * 0.1 }}
-                      className="bg-white/10 backdrop-blur-lg rounded-2xl p-6"
+                      className="rounded-2xl p-6 bg-[rgba(255,255,255,0.75)] dark:bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.5)] dark:border-[rgba(255,255,255,0.08)] shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[10px] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_40px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_14px_40px_rgba(0,0,0,0.35)]"
                     >
                       <div className="text-4xl mb-3">{benefit.icon}</div>
-                      <h3 className="text-lg font-bold mb-2">
-                        <HeadingHighlight text={benefit.title} solidClassName="text-white" />
+                      <h3 className="text-lg font-bold mb-2 text-[#111827] dark:text-[#f9fafb]">
+                        <HeadingHighlight
+                          text={benefit.title}
+                          solidClassName="text-[#111827] dark:text-[#f9fafb]"
+                          gradientClassName="bg-clip-text text-transparent bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] dark:from-[#60a5fa] dark:to-[#a78bfa]"
+                        />
                       </h3>
-                      <p className="text-sm text-white/80">{benefit.desc}</p>
+                      <p className="text-sm text-[#4b5563] dark:text-[#d1d5db]">{benefit.desc}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -293,14 +319,13 @@ export default function ServicesContent() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-10 py-4 bg-white text-blue-600 font-bold rounded-full hover:shadow-2xl 
-                             transition-all duration-200 text-lg"
+                    className="px-10 py-4 bg-white text-[#2563eb] dark:bg-[#f3f4f6] dark:text-[#1d4ed8] font-bold rounded-full hover:bg-[#f3f4f6] dark:hover:bg-[#e5e7eb] transition-colors duration-200 text-lg"
                   >
                     Become a Partner →
                   </motion.button>
                 </Link>
 
-                <p className="mt-6 text-sm text-white/70">
+                <p className="mt-6 text-sm text-[#4b5563] dark:text-[#d1d5db]">
                   Join 5+ institutions already using matriXO for their events
                 </p>
               </div>
@@ -334,39 +359,39 @@ export default function ServicesContent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className={`rounded-[var(--glass-radius)] p-8 ${
+                className={`rounded-[var(--glass-radius)] p-8 h-full flex flex-col ${
                   plan.highlighted
-                    ? 'bg-gradient-to-br from-neon-blue to-neon-purple text-white scale-105 shadow-2xl'
+                    ? 'bg-gradient-to-br from-neon-blue to-neon-purple text-white shadow-2xl'
                     : 'glass-card'
                 }`}
               >
-                <h3 className={`text-2xl font-bold mb-2 ${plan.highlighted ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
-                  <HeadingHighlight text={plan.name} solidClassName={plan.highlighted ? 'text-white' : 'heading-solid'} />
-                </h3>
-                <p className={`mb-6 ${plan.highlighted ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'}`}>
-                  {plan.description}
-                </p>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  {plan.period && <span className={`${plan.highlighted ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'}`}>{plan.period}</span>}
+                <div className="flex-1">
+                  <h3 className={`text-2xl font-bold mb-2 ${plan.highlighted ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                    <HeadingHighlight text={plan.name} solidClassName={plan.highlighted ? 'text-white' : 'heading-solid'} />
+                  </h3>
+                  <p className={`mb-6 ${plan.highlighted ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'}`}>
+                    {plan.description}
+                  </p>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold">{plan.price}</span>
+                    {plan.period && <span className={`${plan.highlighted ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'}`}>{plan.period}</span>}
+                  </div>
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className={`flex items-center ${plan.highlighted ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'}`}>
+                        <span className={`mr-2 ${plan.highlighted ? 'text-white' : 'text-neon-blue'}`}>✓</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className={`flex items-center ${plan.highlighted ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'}`}>
-                      <span className={`mr-2 ${plan.highlighted ? 'text-white' : 'text-neon-blue'}`}>✓</span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/contact">
-                  <button className={`w-full py-3 rounded-full font-semibold transition-all duration-300 ${
-                    plan.highlighted
-                      ? 'bg-white text-neon-blue hover:shadow-xl'
-                      : 'btn-primary'
-                  }`}>
-                    {plan.cta}
-                  </button>
-                </Link>
+                <div className="mt-auto pt-8">
+                  <Link href="/contact">
+                    <button className={pricingButtonClass}>
+                      {plan.cta}
+                    </button>
+                  </Link>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -390,7 +415,7 @@ export default function ServicesContent() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact">
-                <button className="btn-primary">
+                <button className={pricingButtonClass}>
                   Schedule a Demo
                 </button>
               </Link>
