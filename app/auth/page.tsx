@@ -54,6 +54,10 @@ export default function AuthPage() {
     if (resendCooldown > 0) return
     setLoading(true)
     try {
+      if (!auth) {
+        toast.error('Authentication is not configured. Please try again later.')
+        return
+      }
       // Sign in temporarily to resend verification
       const userCredential = await signInWithEmailAndPassword(auth, verificationEmail, formData.password)
       await sendEmailVerification(userCredential.user)
