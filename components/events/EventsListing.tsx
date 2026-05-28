@@ -37,6 +37,9 @@ export default function EventsListing() {
     return filtered
   }, [categoryFilter, sortOption, searchTerm])
 
+  const activeFilterClass =
+    'bg-[#4B5563] text-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] hover:bg-[#2F3542] dark:bg-white dark:text-[#111111] dark:shadow-[0_2px_8px_rgba(255,255,255,0.08)] dark:hover:bg-[#F3F3F3]'
+
   return (
     <div className="min-h-screen pt-5 pb-20">
       {/* Header */}
@@ -87,9 +90,9 @@ export default function EventsListing() {
                 <button
                   key={option.value}
                   onClick={() => setSortOption(option.value as SortOption)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] flex items-center gap-1.5 ${
                     sortOption === option.value
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                      ? activeFilterClass
                       : 'glass-chip text-gray-700 dark:text-gray-300'
                   }`}
                 >
@@ -113,9 +116,9 @@ export default function EventsListing() {
                 <button
                   key={cat.value}
                   onClick={() => setCategoryFilter(cat.value)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
                     categoryFilter === cat.value
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                      ? activeFilterClass
                       : 'glass-chip text-gray-700 dark:text-gray-300'
                   }`}
                 >
@@ -138,16 +141,16 @@ export default function EventsListing() {
           {filteredAndSortedEvents.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-xl text-gray-500">No programs found matching your criteria</p>
-              <button
-                onClick={() => {
-                  setCategoryFilter('all')
-                  setSortOption('all')
-                  setSearchTerm('')
-                }}
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full hover:shadow-lg transition-all duration-200"
-              >
-                Clear All Filters
-              </button>
+                <button
+                  onClick={() => {
+                    setCategoryFilter('all')
+                    setSortOption('all')
+                    setSearchTerm('')
+                  }}
+                  className={`mt-4 px-6 py-3 rounded-full transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${activeFilterClass}`}
+                >
+                  Clear All Filters
+                </button>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
