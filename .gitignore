@@ -10,7 +10,11 @@
 
 # next.js
 /.next/
+.next
+.next-dev.log
+.next-dev.err.log
 /out/
+out
 
 # production
 /build
@@ -46,6 +50,11 @@ next-env.d.ts
 Thumbs.db
 
 # build caches and outputs
+node_modules
+dist
+.next
+.next-dev.log
+.next-dev.err.log
 dist/
 .cache/
 

@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import AboutContent from '@/components/about/AboutContent'
-import About from '@/components/home/About'
 
 export const metadata: Metadata = {
   title: 'About Us - matriXO',
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <About />
       <AboutContent />
     </>
   )
