@@ -335,7 +335,7 @@ export default function AuthPage() {
             transition={{ duration: 0.6 }}
             className="w-full"
           >
-            <div className="glass-card-elevated p-6 lg:p-8">
+            <div className="rounded-2xl bg-white dark:bg-[#0B1220] border border-gray-200 dark:border-white/[0.08] shadow-sm p-6 lg:p-8">
               {/* Mobile Logo */}
               <div className="lg:hidden mb-8 flex justify-center relative h-12">
                 {/* Light Mode Logo (Black) */}
@@ -359,9 +359,13 @@ export default function AuthPage() {
                     <FaCheckCircle className="text-3xl text-green-500" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                      <HeadingHighlight text="Welcome back!" />
-                    </h3>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                        <HeadingHighlight
+                          text="Welcome back!"
+                          solidClassName="text-gray-900 dark:text-white"
+                          gradientClassName="text-gray-900 dark:text-white"
+                        />
+                      </h3>
                     <p className="text-gray-600 dark:text-gray-400">
                       You&apos;re already signed in as
                     </p>
@@ -371,14 +375,14 @@ export default function AuthPage() {
                   </div>
                   <div className="space-y-3">
                     <Link href="/">
-                      <button className="w-full py-3 px-5 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group">
+                      <button className="w-full py-3 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2 group">
                         <span>Go to Home</span>
                         <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
                       </button>
                     </Link>
                     <button
                       onClick={async () => { await logout(); toast.success('Signed out successfully') }}
-                      className="w-full py-3 px-5 border border-gray-200/30 dark:border-white/[0.06] text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-white/40 dark:hover:bg-white/[0.06] transition-all flex items-center justify-center gap-2"
+                      className="w-full py-3 px-5 border border-gray-200 dark:border-white/[0.08] text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-center gap-2"
                     >
                       <FaSignOutAlt />
                       <span>Sign out & use another account</span>
@@ -390,23 +394,23 @@ export default function AuthPage() {
 
               {/* Tab Switcher */}
               {authStep === 'form' && (
-              <div className="flex gap-2 mb-6 p-1 bg-white/40 dark:bg-white/[0.04] backdrop-blur-sm rounded-xl border border-gray-200/30 dark:border-white/[0.06]">
+              <div className="flex gap-2 mb-6 p-1 bg-transparent rounded-xl border border-gray-200 dark:border-white/[0.08]">
                 <button
                   onClick={() => setIsLogin(true)}
-                  className={`flex-1 py-2.5 px-5 rounded-lg font-medium transition-all ${
+                  className={`flex-1 py-2.5 px-5 rounded-lg font-medium transition-colors duration-200 ${
                     isLogin
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ? 'bg-white text-blue-600 font-semibold'
+                      : 'bg-transparent text-gray-400'
                   }`}
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => setIsLogin(false)}
-                  className={`flex-1 py-2.5 px-5 rounded-lg font-medium transition-all ${
+                  className={`flex-1 py-2.5 px-5 rounded-lg font-medium transition-colors duration-200 ${
                     !isLogin
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ? 'bg-white text-blue-600 font-semibold'
+                      : 'bg-transparent text-gray-400'
                   }`}
                 >
                   Sign Up
@@ -429,16 +433,20 @@ export default function AuthPage() {
                   </button>
 
                   <div className="text-center space-y-3">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-purple-500/10 flex items-center justify-center">
-                      <FaEnvelope className="text-2xl text-purple-400" />
+                    <div className="w-16 h-16 mx-auto rounded-full bg-blue-500/10 flex items-center justify-center">
+                      <FaEnvelope className="text-2xl text-blue-500" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                      <HeadingHighlight text="Verify Your Email" />
+                      <HeadingHighlight
+                        text="Verify Your Email"
+                        solidClassName="text-gray-900 dark:text-white"
+                        gradientClassName="text-gray-900 dark:text-white"
+                      />
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       We&apos;ve sent a 6-digit verification code to
                     </p>
-                    <p className="font-semibold text-purple-500">{formData.email}</p>
+                    <p className="font-semibold text-blue-600">{formData.email}</p>
                   </div>
 
                   {/* OTP Input */}
@@ -458,9 +466,7 @@ export default function AuthPage() {
                           const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
                           handleOTPChange(0, paste)
                         }}
-                        className="w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold rounded-xl glass-input 
-                                 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500/40 
-                                 focus:border-purple-500 transition-all"
+                        className="w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold rounded-xl bg-slate-100 text-gray-900 border border-transparent focus:border-blue-600 focus:outline-none focus:ring-0 transition-colors"
                         autoFocus={idx === 0}
                       />
                     ))}
@@ -469,8 +475,8 @@ export default function AuthPage() {
                   <button
                     onClick={handleOTPSubmit}
                     disabled={otpLoading || otpValues.join('').length !== 6}
-                    className="w-full py-3 px-5 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
+                  className="w-full py-3 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
                     {otpLoading ? (
                       <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
@@ -490,7 +496,7 @@ export default function AuthPage() {
                         <button
                           onClick={handleResendOTP}
                           disabled={otpLoading}
-                          className="text-purple-500 hover:text-purple-400 font-medium transition-colors disabled:opacity-50"
+                          className="text-blue-600 hover:underline font-medium transition-colors disabled:opacity-50"
                         >
                           Resend Code
                         </button>
@@ -506,7 +512,7 @@ export default function AuthPage() {
                 <button
                   onClick={handleGoogleSignIn}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 py-3 px-5 bg-white/80 dark:bg-white/90 text-gray-900 rounded-xl font-semibold hover:bg-white transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg backdrop-blur-sm"
+                  className="w-full flex items-center justify-center gap-3 py-3 px-5 bg-white text-gray-900 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 >
                   {loading ? (
                     <div className="w-5 h-5 border-2 border-gray-400 border-t-gray-900 rounded-full animate-spin" />
@@ -524,7 +530,7 @@ export default function AuthPage() {
                   <div className="w-full border-t border-gray-200/30 dark:border-white/[0.06]" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white/50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-500">Or continue with</span>
+                  <span className="px-4 bg-white dark:bg-[#0B1220] text-gray-500 dark:text-gray-500">Or continue with</span>
                 </div>
               </div>
 
@@ -545,7 +551,7 @@ export default function AuthPage() {
                         value={formData.name}
                         onChange={handleChange}
                         required={!isLogin}
-                        className="w-full py-3 px-5 glass-input placeholder-gray-500 dark:placeholder-gray-500"
+                        className="w-full py-3 px-5 rounded-xl bg-slate-100 text-gray-900 placeholder-gray-500 border border-transparent focus:border-blue-600 focus:outline-none focus:ring-0 transition-colors"
                       />
                     </motion.div>
                   )}
@@ -558,7 +564,7 @@ export default function AuthPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full py-3 px-5 glass-input placeholder-gray-500 dark:placeholder-gray-500"
+                  className="w-full py-3 px-5 rounded-xl bg-slate-100 text-gray-900 placeholder-gray-500 border border-transparent focus:border-blue-600 focus:outline-none focus:ring-0 transition-colors"
                 />
 
                 <input
@@ -568,7 +574,7 @@ export default function AuthPage() {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="w-full py-3 px-5 glass-input placeholder-gray-500 dark:placeholder-gray-500"
+                  className="w-full py-3 px-5 rounded-xl bg-slate-100 text-gray-900 placeholder-gray-500 border border-transparent focus:border-blue-600 focus:outline-none focus:ring-0 transition-colors"
                 />
 
                 <AnimatePresence mode="wait">
@@ -586,7 +592,7 @@ export default function AuthPage() {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         required={!isLogin}
-                        className="w-full py-3 px-5 glass-input placeholder-gray-500 dark:placeholder-gray-500"
+                        className="w-full py-3 px-5 rounded-xl bg-slate-100 text-gray-900 placeholder-gray-500 border border-transparent focus:border-blue-600 focus:outline-none focus:ring-0 transition-colors"
                       />
                     </motion.div>
                   )}
@@ -594,7 +600,7 @@ export default function AuthPage() {
 
                 {isLogin && (
                   <div className="flex justify-end">
-                    <Link href="/forgot-password" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                    <Link href="/forgot-password" className="text-sm text-blue-400 hover:underline transition-colors">
                       Forgot password?
                     </Link>
                   </div>
@@ -603,7 +609,7 @@ export default function AuthPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 px-5 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+                  className="w-full py-3 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
                 >
                   {loading ? (
                     <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
@@ -618,11 +624,11 @@ export default function AuthPage() {
 
               <div className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                 By continuing, you agree to our{' '}
-                <Link href="/terms" className="text-purple-500 dark:text-purple-400 hover:text-purple-600 dark:hover:text-purple-300">
+                <Link href="/terms" className="text-blue-600 hover:underline">
                   Terms
                 </Link>{' '}
                 and{' '}
-                <Link href="/privacy" className="text-purple-500 dark:text-purple-400 hover:text-purple-600 dark:hover:text-purple-300">
+                <Link href="/privacy" className="text-blue-600 hover:underline">
                   Privacy Policy
                 </Link>
               </div>
