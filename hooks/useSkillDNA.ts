@@ -39,6 +39,7 @@ interface UseSkillDNAReturn {
   loading: boolean;
   error: string | null;
   onboardingComplete: boolean;
+  isGuest: boolean;
 
   // Onboarding
   initializeUser: () => Promise<void>;
@@ -53,6 +54,68 @@ interface UseSkillDNAReturn {
 
   // History
   getHistory: () => Promise<SkillDNAVersion[]>;
+
+  // Guest helpers
+  updateGuestData: (updater: (data: SkillDNAUserDocument) => SkillDNAUserDocument) => Promise<void>;
+}
+
+const GUEST_SESSION_KEY = 'skilldna_guest_session';
+const GUEST_DATA_KEY_PREFIX = 'skilldna_guest_data_';
+
+function getGuestSessionId(): string | null {
+  if (typeof window === 'undefined') return null;
+  let sessionId = window.sessionStorage.getItem(GUEST_SESSION_KEY);
+  if (!sessionId) {
+    const fallbackId = `guest_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    sessionId = typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : fallbackId;
+    window.sessionStorage.setItem(GUEST_SESSION_KEY, sessionId);
+  }
+  return sessionId;
+}
+
+function getGuestStorageKey(sessionId: string): string {
+  return `${GUEST_DATA_KEY_PREFIX}${sessionId}`;
+}
+
+function getDefaultGuestData(): SkillDNAUserDocument {
+  return {
+    profile: {
+      name: 'Guest',
+      email: '',
+      education: { degree: '', field: '', institution: '', year: '' },
+      interests: [],
+      goals: { shortTerm: '', midTerm: '', longTerm: '', dreamRole: '', targetIndustries: [] },
+      role: 'student',
+      createdAt: new Date().toISOString(),
+      onboardingComplete: false,
+    },
+  };
+}
+
+function readGuestData(): SkillDNAUserDocument {
+  const sessionId = getGuestSessionId();
+  if (!sessionId) return getDefaultGuestData();
+  const key = getGuestStorageKey(sessionId);
+  const raw = window.sessionStorage.getItem(key);
+  if (!raw) {
+    const initial = getDefaultGuestData();
+    window.sessionStorage.setItem(key, JSON.stringify(initial));
+    return initial;
+  }
+  try {
+    return JSON.parse(raw) as SkillDNAUserDocument;
+  } catch {
+    const fallback = getDefaultGuestData();
+    window.sessionStorage.setItem(key, JSON.stringify(fallback));
+    return fallback;
+  }
+}
+
+function writeGuestData(data: SkillDNAUserDocument): void {
+  const sessionId = getGuestSessionId();
+  if (!sessionId) return;
+  const key = getGuestStorageKey(sessionId);
+  window.sessionStorage.setItem(key, JSON.stringify(data));
 }
 
 export function useSkillDNA(): UseSkillDNAReturn {
@@ -62,6 +125,7 @@ export function useSkillDNA(): UseSkillDNAReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const isGuest = !user;
 
   // Get Firebase Auth token for API calls
   const getAuthToken = useCallback(async (): Promise<string> => {
@@ -72,9 +136,10 @@ export function useSkillDNA(): UseSkillDNAReturn {
   // Load user data on mount
   const loadUserData = useCallback(async () => {
     if (!user) {
-      setUserData(null);
-      setProfile(null);
-      setOnboardingComplete(false);
+      const guestData = readGuestData();
+      setUserData(guestData);
+      setProfile(guestData.skillDNA || null);
+      setOnboardingComplete(guestData.profile?.onboardingComplete === true);
       setLoading(false);
       return;
     }
@@ -108,7 +173,13 @@ export function useSkillDNA(): UseSkillDNAReturn {
 
   // Initialize user document in Firestore
   const initializeUser = useCallback(async () => {
-    if (!user) throw new Error('Not authenticated');
+    if (!user) {
+      const guestData = readGuestData();
+      setUserData(guestData);
+      setProfile(guestData.skillDNA || null);
+      setOnboardingComplete(guestData.profile?.onboardingComplete === true);
+      return;
+    }
 
     try {
       setError(null);
@@ -127,7 +198,71 @@ export function useSkillDNA(): UseSkillDNAReturn {
 
   // Submit onboarding data and get AI analysis
   const submitOnboarding = useCallback(async (data: OnboardingData): Promise<AIAnalysisResponse> => {
-    if (!user) throw new Error('Not authenticated');
+    if (!user) {
+      try {
+        setError(null);
+        setLoading(true);
+
+        const currentGuest = readGuestData();
+        const updatedGuest: SkillDNAUserDocument = {
+          ...currentGuest,
+          onboardingData: data,
+          profile: {
+            ...currentGuest.profile,
+            education: data.academic,
+            interests: data.interests,
+            goals: data.careerGoals,
+            onboardingComplete: true,
+            skillDNAVersion: 1,
+          },
+        };
+
+        writeGuestData(updatedGuest);
+
+        const response = await fetch('/api/skilldna/analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ onboardingData: data }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Analysis failed');
+        }
+
+        const result = await response.json();
+        const analysisData: AIAnalysisResponse = result.data;
+
+        const { learningVelocityEstimate, ...profileFields } = analysisData;
+        const skillDNAProfile: SkillDNAProfile = {
+          ...profileFields,
+          learningVelocity: learningVelocityEstimate,
+          hiringReadiness: analysisData.hiringReadiness ?? 40,
+          confidenceIndex: analysisData.confidenceIndex ?? 50,
+          lastUpdated: new Date().toISOString(),
+          version: 1,
+        };
+
+        const finalGuest: SkillDNAUserDocument = {
+          ...updatedGuest,
+          skillDNA: skillDNAProfile,
+        };
+
+        writeGuestData(finalGuest);
+        setUserData(finalGuest);
+        setProfile(skillDNAProfile);
+        setOnboardingComplete(true);
+
+        return analysisData;
+      } catch (err: any) {
+        setError(err.message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    }
 
     try {
       setError(null);
@@ -188,7 +323,13 @@ export function useSkillDNA(): UseSkillDNAReturn {
 
   // Refresh profile from Firestore (silent — no loading spinner)
   const refreshProfile = useCallback(async () => {
-    if (!user) return;
+    if (!user) {
+      const guestData = readGuestData();
+      setUserData(guestData);
+      setProfile(guestData.skillDNA || null);
+      setOnboardingComplete(guestData.profile?.onboardingComplete === true);
+      return;
+    }
     try {
       const data = await getSkillDNAUser(user.uid);
       if (data) {
@@ -253,7 +394,25 @@ export function useSkillDNA(): UseSkillDNAReturn {
   const submitAssessment = useCallback(async (
     assessment: Omit<Assessment, 'id' | 'userId'>
   ) => {
-    if (!user) throw new Error('Not authenticated');
+    if (!user) {
+      const currentGuest = readGuestData();
+      const assessments = currentGuest.assessments ? { ...currentGuest.assessments } : {};
+      const id = `guest_${Date.now()}`;
+      const completedAt = assessment.completedAt ?? new Date().toISOString();
+      assessments[id] = {
+        id,
+        userId: 'guest',
+        ...assessment,
+        completedAt,
+      };
+      const updatedGuest = {
+        ...currentGuest,
+        assessments,
+      };
+      writeGuestData(updatedGuest);
+      setUserData(updatedGuest);
+      return;
+    }
 
     try {
       const assessmentId = await saveAssessment(user.uid, assessment);
@@ -275,17 +434,31 @@ export function useSkillDNA(): UseSkillDNAReturn {
     return getVersionHistory(user.uid);
   }, [user]);
 
+  const updateGuestData = useCallback(async (
+    updater: (data: SkillDNAUserDocument) => SkillDNAUserDocument
+  ) => {
+    if (!isGuest) return;
+    const current = readGuestData();
+    const updated = updater(current);
+    writeGuestData(updated);
+    setUserData(updated);
+    setProfile(updated.skillDNA || null);
+    setOnboardingComplete(updated.profile?.onboardingComplete === true);
+  }, [isGuest]);
+
   return {
     userData,
     profile,
     loading,
     error,
     onboardingComplete,
+    isGuest,
     initializeUser,
     submitOnboarding,
     refreshProfile,
     triggerUpdate,
     submitAssessment,
     getHistory,
+    updateGuestData,
   };
 }

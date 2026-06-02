@@ -81,7 +81,7 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
     if (user?.email) {
       setFormData(prev => ({
         ...prev,
-        email: user.email!,
+        email: user.email || prev.email,
         name: user.displayName || prev.name
       }))
     }

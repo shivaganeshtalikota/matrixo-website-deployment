@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from '@/lib/AuthContext'
-import { storeRedirectAfterLogin } from '@/lib/authRedirect'
 import { useSkillDNA } from '@/hooks/useSkillDNA'
 import OnboardingFlow from '@/components/skilldna/OnboardingFlow'
 import SkillDNADashboard from '@/components/skilldna/SkillDNADashboard'
@@ -12,8 +11,7 @@ import { OnboardingData, SkillLevel, TechnicalSkill, AcademicBackground, CareerG
 import { updateSkillDNAProfile, updateAcademicBackground, updateInterests, updateCareerGoals, editSkill } from '@/lib/skilldna/firestore-service'
 import { getAllVerifications } from '@/lib/skilldna/verification/firestore-service'
 import { motion } from 'framer-motion'
-import { FaDna, FaSignInAlt, FaExclamationTriangle, FaRedo } from 'react-icons/fa'
-import Link from 'next/link'
+import { FaDna, FaExclamationTriangle, FaRedo } from 'react-icons/fa'
 
 export default function SkillDNAPage() {
   const { user, loading: authLoading } = useAuth()
@@ -26,6 +24,8 @@ export default function SkillDNAPage() {
     initializeUser,
     submitOnboarding,
     refreshProfile,
+    isGuest,
+    updateGuestData,
   } = useSkillDNA()
   
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -33,6 +33,7 @@ export default function SkillDNAPage() {
   const [analysisError, setAnalysisError] = useState<string | null>(null)
   const pendingDataRef = useRef<OnboardingData | null>(null)
   const [authToken, setAuthToken] = useState<string>('')
+  const [guestStarted, setGuestStarted] = useState(false)
   const wrapWithSidebar = (content: JSX.Element) => (
     <FeatureSidebar>{content}</FeatureSidebar>
   )
@@ -41,6 +42,8 @@ export default function SkillDNAPage() {
   useEffect(() => {
     if (user) {
       user.getIdToken().then(setAuthToken).catch(console.error)
+    } else {
+      setAuthToken('')
     }
   }, [user])
 
@@ -83,7 +86,7 @@ export default function SkillDNAPage() {
 
   // Add a skill manually -> save directly to Firestore, then refresh
   const handleAddSkill = async (skill: { name: string; level: SkillLevel; category: string }) => {
-    if (!user || !profile) throw new Error('Not authenticated')
+    if (!profile) throw new Error('No profile available')
 
     const trimmedName = skill.name.trim()
     // Prevent duplicates (case-insensitive)
@@ -101,45 +104,108 @@ export default function SkillDNAPage() {
     }
 
     const updatedSkills = [...profile.technicalSkills, newSkill]
-    await updateSkillDNAProfile(user.uid, { technicalSkills: updatedSkills }, 'skill_added')
-    await refreshProfile()
+    if (user) {
+      await updateSkillDNAProfile(user.uid, { technicalSkills: updatedSkills }, 'skill_added')
+      await refreshProfile()
+      return
+    }
+    if (isGuest) {
+      const updatedProfile = {
+        ...profile,
+        technicalSkills: updatedSkills,
+        lastUpdated: new Date().toISOString(),
+        version: (profile.version || 0) + 1,
+      }
+      await updateGuestData((data) => ({
+        ...data,
+        skillDNA: updatedProfile,
+      }))
+    }
   }
 
   // Remove a skill -> update Firestore, then refresh
   const handleRemoveSkill = async (skillName: string) => {
-    if (!user || !profile) throw new Error('Not authenticated')
+    if (!profile) throw new Error('No profile available')
     const updatedSkills = profile.technicalSkills.filter(
       (s) => s.name.toLowerCase() !== skillName.toLowerCase()
     )
-    await updateSkillDNAProfile(user.uid, { technicalSkills: updatedSkills }, 'skill_added')
-    await refreshProfile()
+    if (user) {
+      await updateSkillDNAProfile(user.uid, { technicalSkills: updatedSkills }, 'skill_added')
+      await refreshProfile()
+      return
+    }
+    if (isGuest) {
+      const updatedProfile = {
+        ...profile,
+        technicalSkills: updatedSkills,
+        lastUpdated: new Date().toISOString(),
+        version: (profile.version || 0) + 1,
+      }
+      await updateGuestData((data) => ({
+        ...data,
+        skillDNA: updatedProfile,
+      }))
+    }
   }
 
   // Update academic background
   const handleUpdateAcademic = async (academic: AcademicBackground) => {
-    if (!user) throw new Error('Not authenticated')
-    await updateAcademicBackground(user.uid, academic)
-    await refreshProfile()
+    if (user) {
+      await updateAcademicBackground(user.uid, academic)
+      await refreshProfile()
+      return
+    }
+    if (isGuest) {
+      await updateGuestData((data) => ({
+        ...data,
+        profile: {
+          ...data.profile,
+          education: academic,
+        },
+      }))
+    }
   }
 
   // Update interests
   const handleUpdateInterests = async (interests: string[]) => {
-    if (!user) throw new Error('Not authenticated')
-    await updateInterests(user.uid, interests)
-    await refreshProfile()
+    if (user) {
+      await updateInterests(user.uid, interests)
+      await refreshProfile()
+      return
+    }
+    if (isGuest) {
+      await updateGuestData((data) => ({
+        ...data,
+        profile: {
+          ...data.profile,
+          interests,
+        },
+      }))
+    }
   }
 
   // Update career goals
   const handleUpdateCareerGoal = async (goal: CareerGoal) => {
-    if (!user) throw new Error('Not authenticated')
-    await updateCareerGoals(user.uid, goal)
-    await refreshProfile()
+    if (user) {
+      await updateCareerGoals(user.uid, goal)
+      await refreshProfile()
+      return
+    }
+    if (isGuest) {
+      await updateGuestData((data) => ({
+        ...data,
+        profile: {
+          ...data.profile,
+          goals: goal,
+        },
+      }))
+    }
   }
 
   // Regenerate AI persona by re-submitting saved onboarding data
   // Preserves manually-managed skills so they are not overwritten by AI output
   const handleRegeneratePersona = async () => {
-    if (!user || !userData?.onboardingData) throw new Error('No onboarding data found')
+    if (!userData?.onboardingData) throw new Error('No onboarding data found')
 
     // Snapshot current skills before regeneration overwrites the profile
     const preservedSkills = profile ? [...profile.technicalSkills] : []
@@ -149,10 +215,23 @@ export default function SkillDNAPage() {
       await submitOnboarding(userData.onboardingData)
 
       // Restore the user's actual skills after AI regeneration
-      if (preservedSkills.length > 0) {
-        await updateSkillDNAProfile(user.uid, { technicalSkills: preservedSkills }, 'skills_restored')
-        await refreshProfile()
-      }
+        if (preservedSkills.length > 0) {
+          if (user) {
+            await updateSkillDNAProfile(user.uid, { technicalSkills: preservedSkills }, 'skills_restored')
+            await refreshProfile()
+          } else if (isGuest && profile) {
+            const updatedProfile = {
+              ...profile,
+              technicalSkills: preservedSkills,
+              lastUpdated: new Date().toISOString(),
+              version: (profile.version || 0) + 1,
+            }
+            await updateGuestData((data) => ({
+              ...data,
+              skillDNA: updatedProfile,
+            }))
+          }
+        }
     } catch (err: any) {
       console.error('Regeneration failed:', err)
       throw err
@@ -163,9 +242,36 @@ export default function SkillDNAPage() {
 
   // Edit a skill (rename, change level/category)
   const handleEditSkill = async (oldName: string, updates: { name?: string; level?: SkillLevel; category?: string }) => {
-    if (!user) throw new Error('Not authenticated')
-    await editSkill(user.uid, oldName, updates)
-    await refreshProfile()
+    if (user) {
+      await editSkill(user.uid, oldName, updates)
+      await refreshProfile()
+      return
+    }
+    if (isGuest && profile) {
+      const updatedSkills = profile.technicalSkills.map((skill) => {
+        if (skill.name.toLowerCase() !== oldName.toLowerCase()) return skill
+        const nextName = updates.name?.trim() || skill.name
+        const nextLevel = updates.level
+        const nextScore = nextLevel ? levelScoreMap[nextLevel] : skill.score
+        return {
+          ...skill,
+          name: nextName,
+          score: nextScore,
+          category: updates.category || skill.category,
+          lastAssessed: new Date().toISOString(),
+        }
+      })
+      const updatedProfile = {
+        ...profile,
+        technicalSkills: updatedSkills,
+        lastUpdated: new Date().toISOString(),
+        version: (profile.version || 0) + 1,
+      }
+      await updateGuestData((data) => ({
+        ...data,
+        skillDNA: updatedProfile,
+      }))
+    }
   }
 
   // Initialize user document when authenticated
@@ -215,8 +321,8 @@ export default function SkillDNAPage() {
     )
   }
 
-  // Not authenticated
-  if (!user) {
+  // Guest landing (no auth required)
+  if (!user && !guestStarted && !onboardingComplete && !profile) {
     return wrapWithSidebar(
       <div className="min-h-screen bg-gradient-to-br from-gray-950 via-purple-950/20 to-blue-950/20 flex items-center justify-center px-4">
         <motion.div
@@ -229,17 +335,15 @@ export default function SkillDNAPage() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-3">SkillDNA™</h1>
           <p className="text-gray-400 mb-6">
-            Sign in to discover your unique skill genome. Our AI will analyze your profile 
-            and create a personalized growth roadmap.
+            Discover your unique skill genome. Our AI analyzes your strengths and creates a personalized growth roadmap—no sign-in required.
           </p>
-          <Link
-            href="/auth"
-            onClick={() => storeRedirectAfterLogin()}
+          <button
+            onClick={() => setGuestStarted(true)}
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-full hover:shadow-xl hover:shadow-purple-500/30 transition-all"
           >
-            <FaSignInAlt />
-            Sign In to Start
-          </Link>
+            <FaDna />
+            Start SkillDNA Analysis
+          </button>
         </motion.div>
       </div>
     )
@@ -330,7 +434,7 @@ export default function SkillDNAPage() {
     return wrapWithSidebar(
       <SkillDNADashboard
         profile={profile}
-        userName={user.displayName || undefined}
+        userName={user?.displayName || userData?.profile?.name || undefined}
         onRefresh={refreshProfile}
         onAddSkill={handleAddSkill}
         onRemoveSkill={handleRemoveSkill}
@@ -342,7 +446,7 @@ export default function SkillDNAPage() {
         currentAcademic={userData?.profile?.education}
         currentInterests={userData?.profile?.interests}
         currentCareerGoal={userData?.profile?.goals}
-        userId={user.uid}
+        userId={user?.uid}
         authToken={authToken}
         onVerificationComplete={loadVerifications}
       />
@@ -353,7 +457,7 @@ export default function SkillDNAPage() {
   return wrapWithSidebar(
     <OnboardingFlow
       onComplete={handleOnboardingComplete}
-      userName={user.displayName || undefined}
+      userName={user?.displayName || userData?.profile?.name || undefined}
     />
   )
 }

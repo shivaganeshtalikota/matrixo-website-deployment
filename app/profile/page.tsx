@@ -20,6 +20,7 @@ import ImageCropModal from '@/components/shared/ImageCropModal'
 import { getCollegeName } from '@/lib/colleges'
 import { LocationSelection, LocationSelectionState } from '@/components/location/LocationSelection'
 import FeatureSidebar from '@/components/features/FeatureSidebar'
+import { storeRedirectAfterLogin } from '@/lib/authRedirect'
 
 const YEAR_OPTIONS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Graduate']
 const BRANCH_OPTIONS = [
@@ -160,7 +161,30 @@ export default function ProfilePage() {
     } finally { setSavingUsername(false) }
   }
 
-  if (!user) { router.replace('/auth'); return null }
+  if (!user) {
+    return wrapWithSidebar(
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950 px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card p-8 max-w-md w-full text-center"
+        >
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white text-2xl">
+            <FaShieldAlt />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Sign in required</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">Please sign in to view and edit your profile.</p>
+          <Link
+            href="/auth"
+            onClick={() => storeRedirectAfterLogin('/profile')}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all w-full"
+          >
+            <FaUser /> Continue to sign in
+          </Link>
+        </motion.div>
+      </div>
+    )
+  }
 
   if (profileLoading) {
     return wrapWithSidebar(
@@ -170,7 +194,17 @@ export default function ProfilePage() {
     )
   }
 
-  if (!profileExists) { router.replace('/profile/setup'); return null }
+  if (!profileExists) {
+    router.replace('/profile/setup')
+    return wrapWithSidebar(
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
+        <div className="flex flex-col items-center gap-3">
+          <FaSpinner className="animate-spin text-3xl text-purple-500" />
+          <p className="text-gray-600 dark:text-gray-400 text-sm">Redirecting to profile setup...</p>
+        </div>
+      </div>
+    )
+  }
 
   const validate = (): boolean => {
     const e: Record<string, string> = {}

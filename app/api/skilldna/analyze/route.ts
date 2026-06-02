@@ -86,20 +86,14 @@ export async function POST(request: NextRequest) {
     // Get API key from environment
     const apiKey = process.env.OPENROUTER_API_KEY;
 
-    // Check authorization header (Firebase Auth token expected)
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    const token = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+    const forwardedFor = request.headers.get('x-forwarded-for') || '';
+    const clientIp = forwardedFor.split(',')[0]?.trim() || request.headers.get('x-real-ip') || request.ip || 'guest';
+    const rateLimitId = token ? token.slice(-16) : `guest_${clientIp}`;
 
-    const token = authHeader.split(' ')[1];
-    
-    // Rate limit by token (simple check)
-    const tokenHash = token.slice(-16); // Use last 16 chars as identifier
-    if (!checkRateLimit(tokenHash)) {
+    // Rate limit by token or IP (simple check)
+    if (!checkRateLimit(rateLimitId)) {
       return NextResponse.json(
         { error: 'Rate limit exceeded. Please try again later.' },
         { status: 429 }

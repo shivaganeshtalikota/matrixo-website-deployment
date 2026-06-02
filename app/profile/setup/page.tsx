@@ -48,19 +48,11 @@ export default function ProfileSetupPage() {
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle')
   const [step, setStep] = useState(1)
 
-  // If profile already exists, redirect
-  if (profileExists) {
-    router.replace('/')
-    return null
-  }
+  const redirectTarget = profileExists ? '/' : (!user ? '/auth' : null)
 
-  if (!user) {
-    router.replace('/auth')
-    return null
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
+    if (redirectTarget) return
+
     const username = formData.username.trim().toLowerCase()
     if (!username || username.length < 3) {
       setUsernameStatus('idle')
@@ -78,7 +70,23 @@ export default function ProfileSetupPage() {
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [formData.username, checkUsernameAvailable])
+  }, [formData.username, checkUsernameAvailable, redirectTarget])
+
+  useEffect(() => {
+    if (!redirectTarget) return
+    router.replace(redirectTarget)
+  }, [redirectTarget, router])
+
+  if (redirectTarget) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-950">
+        <div className="flex flex-col items-center gap-3">
+          <FaSpinner className="animate-spin text-3xl text-purple-500" />
+          <p className="text-gray-600 dark:text-gray-400 text-sm">Redirecting...</p>
+        </div>
+      </div>
+    )
+  }
 
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
