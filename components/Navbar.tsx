@@ -8,7 +8,6 @@ import { FaBars, FaTimes, FaChevronDown, FaUser, FaSignOutAlt, FaIdBadge, FaSun,
 import { useAuth } from '@/lib/AuthContext'
 import { useProfile } from '@/lib/ProfileContext'
 import { toast } from 'sonner'
-import config from '@/lib/config'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
 import { useTheme } from 'next-themes'
 
@@ -119,10 +118,12 @@ export default function Navbar() {
   }
 
   return (
-    <nav
-      className={`fixed top-0 w-full z-40 transition-all duration-500 glass-nav ${scrolled ? 'shadow-sm' : ''}`}
-    >
-      <div className="container-custom px-4 sm:px-6 py-3">
+    <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out">
+      <div
+  className={`container-custom mx-auto mt-3 sm:mt-4 px-6 lg:px-10 py-1.5 sm:py-2 h-16 max-w-6xl w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] rounded-full navbar-floating ${
+    scrolled ? 'navbar-floating-scrolled' : ''
+  }`}
+>
         <div className="flex items-center justify-between">
           {/* Logo with BETA Badge */}
           <button
@@ -190,9 +191,12 @@ export default function Navbar() {
                       }`}
                   >
                     {link.name}
-                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-gray-900 dark:bg-white 
-                                   transition-all duration-300 ease-out ${isActive ? 'w-full' : 'w-0 group-hover:w-full'
-                      }`} />
+                    <span
+                      className={`absolute -bottom-1 left-0 h-0.5 bg-gray-900 dark:bg-white transition-all duration-300 ease-out ${isActive
+                        ? 'w-full'
+                        : 'w-0 group-hover:w-full'
+                        }`}
+                    />
                   </Link>
                 </motion.div>
               )
@@ -222,7 +226,7 @@ export default function Navbar() {
                       transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                       className="absolute top-full right-0 mt-2 w-80 glass-card-elevated overflow-hidden"
                     >
-                      {betaLinks.map((link, index) => (
+                      {betaLinks.map((link) => (
                         <Link
                           key={link.name}
                           href={link.href}

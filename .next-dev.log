@@ -2,13 +2,3 @@
 > matrixo-website@1.0.0 dev
 > next dev
 
-  ▲ Next.js 14.2.35
-  - Local:        http://localhost:3002
-
- ✓ Starting...
- ✓ Ready in 1993ms
- ✓ Compiled /middleware in 218ms (72 modules)
- ○ Compiling / ...
- ✓ Compiled / in 8.5s (1368 modules)
- ✓ Compiled in 924ms (608 modules)
- GET / 200 in 9501ms

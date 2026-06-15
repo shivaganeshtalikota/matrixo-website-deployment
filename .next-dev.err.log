@@ -1,6 +1,13 @@
- ⚠ Port 3000 is in use, trying 3001 instead.
- ⚠ Port 3001 is in use, trying 3002 instead.
-[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
-  npx update-browserslist-db@latest
-  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at spawn (node:child_process:796:9)
+    at fork (node:child_process:174:10)
+    at F:\matrixo-website-deployment\node_modules\next\dist\cli\next-dev.js:213:45
+    at new Promise (<anonymous>)
+    at startServer (F:\matrixo-website-deployment\node_modules\next\dist\cli\next-dev.js:199:16)
+    at runDevServer (F:\matrixo-website-deployment\node_modules\next\dist\cli\next-dev.js:280:23)
+    at Module.nextDev (F:\matrixo-website-deployment\node_modules\next\dist\cli\next-dev.js:288:11) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'spawn'
+}
