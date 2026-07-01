@@ -92,7 +92,15 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const { signIn } = useEmployeeAuth()
+
+  useEffect(() => {
+    const updateViewport = () => setIsMobile(window.innerWidth < 768)
+    updateViewport()
+    window.addEventListener('resize', updateViewport)
+    return () => window.removeEventListener('resize', updateViewport)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -120,11 +128,11 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.25) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.15) 0%, transparent 50%), #050507' }}>
+    <div className="min-h-[100dvh] flex items-center justify-center p-3 sm:p-4 relative overflow-hidden" style={{ background: isMobile ? 'radial-gradient(ellipse at 20% 0%, rgba(124,58,237,0.18) 0%, transparent 52%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.14) 0%, transparent 42%), linear-gradient(180deg, #0f172a 0%, #111827 100%)' : 'radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.25) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.15) 0%, transparent 50%), #050507' }}>
       {/* iOS 26 ambient blobs */}
-      <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.6) 0%, transparent 70%)' }} />
-      <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.5) 0%, transparent 70%)' }} />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      <div className={`absolute top-[-20%] left-[-10%] ${isMobile ? 'w-[360px] h-[360px] opacity-18' : 'w-[600px] h-[600px] opacity-30'} rounded-full blur-3xl`} style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.6) 0%, transparent 70%)' }} />
+      <div className={`absolute bottom-[-10%] right-[-5%] ${isMobile ? 'w-[320px] h-[320px] opacity-12' : 'w-[500px] h-[500px] opacity-20'} rounded-full blur-3xl`} style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.5) 0%, transparent 70%)' }} />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -132,21 +140,21 @@ function LoginForm() {
         transition={{ duration: 0.5 }}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-block">
             <motion.img 
               src="/logos/logo-dark.png" 
               alt="matriXO" 
-              className="h-12 mx-auto mb-4"
+              className="h-10 sm:h-12 mx-auto mb-3 sm:mb-4"
               whileHover={{ scale: 1.05 }}
             />
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">Employee Portal</h1>
-          <p className="text-neutral-400">Access your attendance dashboard</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Employee Portal</h1>
+          <p className="text-sm sm:text-base text-neutral-300 sm:text-neutral-400">Access your attendance dashboard</p>
         </div>
 
-        <div className="rounded-3xl p-8 shadow-2xl" style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(40px) saturate(180%)', WebkitBackdropFilter: 'blur(40px) saturate(180%)', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 32px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)' }}>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="rounded-3xl p-5 sm:p-8 shadow-2xl" style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(40px) saturate(180%)', WebkitBackdropFilter: 'blur(40px) saturate(180%)', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 32px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)' }}>
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-neutral-300 flex items-center gap-2">
                 <FaIdCard className="text-primary-400" />
@@ -157,7 +165,7 @@ function LoginForm() {
                 value={employeeId}
                 onChange={(e) => setEmployeeId(e.target.value)}
                 placeholder="e.g., M-01 or M-A001"
-                className="w-full py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-white placeholder-neutral-400"
+                className="w-full py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-base text-white placeholder-neutral-400"
                 style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)' }}
               />
             </div>
@@ -173,7 +181,7 @@ function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-white placeholder-neutral-400 pr-12"
+                  className="w-full py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-base text-white placeholder-neutral-400 pr-12"
                   style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(10px)' }}
                 />
                 <button
@@ -1273,7 +1281,8 @@ function Dashboard() {
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('ep-theme')
-      return saved ? saved === 'dark' : true
+      if (saved) return saved === 'dark'
+      return window.matchMedia('(max-width: 768px)').matches ? false : true
     }
     return true
   })

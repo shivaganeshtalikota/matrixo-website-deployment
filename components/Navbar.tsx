@@ -413,9 +413,9 @@ export default function Navbar() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-              className="md:hidden overflow-hidden"
+              className="md:hidden overflow-hidden mt-3 rounded-[28px] border border-gray-200/70 dark:border-white/10 bg-white/95 dark:bg-neutral-950/92 backdrop-blur-3xl shadow-2xl shadow-black/10 dark:shadow-black/50"
             >
-              <div className="py-4 space-y-3">
+              <div className="py-4 px-2 space-y-2.5">
                 {navLinks.map((link) => {
                   // Check if active: exact match for home, startsWith for other routes
                   const isActive = link.href === '/'
@@ -427,8 +427,8 @@ export default function Navbar() {
                       href={link.href}
                       onClick={() => setIsOpen(false)}
                       className={`block px-4 py-2.5 rounded-2xl transition-all duration-200 ease-out ${isActive
-                        ? 'bg-blue-500/15 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 font-semibold backdrop-blur-sm'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-white/40 dark:hover:bg-white/[0.06]'
+                        ? 'bg-blue-500/18 dark:bg-blue-400/14 text-blue-700 dark:text-blue-300 font-semibold shadow-sm'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-black/5 dark:hover:bg-white/8'
                         }`}
                     >
                       {link.name}
@@ -441,8 +441,8 @@ export default function Navbar() {
                   <div className="border-t border-gray-200/30 dark:border-white/[0.06] pt-3 mt-3">
                     <button
                       onClick={() => setShowMobileFeaturesDropdown(!showMobileFeaturesDropdown)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 text-gray-700 dark:text-gray-300 
-                               font-bold hover:bg-white/40 dark:hover:bg-white/[0.06] rounded-2xl transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-2.5 text-gray-700 dark:text-gray-200 
+                               font-bold hover:bg-black/5 dark:hover:bg-white/8 rounded-2xl transition-colors"
                     >
                       <span>Features</span>
                       <FaChevronDown className={`text-xs transition-transform duration-200 ${showMobileFeaturesDropdown ? 'rotate-180' : ''}`} />
@@ -465,8 +465,8 @@ export default function Navbar() {
                                   setIsOpen(false)
                                   setShowMobileFeaturesDropdown(false)
                                 }}
-                                className="block px-4 py-3 bg-gray-500/10 dark:bg-white/[0.04] hover:bg-gray-500/15 dark:hover:bg-white/[0.08] 
-                                         rounded-2xl transition-colors backdrop-blur-sm"
+                                className="block px-4 py-3 bg-white/85 dark:bg-white/[0.06] hover:bg-white dark:hover:bg-white/[0.1] 
+                                         rounded-2xl transition-colors shadow-sm border border-gray-200/50 dark:border-white/10"
                               >
                                 <div className="font-bold text-gray-900 dark:text-white text-sm mb-1">
                                   {link.name}
@@ -487,7 +487,7 @@ export default function Navbar() {
                 <div className="border-t border-gray-200/30 dark:border-white/[0.06] pt-3 mt-3 space-y-2">
                   {user ? (
                     <>
-                      <div className="px-4 py-3 bg-white/50 dark:bg-white/[0.04] rounded-2xl flex items-center gap-3 backdrop-blur-sm">
+                      <div className="px-4 py-3 bg-white/85 dark:bg-white/[0.06] rounded-2xl flex items-center gap-3 shadow-sm border border-gray-200/40 dark:border-white/10">
                         {profile?.profilePhoto ? (
                           <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -510,7 +510,7 @@ export default function Navbar() {
                       <Link
                         href="/profile"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 glass-card-thin text-gray-700 dark:text-gray-300
+                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-white/85 dark:bg-white/[0.06] text-gray-700 dark:text-gray-200
                                  rounded-full font-semibold hover:scale-[1.02] transition-all duration-200"
                       >
                         <FaUser className="text-sm" />
@@ -522,7 +522,7 @@ export default function Navbar() {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 border-2 border-purple-500 text-purple-600 dark:text-purple-400 
+                          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 border-2 border-purple-500 bg-white/90 dark:bg-white/[0.06] text-purple-700 dark:text-purple-300 
                                    rounded-full font-semibold hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200"
                         >
                           <FaIdBadge className="text-sm" />
@@ -534,7 +534,7 @@ export default function Navbar() {
                           handleLogout()
                           setIsOpen(false)
                         }}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 border-2 border-red-500 text-red-600 dark:text-red-400 
+                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 border-2 border-red-500 bg-white/90 dark:bg-white/[0.06] text-red-600 dark:text-red-300 
                                  rounded-full font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
                       >
                         <FaSignOutAlt className="text-sm" />
@@ -545,7 +545,7 @@ export default function Navbar() {
                     <Link
                       href="/auth"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 border-2 border-purple-500 text-purple-600 dark:text-purple-400 
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 border-2 border-purple-500 bg-white/90 dark:bg-white/[0.06] text-purple-700 dark:text-purple-300 
                                rounded-full font-semibold hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200"
                     >
                       <FaUser className="text-sm" />
