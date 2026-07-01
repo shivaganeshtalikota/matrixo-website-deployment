@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { FaCalendar, FaMapMarkerAlt, FaTicketAlt, FaSearch, FaFilter, FaClock, FaStar } from 'react-icons/fa'
 import eventsData from '@/data/events.json'
 import { format, isFuture, isPast, compareDesc, compareAsc } from 'date-fns'
+import { useEventVisibility } from '@/lib/eventVisibility'
 
 type SortOption = 'upcoming' | 'latest' | 'all'
 
@@ -14,9 +15,13 @@ export default function EventsListing() {
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [sortOption, setSortOption] = useState<SortOption>('upcoming')
   const [searchTerm, setSearchTerm] = useState('')
+  const { visibilityMap, loading: visibilityLoading } = useEventVisibility()
 
   const filteredAndSortedEvents = useMemo(() => {
     let filtered = eventsData.filter(event => {
+      const isHidden = visibilityMap[event.slug]?.hidden === true
+      if (isHidden) return false
+
       const matchesCategory = categoryFilter === 'all' || event.category.toLowerCase() === categoryFilter.toLowerCase()
       const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             event.tagline.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -34,7 +39,7 @@ export default function EventsListing() {
     }
 
     return filtered
-  }, [categoryFilter, sortOption, searchTerm])
+  }, [categoryFilter, sortOption, searchTerm, visibilityMap])
 
   return (
     <div className="min-h-screen pt-5 pb-20">
@@ -127,6 +132,7 @@ export default function EventsListing() {
           {/* Results Count */}
           <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
             Showing <span className="font-semibold text-gray-900 dark:text-white">{filteredAndSortedEvents.length}</span> program{filteredAndSortedEvents.length !== 1 ? 's' : ''}
+            {visibilityLoading && <span className="ml-2 text-xs text-gray-500">Checking visibility…</span>}
           </div>
         </div>
       </section>

@@ -31,12 +31,14 @@ import {
   FaEnvelope,
   FaCheck,
   FaHome,
-  FaListAlt
+  FaListAlt,
+  FaEyeSlash
 } from 'react-icons/fa'
 import { useEmployeeAuth, EmployeeProfile, AttendanceRecord, ActivityLog, LeaveRequest, isAdminOrSubAdmin, formatDate, Holiday } from '@/lib/employeePortalContext'
 import { Card, Button, Input, Select, Badge, Avatar, Modal, Spinner, EmptyState, Tabs, ProfileInfo, ProfileInfoData, employeeToProfileData, getLocalProfileImage } from './ui'
 import { toast } from 'sonner'
 import { Timestamp } from 'firebase/firestore'
+import EventVisibilityManager from './EventVisibilityManager'
 
 // ============================================
 // LOCAL PROFILE IMAGE FALLBACKS (use centralized getLocalProfileImage from ui)
@@ -2036,6 +2038,7 @@ export function AdminPanel() {
         tabs={[
           { id: 'employees', label: 'All Employees' },
           { id: 'attendance', label: 'Recent Activity' },
+          { id: 'events', label: 'Event Visibility' },
           { id: 'leaveRequests', label: 'Leave Requests' }
         ]}
         activeTab={activeTab}
@@ -2186,6 +2189,8 @@ export function AdminPanel() {
         <div className="flex items-center justify-center py-12">
           <Spinner size="lg" />
         </div>
+      ) : activeTab === 'events' ? (
+        <EventVisibilityManager />
       ) : activeTab === 'attendance' ? (
         <Card padding="none">
           <AttendanceTable

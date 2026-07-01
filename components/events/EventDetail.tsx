@@ -5,13 +5,44 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import { FaCalendar, FaMapMarkerAlt, FaClock, FaUsers, FaTag } from 'react-icons/fa'
+import { FaCalendar, FaMapMarkerAlt, FaClock, FaUsers, FaTag, FaLock } from 'react-icons/fa'
 import EventRegistrationForm from './EventRegistrationForm'
 import Confetti from '../Confetti'
 import VibeCodeEventDetail from './VibeCodeEventDetail'
 import WrangleXEventDetail from './WrangleXEventDetail'
+import { useEventVisibility } from '@/lib/eventVisibility'
 
 export default function EventDetail({ event }: { event: any }) {
+  const { visibilityMap, loading } = useEventVisibility()
+  const isHidden = visibilityMap[event.slug]?.hidden === true
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-black px-4">
+        <div className="text-center space-y-3">
+          <div className="mx-auto h-12 w-12 rounded-full border-4 border-blue-500 border-t-transparent animate-spin" />
+          <p className="text-gray-700 dark:text-gray-300 font-medium">Checking event visibility…</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (isHidden) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-black px-4">
+        <div className="max-w-md w-full text-center glass-card p-8 sm:p-10 border border-gray-200/40 dark:border-white/[0.08]">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-500">
+            <FaLock className="text-2xl" />
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">Event hidden by admin</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+            This event has been hidden from the public event pages. If you’re an admin, manage it from the employee portal.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   // Check if this is a VibeCode event - render dedicated component
   if (event.isVibeCodeEvent) {
     return <VibeCodeEventDetail event={event} />

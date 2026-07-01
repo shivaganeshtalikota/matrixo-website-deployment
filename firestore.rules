@@ -226,6 +226,14 @@ service cloud.firestore {
     }
 
     // ================================================
+    // PUBLIC EVENT VISIBILITY COLLECTION
+    // ================================================
+    match /eventVisibility/{eventSlug} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // ================================================
     // CONTACT SUBMISSIONS COLLECTION
     // ================================================
     match /contactSubmissions/{submissionId} {
