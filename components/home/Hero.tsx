@@ -1,19 +1,27 @@
 'use client'
 
+import type { MouseEvent } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FaRocket, FaUniversity } from 'react-icons/fa'
+import HeadingHighlight from '@/components/HeadingHighlight'
 
 export default function Hero() {
+  const getEntryDirection = (event: MouseEvent<HTMLButtonElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = event.clientX - rect.left
+
+    return x < rect.width / 2 ? 'left' : 'right'
+  }
+
+  const handleCtaMouseEnter = (event: MouseEvent<HTMLButtonElement>) => {
+    event.currentTarget.dataset.direction = getEntryDirection(event)
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-transparent">
       {/* Subtle dot pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px]" />
-
-      {/* Ambient glow orbs */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-purple-400/10 dark:bg-purple-500/[0.07] rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-400/10 dark:bg-blue-500/[0.07] rounded-full blur-3xl" />
-      <div className="absolute top-2/3 left-1/3 w-64 h-64 bg-cyan-400/[0.06] dark:bg-cyan-500/[0.04] rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:28px_28px]" />
 
       {/* Very subtle top accent line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300/50 dark:via-white/[0.06] to-transparent" />
@@ -23,16 +31,16 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
         >
           {/* Badge */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="inline-block mb-6 px-6 py-2 glass-chip"
           >
-            <span className="text-gray-700 dark:text-gray-300 font-medium text-sm md:text-base">
+            <span className="text-slate-700 dark:text-gray-300 font-medium text-sm md:text-base">
               AI-Powered Career Growth Platform 🧬
             </span>
           </motion.div>
@@ -42,7 +50,7 @@ export default function Hero() {
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="relative inline-block mb-6"
           >
             <img
@@ -61,28 +69,28 @@ export default function Hero() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-xl md:text-3xl lg:text-4xl font-light text-gray-700 dark:text-gray-300 mb-4 max-w-4xl mx-auto"
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-xl md:text-3xl lg:text-4xl font-light text-slate-700 dark:text-gray-300 mb-4 max-w-4xl mx-auto"
           >
-            Where AI Meets Your Career Journey
+            <HeadingHighlight text="Where AI Meets Your Career Journey" />
           </motion.p>
 
           {/* Bold tagline */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mb-12"
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-2xl md:text-3xl font-display font-bold text-slate-800 dark:text-white mb-12"
           >
-            Map Your Skills. Grow Smarter. Prove Your Worth.
+            <HeadingHighlight text="Map Your Skills. Grow Smarter. Prove Your Worth." />
           </motion.p>
 
           {/* Description */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto"
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="text-lg md:text-xl text-slate-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto"
           >
             AI-driven skill analysis, personalized learning paths, blockchain-verified credentials,
             and AI-matched mentorship — everything you need to become industry-ready, in one platform.
@@ -92,14 +100,14 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.75 }}
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
             <Link href="/events">
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                onMouseEnter={handleCtaMouseEnter}
                 whileTap={{ scale: 0.98 }}
-                className="btn-primary flex items-center space-x-2"
+                className="hero-cta"
               >
                 <FaRocket />
                 <span>Explore Events</span>
@@ -108,20 +116,20 @@ export default function Hero() {
 
             <Link href="/services">
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                onMouseEnter={handleCtaMouseEnter}
                 whileTap={{ scale: 0.98 }}
-                className="btn-secondary flex items-center space-x-2"
+                className="hero-cta"
               >
                 <FaRocket />
-                <span>Explore Platform</span>
+                <span>Explore Features</span>
               </motion.button>
             </Link>
 
             <Link href="/contact">
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                onMouseEnter={handleCtaMouseEnter}
                 whileTap={{ scale: 0.98 }}
-                className="btn-secondary flex items-center space-x-2"
+                className="hero-cta"
               >
                 <FaUniversity />
                 <span>For Colleges</span>

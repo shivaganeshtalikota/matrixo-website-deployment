@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Hero from '@/components/home/Hero'
-import CTA from '@/components/home/CTA'
+import BetaFeaturesShowcase from '@/components/home/BetaFeaturesShowcase'
 import Stats from '@/components/home/Stats'
 
 export const metadata: Metadata = {
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <>
+    <div>
       <Hero />
       <Stats />
-      <CTA />
-    </>
+      <BetaFeaturesShowcase />
+    </div>
   )
 }

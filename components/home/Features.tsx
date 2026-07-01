@@ -2,56 +2,58 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { FaCode, FaTrophy, FaLaptopCode, FaBriefcase, FaRocket, FaUsers } from 'react-icons/fa'
+import HeadingHighlight from '@/components/HeadingHighlight'
+import {
+  HiOutlineAcademicCap,
+  HiOutlineBriefcase,
+  HiOutlineCodeBracketSquare,
+  HiOutlineRocketLaunch,
+  HiOutlineTrophy,
+  HiOutlineUserGroup,
+} from 'react-icons/hi2'
 
 const features = [
   {
-    icon: FaCode,
+    icon: HiOutlineCodeBracketSquare,
     title: 'Technical Workshops',
     description: 'Hands-on coding workshops on cutting-edge technologies taught by industry experts. Web development, AI/ML, cloud, and more.',
     href: '/services',
-    gradient: 'from-purple-500 to-fuchsia-500',
-    hasContactButton: true,
+    iconClassName: 'text-[#5B5BF6] dark:text-slate-200',
   },
   {
-    icon: FaTrophy,
+    icon: HiOutlineTrophy,
     title: 'Hackathons',
     description: 'Competitive coding events where students build real projects and solve industry challenges with prizes and recognition.',
     href: '/events',
-    gradient: 'from-blue-500 to-cyan-500',
-    hasContactButton: true,
+    iconClassName: 'text-[#D97706] dark:text-slate-200',
   },
   {
-    icon: FaLaptopCode,
+    icon: HiOutlineAcademicCap,
     title: 'Bootcamps',
     description: 'Intensive multi-week training programs covering full-stack development, data science, cybersecurity, and more.',
     href: '/services',
-    gradient: 'from-amber-500 to-orange-500',
-    hasContactButton: true,
+    iconClassName: 'text-[#4F46E5] dark:text-slate-200',
   },
   {
-    icon: FaBriefcase,
+    icon: HiOutlineBriefcase,
     title: 'Career Programs',
     description: 'Placement preparation, resume building, mock interviews, and DSA training to help you land your dream job.',
     href: '/services',
-    gradient: 'from-green-500 to-emerald-500',
-    hasContactButton: false,
+    iconClassName: 'text-[#2563EB] dark:text-slate-200',
   },
   {
-    icon: FaRocket,
+    icon: HiOutlineRocketLaunch,
     title: 'Campus Events',
     description: 'Large-scale technical events, seminars, and conferences hosted at educational institutions across India.',
     href: '/events',
-    gradient: 'from-red-500 to-rose-500',
-    hasContactButton: false,
+    iconClassName: 'text-[#059669] dark:text-slate-200',
   },
   {
-    icon: FaUsers,
+    icon: HiOutlineUserGroup,
     title: 'Corporate Collaboration',
     description: 'Partner with us to train students, host events, run internship drives, and build a talent pipeline for your organization.',
     href: '/contact',
-    gradient: 'from-indigo-500 to-violet-500',
-    hasContactButton: false,
+    iconClassName: 'text-[#475569] dark:text-slate-200',
   },
 ]
 
@@ -66,7 +68,7 @@ export default function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-            What We <span className="gradient-text">Offer</span>
+            <HeadingHighlight text="What We Offer" />
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Comprehensive technical training programs designed to build
@@ -76,39 +78,41 @@ export default function Features() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -10 }}
-              className="glass-card p-8 hover-lift hover-glow h-full flex flex-col"
-            >
-              <Link href={feature.href} className="flex-1">
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                  className={`w-14 h-14 bg-gradient-to-br ${feature.gradient} rounded-xl flex items-center justify-center mb-6 text-white shadow-lg`}
+            <Link key={feature.title} href={feature.href} className="block h-full">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                className="group h-full cursor-pointer"
+              >
+                <div
+                  className="feature-card relative flex h-full flex-col overflow-hidden p-8"
                 >
-                  <feature.icon size={22} />
-                </motion.div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {feature.description}
-                </p>
-              </Link>
-              {feature.hasContactButton && (
-                <Link 
-                  href={`/contact?subject=${encodeURIComponent(feature.title)}`}
-                  className="mt-6 btn-primary text-center"
-                >
-                  Contact Us
-                </Link>
-              )}
-            </motion.div>
+                  <div className="relative flex h-full flex-col">
+                    <div className="feature-card-icon mb-6">
+                      <feature.icon
+                        className={`h-7 w-7 ${feature.iconClassName}`}
+                      />
+                    </div>
+
+                    <h3 className="relative mb-3 text-xl font-bold text-slate-800 dark:text-white">
+                      <HeadingHighlight text={feature.title} />
+                    </h3>
+                    <p className="relative text-[15px] leading-7 text-gray-600 dark:text-gray-400">
+                      {feature.description}
+                    </p>
+
+                    <div className="relative mt-6 flex items-center text-sm font-semibold text-slate-700 dark:text-gray-300">
+                      <span>Learn more</span>
+                      <span className="ml-2 transition-transform duration-300 ease-in-out group-hover:translate-x-1">
+                        →
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </div>

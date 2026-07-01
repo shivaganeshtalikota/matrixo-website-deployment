@@ -1,13 +1,13 @@
 import Link from 'next/link'
-import { FaLinkedin, FaInstagram, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa'
+import { FaLinkedin, FaInstagram, FaEnvelope } from 'react-icons/fa'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-white/50 dark:bg-white/[0.02] backdrop-blur-xl text-gray-700 dark:text-gray-300 pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 border-t border-gray-200/30 dark:border-white/[0.06]">
-      <div className="container-custom px-4 sm:px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-10 sm:mb-12">
+    <footer className="mx-4 md:mx-8 my-6 px-6 py-10 rounded-2xl backdrop-blur-lg bg-white/30 dark:bg-black/30 border border-white/20 dark:border-white/10 shadow-xl text-gray-700 dark:text-gray-300">
+      <div className="container-custom">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10 sm:mb-12 items-start">
           {/* Brand */}
           <div>
             <div className="relative h-10 w-auto mb-4">
@@ -24,19 +24,9 @@ export default function Footer() {
                 className="h-10 w-auto rounded-lg absolute top-0 left-0 hidden dark:block"
               />
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-xs">
               Technical workshops, hackathons, and career-focused events for students.
             </p>
-            <div className="flex space-x-4">
-              <a href="https://linkedin.com/company/matrixo" target="_blank" rel="noopener noreferrer"
-                 className="hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-                <FaLinkedin size={20} />
-              </a>
-              <a href="https://www.instagram.com/matrixo_in?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
-                 className="hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-                <FaInstagram size={20} />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -47,6 +37,7 @@ export default function Footer() {
               <li><Link href="/events" className="hover:text-gray-900 dark:hover:text-white transition-colors">Events</Link></li>
               <li><Link href="/services" className="hover:text-gray-900 dark:hover:text-white transition-colors">Services</Link></li>
               <li><Link href="/team" className="hover:text-gray-900 dark:hover:text-white transition-colors">Team</Link></li>
+              <li><Link href="/careers" className="hover:text-gray-900 dark:hover:text-white transition-colors">Careers</Link></li>
               <li><Link href="/blog" className="hover:text-gray-900 dark:hover:text-white transition-colors">Blog</Link></li>
             </ul>
           </div>
@@ -62,18 +53,39 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Socials */}
           <div>
-            <h4 className="text-gray-900 dark:text-white font-semibold mb-4">Contact</h4>
-            <ul className="space-y-3">
-              <li className="flex items-start space-x-2">
-                <FaMapMarkerAlt className="mt-1 flex-shrink-0 text-gray-500 dark:text-gray-400" />
-                <span>KPRISE Incubation Center<br />KPRES, Ghanpur<br />Hyderabad, Telangana - 500088</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <FaEnvelope className="flex-shrink-0 text-gray-500 dark:text-gray-400" />
-                <a href="mailto:hello@matrixo.in" className="hover:text-gray-900 dark:hover:text-white transition-colors">
+            <h4 className="text-gray-900 dark:text-white font-semibold mb-4">Socials</h4>
+            <ul className="space-y-3 text-gray-400">
+              <li>
+                <a
+                  href="mailto:hello@matrixo.in"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <FaEnvelope className="text-gray-500 dark:text-gray-400" />
                   hello@matrixo.in
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/matrixo_in?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <FaInstagram className="text-gray-500 dark:text-gray-400" />
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://linkedin.com/company/matrixo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  <FaLinkedin className="text-gray-500 dark:text-gray-400" />
+                  LinkedIn
                 </a>
               </li>
             </ul>

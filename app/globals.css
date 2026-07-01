@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,6 +66,14 @@
     scroll-behavior: smooth;
   }
 
+  #explore-features {
+    scroll-margin-top: 140px;
+  }
+
+  #feature-card {
+    scroll-margin-top: 100px;
+  }
+
   body {
     @apply bg-gray-50 dark:bg-[#0a0a12] text-gray-900 dark:text-gray-100;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -86,9 +92,34 @@
 }
 
 @layer components {
-  /* iOS 26 Liquid Glass gradient text */
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400;
+  /* Premium navy-to-royal gradient text */
+  .gradient-text,
+  .premium-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      90deg,
+      #0f172a 0%,
+      #1e3a8a 55%,
+      #2563eb 100%
+    );
+  }
+
+  .dark .gradient-text,
+  .dark .premium-gradient {
+    background-image: linear-gradient(
+      90deg,
+      #1e3a8a 0%,
+      #2563eb 58%,
+      #60a5fa 100%
+    );
+  }
+
+  .heading-solid {
+    color: #0f172a;
+  }
+
+  .dark .heading-solid {
+    color: #ffffff;
   }
 
   /* iOS 26 Liquid Glass Card — the core glass material */
@@ -99,6 +130,85 @@
     border: 1px solid var(--glass-border);
     border-radius: var(--glass-radius);
     box-shadow: var(--glass-shadow);
+  }
+
+  /* Premium feature/service card system */
+  .feature-card {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    color: #1e293b;
+    transition: all 0.35s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(1, 69, 242, 0.12);
+  }
+
+  .dark .feature-card {
+    background: linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.88),
+      rgba(17, 24, 39, 0.92)
+    );
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(59, 130, 246, 0.18);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.02),
+      0 20px 60px rgba(1, 69, 242, 0.18);
+    color: #f8fafc;
+  }
+
+  .dark .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 30px rgba(1, 69, 242, 0.22),
+      0 20px 60px rgba(1, 69, 242, 0.18);
+  }
+
+  .feature-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.35s ease;
+  }
+
+  .dark .feature-card-icon {
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    box-shadow: 0 0 20px rgba(1, 69, 242, 0.08);
+  }
+
+  .dark .feature-card-icon svg {
+    filter: none;
+  }
+
+  .feature-card-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feature-card-icon svg * {
+    vector-effect: non-scaling-stroke;
   }
 
   .glass-card-thick {
@@ -181,6 +291,90 @@
     transform: translateY(-1px);
   }
 
+  .nav-link {
+    @apply font-medium whitespace-nowrap relative inline-flex items-center pb-1 transition-colors duration-300 ease-out text-gray-500 dark:text-gray-400;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #5f84a2, #91aec4);
+    transform: translateX(-50%);
+    transition: width 0.35s ease;
+  }
+
+  .nav-link:hover {
+    @apply text-gray-900 dark:text-white;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  .nav-link-active {
+    @apply text-gray-900 dark:text-white;
+  }
+
+  .nav-link-active::after {
+    width: 100%;
+  }
+
+  .hero-cta {
+    @apply px-5 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 font-semibold text-sm sm:text-base;
+    --cta-translate-x: -100%;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 9999px;
+    box-shadow: var(--glass-shadow);
+    @apply text-gray-800 dark:text-gray-200;
+    transition: transform 0.6s ease, box-shadow 0.6s ease, color 0.45s ease, border-color 0.6s ease;
+  }
+
+  .hero-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(270deg, #194569, #5f84a2, #91aec4, #5f84a2, #194569);
+    background-size: 300% 300%;
+    animation: gradientFlow 12s ease infinite;
+    opacity: 0;
+    transform: translate3d(var(--cta-translate-x), 0, 0);
+    transition: opacity 0.4s ease, transform 0.6s ease;
+    z-index: 0;
+  }
+
+  .hero-cta[data-direction="right"] {
+    --cta-translate-x: 100%;
+  }
+
+  .hero-cta:hover::before {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .hero-cta:hover {
+    transform: scale(1.03);
+    box-shadow: var(--glass-shadow-elevated);
+    color: #f8fafc;
+  }
+
+  .hero-cta > * {
+    position: relative;
+    z-index: 1;
+  }
+
   /* iOS 26 Liquid Glass Input fields */
   .glass-input {
     background: var(--glass-bg-thin);
@@ -195,6 +389,28 @@
     border-color: rgba(59, 130, 246, 0.4);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), var(--glass-specular);
     outline: none;
+  }
+
+  /* Dark mode styling for select dropdowns and option elements */
+  .dark select.glass-input {
+    color-scheme: dark;
+  }
+  .dark select.glass-input option {
+    background-color: #111827;
+    color: #f3f4f6;
+  }
+  select.glass-input option {
+    background-color: #ffffff;
+    color: #111827;
+  }
+
+  /* Global dark-mode dropdown option styling (covers all selects, not just .glass-input) */
+  .dark select option {
+    background-color: #111827;
+    color: #f3f4f6;
+  }
+  .dark select {
+    color-scheme: dark;
   }
 
   /* iOS 26 Liquid Glass Hero section */
@@ -216,6 +432,95 @@
     );
   }
 
+  /* Ambient background system (light mode focused) */
+  .site-ambient,
+  .landing-ambient {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(circle at top center,
+        rgba(1, 69, 242, 0.18) 0%,
+        rgba(1, 69, 242, 0.08) 25%,
+        transparent 60%),
+      linear-gradient(
+        180deg,
+        #f8f6f0 0%,
+        #f4f7ff 100%
+      );
+    background-color: #f8f6f0;
+    overflow: hidden;
+  }
+
+  .site-ambient::before,
+  .landing-ambient::before {
+    content: "";
+    position: absolute;
+    top: -210px;
+    left: 50%;
+    width: 1020px;
+    height: 600px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle at center,
+      rgba(1, 69, 242, 0.28) 0%,
+      rgba(1, 69, 242, 0.12) 38%,
+      rgba(248, 246, 240, 0.32) 62%,
+      transparent 75%);
+    filter: blur(150px);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .site-ambient > *,
+  .landing-ambient > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dark .site-ambient,
+  .dark .landing-ambient {
+    background:
+      radial-gradient(circle at top center,
+        rgba(59, 130, 246, 0.18) 0%,
+        rgba(59, 130, 246, 0.08) 30%,
+        transparent 65%),
+      linear-gradient(180deg, #0a0a12 0%, #0f1322 100%);
+    background-color: #0a0a12;
+  }
+
+  .dark .site-ambient::before,
+  .dark .landing-ambient::before {
+    background: radial-gradient(circle at center,
+      rgba(59, 130, 246, 0.28) 0%,
+      rgba(59, 130, 246, 0.14) 35%,
+      rgba(12, 12, 18, 0.2) 60%,
+      transparent 75%);
+    opacity: 0.38;
+  }
+
+  /* Floating navbar surface */
+  .navbar-floating {
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  }
+
+  .navbar-floating-scrolled {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .navbar-floating {
+    background: rgba(12, 12, 18, 0.7);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .dark .navbar-floating-scrolled {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  }
+
   /* iOS 26 Chip / Tag */
   .glass-chip {
     background: var(--glass-bg-thin);
@@ -224,6 +529,20 @@
     border: 1px solid var(--glass-border-subtle);
     border-radius: 9999px;
     box-shadow: var(--glass-specular);
+  }
+
+  /* Features Dropdown Glassmorphism
+     Background is controlled inline in components/Navbar.tsx, so this
+     class only applies blur enhancements when supported. */
+  @supports (backdrop-filter: blur(30px)) or (-webkit-backdrop-filter: blur(30px)) {
+    .features-dropdown-glass {
+      backdrop-filter: blur(30px) saturate(200%);
+      -webkit-backdrop-filter: blur(30px) saturate(200%);
+    }
+    .dark .features-dropdown-glass {
+      backdrop-filter: blur(30px) saturate(200%);
+      -webkit-backdrop-filter: blur(30px) saturate(200%);
+    }
   }
 
   .section-padding {
@@ -237,11 +556,11 @@
 
 @layer utilities {
   .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: none;
   }
 
   .text-shadow-lg {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
   }
 
   .hover-lift {
@@ -256,7 +575,7 @@
     @apply transition-all duration-300;
   }
   .hover-glow:hover {
-    box-shadow: 0 8px 40px rgba(59, 130, 246, 0.08), 0 2px 12px rgba(139, 92, 246, 0.06), var(--glass-specular);
+    box-shadow: none;
   }
 
   .animate-pulse-slow {
@@ -317,6 +636,18 @@
   }
 
   /* Wave animation for gradient movement */
+  @keyframes gradientFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
   @keyframes wave {
     0% {
       transform: translateX(-100%);
@@ -403,12 +734,50 @@
   @apply bg-gray-500 dark:bg-gray-500;
 }
 
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 255, 0.4) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 255, 0.4);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 255, 0.7);
+}
+
 /* Hide scrollbars globally for employee portal */
 .no-scrollbar {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
 .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Explore Features carousel layout */
+.carousel-section {
+  overflow: visible;
+}
+
+.right-panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.right-panel::-webkit-scrollbar {
   display: none;
 }
 
@@ -1158,22 +1527,22 @@ html {
    ============================================ */
 @media print {
   /* Hide navigation, footer, and download buttons */
-  nav, footer, .print\\:hidden,
+  nav, footer, .print\:hidden,
   [class*="BetaBanner"],
   [class*="Navbar"],
   [class*="Footer"] {
     display: none !important;
   }
 
-  /* Reset backgrounds for printing */
+  /* Reset backgrounds for printing - use white for readability */
   body {
-    background: #0a0a0f !important;
+    background: #ffffff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
 
-  /* Ensure gradients and colors print */
+  /* Force printing colors */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -1184,6 +1553,35 @@ html {
     display: none !important;
   }
 
+  /* Override dark backgrounds for print */
+  .dark .min-h-screen,
+  .min-h-screen {
+    background: #ffffff !important;
+  }
+
+  /* Replace glass/backdrop-filter cards with solid backgrounds for print */
+  [style*="backdrop-filter"],
+  [style*="backdropFilter"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  }
+
+  /* Ensure text is dark for print */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark p, .dark span, .dark div {
+    color: #111827 !important;
+  }
+
+  .dark .text-white {
+    color: #111827 !important;
+  }
+
+  .dark .text-gray-300, .dark .text-gray-400, .dark .text-gray-500 {
+    color: #4b5563 !important;
+  }
+
   /* Adjust page margins */
   @page {
     margin: 0.5in;
@@ -1191,30 +1589,43 @@ html {
   }
 
   /* Prevent page breaks inside profile sections */
-  .rounded-2xl, .rounded-3xl {
+  .rounded-2xl,
+  .rounded-3xl,
+  .rounded-\[24px\],
+  .rounded-\[28px\],
+  .rounded-t-\[28px\] {
     break-inside: avoid;
     page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* Ensure progress bars and skill bars are visible */
+  .bg-gradient-to-r {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Make info chips visible */
+  .rounded-xl[style] {
+    background: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+  }
+
+  /* Stat cards should have light background */
+  .hover-lift {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
   }
 }
 
-.navbar-floating {
-  background: var(--glass-bg-thick);
-  backdrop-filter: var(--glass-blur-heavy);
-  -webkit-backdrop-filter: var(--glass-blur-heavy);
-
-  border: 1px solid var(--glass-border);
-
-  box-shadow:
-    var(--glass-shadow-float),
-    0 0 30px rgba(59, 130, 246, 0.12);
-
-  transition: all 0.3s ease;
+/* Special class added by ProfileDownload before printing */
+body.printing-profile {
+  /* Helps browser prepare for print mode */
 }
 
-.navbar-floating-scrolled {
-  transform: translateY(-2px);
-
-  box-shadow:
-    var(--glass-shadow-float),
-    0 0 40px rgba(59, 130, 246, 0.18);
+body.printing-profile .min-h-screen {
+  background: #ffffff !important;
 }

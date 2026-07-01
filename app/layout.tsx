@@ -6,20 +6,21 @@ import Footer from '@/components/Footer'
 import { AuthProvider } from '@/lib/AuthContext'
 import { ProfileProvider } from '@/lib/ProfileContext'
 import ProfileGuard from '@/components/ProfileGuard'
+import ThemeProvider from '@/components/ThemeProvider'
 import { Toaster } from 'sonner'
 import Script from 'next/script'
-import config from '@/lib/config'
 import { headers } from 'next/headers'
-import ThemeProvider from '@/components/ThemeProvider'
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 })
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   variable: '--font-space-grotesk',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -93,16 +94,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Check if we're on employee portal route
   const headersList = await headers()
-  const pathname = headersList.get('x-pathname') || ''
+  const initialPathname = headersList.get('x-pathname') || ''
   const host = headersList.get('host') || ''
-  const isEmployeePortal = host.includes('team-auth') || pathname.includes('/employee-portal')
+  const isEmployeePortal = host.includes('team-auth') || initialPathname.includes('/employee-portal')
 
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
-        <meta charSet="UTF-8" />
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
 
@@ -115,12 +114,13 @@ export default async function RootLayout({
         {/* Theme color for PWA */}
         <meta name="theme-color" content="#0a0a0a" />
 
-        {/* Dark Mode Script */}
+        {/* Dark Mode Script - Default to DARK mode */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                // Apply dark mode unless light mode was explicitly saved
+                if (localStorage.getItem('theme') !== 'light') {
                   document.documentElement.classList.add('dark')
                 } else {
                   document.documentElement.classList.remove('dark')
@@ -134,9 +134,9 @@ export default async function RootLayout({
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-KFF7KV3Z11"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
-        <Script id="google-analytics" strategy="lazyOnload">
+        <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -145,11 +145,11 @@ export default async function RootLayout({
           `}
         </Script>
 
-        <ThemeProvider>
+        <ThemeProvider defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
             <ProfileProvider>
               {!isEmployeePortal && <Navbar />}
-              <main className={isEmployeePortal ? "min-h-screen overflow-x-hidden" : "min-h-screen pt-0 overflow-x-hidden"}>
+              <main className={isEmployeePortal ? 'min-h-screen overflow-x-hidden' : 'min-h-screen pt-24 overflow-x-hidden site-ambient'}>
                 {isEmployeePortal ? children : <ProfileGuard>{children}</ProfileGuard>}
               </main>
               {!isEmployeePortal && <Footer />}

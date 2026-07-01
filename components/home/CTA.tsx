@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FaArrowRight, FaCalendar } from 'react-icons/fa'
+import HeadingHighlight from '@/components/HeadingHighlight'
 
 export default function CTA() {
   return (
@@ -20,8 +21,7 @@ export default function CTA() {
           className="text-center max-w-4xl mx-auto"
         >
           <h2 className="text-4xl md:text-6xl font-display font-bold mb-6 text-gray-900 dark:text-white">
-            Ready to Build
-            <span className="gradient-text block mt-2">Your Tech Career?</span>
+            <HeadingHighlight text="Ready to Build Your Tech Career?" highlightWords={3} />
           </h2>
 
           <p className="text-xl text-gray-700 dark:text-gray-300 mb-12">

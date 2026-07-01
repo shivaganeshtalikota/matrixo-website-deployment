@@ -6,8 +6,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { FaCalendar, FaMapMarkerAlt, FaTicketAlt, FaSearch, FaFilter, FaClock, FaStar } from 'react-icons/fa'
 import eventsData from '@/data/events.json'
-import { format, isFuture, isPast, compareDesc, compareAsc } from 'date-fns'
+import HeadingHighlight from '@/components/HeadingHighlight'
 import { useEventVisibility } from '@/lib/eventVisibility'
+import { format, isFuture, isPast, compareDesc, compareAsc } from 'date-fns'
 
 type SortOption = 'upcoming' | 'latest' | 'all'
 
@@ -41,6 +42,9 @@ export default function EventsListing() {
     return filtered
   }, [categoryFilter, sortOption, searchTerm, visibilityMap])
 
+  const activeFilterClass =
+    'bg-[#4B5563] text-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] hover:bg-[#2F3542] dark:bg-white dark:text-[#111111] dark:shadow-[0_2px_8px_rgba(255,255,255,0.08)] dark:hover:bg-[#F3F3F3]'
+
   return (
     <div className="min-h-screen pt-5 pb-20">
       {/* Header */}
@@ -54,7 +58,7 @@ export default function EventsListing() {
             className="text-center max-w-4xl mx-auto"
           >
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-4 sm:mb-6">
-              Explore <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">Programs</span>
+              <HeadingHighlight text="Explore Programs" />
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300">
               Workshops, hackathons, bootcamps, and technical events designed to accelerate your tech career
@@ -91,9 +95,9 @@ export default function EventsListing() {
                 <button
                   key={option.value}
                   onClick={() => setSortOption(option.value as SortOption)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] flex items-center gap-1.5 ${
                     sortOption === option.value
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                      ? activeFilterClass
                       : 'glass-chip text-gray-700 dark:text-gray-300'
                   }`}
                 >
@@ -117,9 +121,9 @@ export default function EventsListing() {
                 <button
                   key={cat.value}
                   onClick={() => setCategoryFilter(cat.value)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
                     categoryFilter === cat.value
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                      ? activeFilterClass
                       : 'glass-chip text-gray-700 dark:text-gray-300'
                   }`}
                 >
@@ -143,16 +147,16 @@ export default function EventsListing() {
           {filteredAndSortedEvents.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-xl text-gray-500">No programs found matching your criteria</p>
-              <button
-                onClick={() => {
-                  setCategoryFilter('all')
-                  setSortOption('all')
-                  setSearchTerm('')
-                }}
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full hover:shadow-lg transition-all duration-200"
-              >
-                Clear All Filters
-              </button>
+                <button
+                  onClick={() => {
+                    setCategoryFilter('all')
+                    setSortOption('all')
+                    setSearchTerm('')
+                  }}
+                  className={`mt-4 px-6 py-3 rounded-full transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${activeFilterClass}`}
+                >
+                  Clear All Filters
+                </button>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
@@ -185,7 +189,7 @@ export default function EventsListing() {
                               className="object-cover object-center"
                             />
                           ) : (
-                            <div className="absolute inset-0 flex items-center justify-center text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+                            <div className="absolute inset-0 flex items-center justify-center text-6xl font-bold gradient-text">
                               {event.title.charAt(0)}
                             </div>
                           )}
@@ -211,10 +215,8 @@ export default function EventsListing() {
 
                         {/* Content */}
                         <div className="p-4 sm:p-5 md:p-6 flex-1 flex flex-col">
-                          <h3 className="text-xl sm:text-2xl font-bold mb-2 text-gray-900 dark:text-white group-hover:bg-clip-text 
-                                       group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 
-                                       group-hover:to-purple-600 transition-all duration-200 line-clamp-2">
-                            {event.title}
+                          <h3 className="text-xl sm:text-2xl font-bold mb-2 text-gray-900 dark:text-white transition-all duration-200 line-clamp-2">
+                            <HeadingHighlight text={event.title} />
                           </h3>
                           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 line-clamp-2">
                             {event.tagline}
@@ -224,7 +226,7 @@ export default function EventsListing() {
                           <div className="space-y-2 mb-4 flex-1">
                             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                               <FaCalendar className="mr-2 text-blue-500 flex-shrink-0" />
-                              {format(new Date(event.date), 'MMM dd, yyyy \u2022 hh:mm a')}
+                              {format(new Date(event.date), 'MMM dd, yyyy • hh:mm a')}
                             </div>
                             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                               <FaMapMarkerAlt className="mr-2 text-purple-600 flex-shrink-0" />
@@ -238,7 +240,7 @@ export default function EventsListing() {
                               <div className="w-full">
                                 <div className="bg-gradient-to-r from-red-50 via-orange-50 to-yellow-50 dark:from-red-900/20 dark:via-orange-900/20 dark:to-yellow-900/20 border-2 border-red-500 rounded-xl p-4 text-center">
                                   <span className="text-3xl mb-2 block">🎉</span>
-                                  <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+                                  <span className="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400">
                                     SOLD OUT!
                                   </span>
                                   <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">

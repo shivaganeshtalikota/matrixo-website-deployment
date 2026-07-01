@@ -2,7 +2,17 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { FaHome, FaRocket, FaCompass, FaBug } from 'react-icons/fa'
+import { FaHome, FaRocket, FaBug } from 'react-icons/fa'
+import HeadingHighlight from '@/components/HeadingHighlight'
+
+const floatingElements = [
+  { left: 12, duration: 3.4, icon: '🚀' },
+  { left: 28, duration: 4.1, icon: '💻' },
+  { left: 44, duration: 3.7, icon: '🎯' },
+  { left: 60, duration: 4.6, icon: '🚀' },
+  { left: 76, duration: 3.9, icon: '💻' },
+  { left: 88, duration: 4.3, icon: '🎯' },
+]
 
 export default function NotFound() {
   return (
@@ -20,9 +30,7 @@ export default function NotFound() {
           
           {/* 404 Text */}
           <h1 className="relative text-[150px] md:text-[250px] font-black leading-none">
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              404
-            </span>
+            <HeadingHighlight text="404" />
           </h1>
         </motion.div>
 
@@ -34,7 +42,7 @@ export default function NotFound() {
           className="mb-8 space-y-4"
         >
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Oops! Page Not Found
+            <HeadingHighlight text="Oops! Page Not Found" />
           </h2>
           
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -53,34 +61,28 @@ export default function NotFound() {
 
         {/* Floating Elements Animation */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(6)].map((_, i) => {
-            // Calculate random values once during render
-            const randomX = Math.random() * 100;
-            const randomDuration = 3 + Math.random() * 2;
-            
-            return (
-              <motion.div
-                key={i}
-                className="absolute text-4xl md:text-6xl"
-                style={{ left: `${randomX}%` }}
-                initial={{ 
-                  y: '100vh',
-                  opacity: 0.1
-                }}
-                animate={{ 
-                  y: [null, '-20vh'],
-                  opacity: [0.1, 0.3, 0.1]
-                }}
-                transition={{ 
-                  duration: randomDuration,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              >
-                {i % 3 === 0 ? '🚀' : i % 3 === 1 ? '💻' : '🎯'}
-              </motion.div>
-            );
-          })}
+          {floatingElements.map((element, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-4xl md:text-6xl"
+              style={{ left: `${element.left}%` }}
+              initial={{
+                y: '100vh',
+                opacity: 0.1
+              }}
+              animate={{
+                y: ['100vh', '-20vh'],
+                opacity: [0.1, 0.3, 0.1]
+              }}
+              transition={{
+                duration: element.duration,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            >
+              {element.icon}
+            </motion.div>
+          ))}
         </div>
 
         {/* Action Buttons */}
@@ -90,18 +92,14 @@ export default function NotFound() {
           transition={{ delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center relative z-10"
         >
-          <Link href="/">
-            <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3">
-              <FaHome className="text-xl group-hover:rotate-12 transition-transform" />
-              <span>Back to Home</span>
-            </button>
+          <Link href="/" className="group px-8 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3">
+            <FaHome className="text-xl group-hover:rotate-12 transition-transform" />
+            <span>Back to Home</span>
           </Link>
 
-          <Link href="/events">
-            <button className="group px-8 py-4 glass-card text-gray-900 dark:text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3">
-              <FaRocket className="text-xl text-purple-600 group-hover:translate-y-[-4px] transition-transform" />
-              <span>Explore Events</span>
-            </button>
+          <Link href="/events" className="group px-8 py-4 glass-card text-gray-900 dark:text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3">
+            <FaRocket className="text-xl text-purple-600 group-hover:translate-y-[-4px] transition-transform" />
+            <span>Explore Events</span>
           </Link>
         </motion.div>
 
@@ -141,19 +139,25 @@ export default function NotFound() {
         >
           <div className="glass-card p-6 hover-lift">
             <div className="text-3xl mb-3">🏠</div>
-            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Go Home</h3>
+            <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+              <HeadingHighlight text="Go Home" />
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Start fresh from the homepage</p>
           </div>
 
           <div className="glass-card p-6 hover-lift">
             <div className="text-3xl mb-3">🎯</div>
-            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Find Events</h3>
+            <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+              <HeadingHighlight text="Find Events" />
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Discover amazing workshops</p>
           </div>
 
           <div className="glass-card p-6 hover-lift">
             <div className="text-3xl mb-3">📧</div>
-            <h3 className="font-bold text-gray-900 dark:text-white mb-2">Get Support</h3>
+            <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+              <HeadingHighlight text="Get Support" />
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">We're here to help you</p>
           </div>
         </motion.div>
