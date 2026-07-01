@@ -348,6 +348,7 @@ function TopNavbar({
       className="fixed top-0 left-0 right-0 overflow-x-hidden"
       style={{
         zIndex: 9000,
+        paddingTop: 'env(safe-area-inset-top)',
         background: darkMode
           ? 'rgba(10,10,15,0.65)'
           : 'rgba(255,255,255,0.72)',
@@ -364,11 +365,11 @@ function TopNavbar({
       {/* Gradient accent line */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-600 via-primary-400 to-primary-600" />
       
-      <div className="max-w-[100vw] px-4 md:px-6 mx-auto">
-        <div className="flex items-center justify-between h-16 gap-2 md:gap-4 overflow-hidden">
+      <div className="max-w-[100vw] px-3 sm:px-4 md:px-6 mx-auto">
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-1.5 sm:gap-2 md:gap-4 overflow-hidden">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
-            <img src={darkMode ? "/logos/logo-dark.png" : "/logos/logo-light.png"} onError={(e) => { (e.target as HTMLImageElement).src = '/logos/logo-dark.png' }} alt="matriXO" className="h-8 md:h-9 group-hover:scale-105 transition-transform" />
+            <img src={darkMode ? "/logos/logo-dark.png" : "/logos/logo-light.png"} onError={(e) => { (e.target as HTMLImageElement).src = '/logos/logo-dark.png' }} alt="matriXO" className="h-7 sm:h-8 md:h-9 w-auto group-hover:scale-105 transition-transform" />
             <div className="hidden sm:flex flex-col">
               <span className={`font-bold text-sm leading-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}>Employee</span>
               <span className="text-primary-500 text-xs font-medium leading-tight">Portal</span>
@@ -439,7 +440,7 @@ function TopNavbar({
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Notification Bell */}
             <NotificationBell onNavigate={setActiveTab} darkMode={darkMode} />
 
@@ -448,7 +449,7 @@ function TopNavbar({
               onClick={toggleTheme}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
-              className="relative p-2.5 rounded-xl transition-all duration-300 overflow-hidden"
+              className="relative p-1.5 sm:p-2.5 rounded-xl transition-all duration-300 overflow-hidden"
               title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               style={{
                 background: darkMode
@@ -471,7 +472,7 @@ function TopNavbar({
                     exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <FaSun className="text-amber-400" size={16} />
+                    <FaSun className="text-amber-400" size={14} />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -481,7 +482,7 @@ function TopNavbar({
                     exit={{ rotate: -90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <FaMoon className="text-indigo-600" size={16} />
+                    <FaMoon className="text-indigo-600" size={14} />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -493,7 +494,7 @@ function TopNavbar({
                 ref={userMenuButtonRef}
                 onClick={handleUserMenuClick}
                 type="button"
-                className="flex items-center gap-3 px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer"
+                className="flex items-center gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl transition-all duration-200 cursor-pointer"
                 style={{
                   background: darkMode ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)',
                   border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.09)',
@@ -573,7 +574,7 @@ function TopNavbar({
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden p-2.5 rounded-xl transition-all ${darkMode ? 'text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 bg-black/5 hover:bg-black/10'}`}
+                  className={`lg:hidden p-2 rounded-xl transition-all ${darkMode ? 'text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 bg-black/5 hover:bg-black/10'}`}
             >
               {mobileMenuOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
             </button>
@@ -587,7 +588,7 @@ function TopNavbar({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden py-4"
+              className="lg:hidden py-3 sm:py-4"
               style={{ borderTop: darkMode ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(0,0,0,0.07)' }}
             >
               <div className="grid grid-cols-2 gap-2">
@@ -1564,7 +1565,7 @@ function Dashboard() {
       <TopNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
       
       {/* Main Content - pt-20 compensates for fixed navbar height */}
-      <main className="max-w-7xl mx-auto px-4 py-6 pt-20">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 pt-[calc(4.75rem+env(safe-area-inset-top))] sm:pt-20">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -1591,7 +1592,7 @@ function Dashboard() {
 
       {/* Footer */}
       <footer
-        className="py-6 mt-auto"
+        className="py-4 sm:py-6 mt-auto px-4"
         style={{ borderTop: darkMode ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.08)' }}
       >
         <p className={`text-center text-sm ${darkMode ? 'text-neutral-500' : 'text-gray-400'}`}>

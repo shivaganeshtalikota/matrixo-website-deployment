@@ -320,7 +320,7 @@ export default function NotificationBell({ onNavigate, darkMode = true }: Notifi
         ref={buttonRef}
         onClick={handleClick}
         type="button"
-        className="relative p-2.5 rounded-xl transition-all group cursor-pointer"
+        className="relative p-1.5 sm:p-2.5 rounded-xl transition-all group cursor-pointer"
         style={{
           background: darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
           border: darkMode ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.1)',
@@ -331,7 +331,7 @@ export default function NotificationBell({ onNavigate, darkMode = true }: Notifi
         aria-label="Notifications"
         aria-expanded={isOpen}
       >
-        <FaBell className={`text-lg transition-colors ${darkMode ? 'text-neutral-300 group-hover:text-white' : 'text-gray-500 group-hover:text-gray-800'}`} />
+        <FaBell className={`text-base sm:text-lg transition-colors ${darkMode ? 'text-neutral-300 group-hover:text-white' : 'text-gray-500 group-hover:text-gray-800'}`} />
         
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg">

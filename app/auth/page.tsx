@@ -178,7 +178,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-black text-gray-900 dark:text-white relative overflow-hidden">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-950 dark:via-gray-900 dark:to-black text-gray-900 dark:text-white relative overflow-hidden">
       {/* Animated Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       
@@ -187,8 +187,8 @@ export default function AuthPage() {
       <div className="absolute top-0 -right-4 w-96 h-96 bg-cyan-500/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000" />
       <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-500/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000" />
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
-        <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
+      <div className="relative z-10 flex items-start sm:items-center justify-center min-h-[100dvh] px-3 sm:px-6 lg:px-8 py-[max(1rem,env(safe-area-inset-top))] sm:py-20">
+        <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-start sm:items-center">
           
           {/* Left Side - Branding */}
           <motion.div
@@ -257,20 +257,20 @@ export default function AuthPage() {
             transition={{ duration: 0.6 }}
             className="w-full"
           >
-            <div className="glass-card-elevated p-6 lg:p-8">
+            <div className="glass-card-elevated p-4 sm:p-6 lg:p-8">
               {/* Mobile Logo */}
-              <div className="lg:hidden mb-8 flex justify-center relative h-12">
+              <div className="lg:hidden mb-6 sm:mb-8 flex justify-center relative h-10 sm:h-12">
                 {/* Light Mode Logo (Black) */}
                 <img 
                   src="/logos/logo-light.png" 
                   alt="matriXO Logo" 
-                  className="h-12 w-auto object-contain dark:hidden"
+                  className="h-10 sm:h-12 w-auto object-contain dark:hidden"
                 />
                 {/* Dark Mode Logo (White) */}
                 <img 
                   src="/logos/logo-dark.png" 
                   alt="matriXO Logo" 
-                  className="h-12 w-auto object-contain hidden dark:block"
+                  className="h-10 sm:h-12 w-auto object-contain hidden dark:block"
                 />
               </div>
 
