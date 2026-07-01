@@ -136,7 +136,6 @@ export default function Navbar() {
       >
         <div className="flex items-center justify-between w-full min-w-0">
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Logo with BETA Badge */}
             <button
               type="button"
               onClick={(e) => {
@@ -164,16 +163,6 @@ export default function Navbar() {
                 />
               </motion.div>
 
-              {/* BETA Badge */}
-              {isBeta && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="px-2 py-0.5 text-xs font-bold bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-full"
-                >
-                  BETA
-                </motion.span>
-              )}
             </button>
 
           </div>
