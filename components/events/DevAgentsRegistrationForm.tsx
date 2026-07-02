@@ -54,7 +54,7 @@ export default function DevAgentsRegistrationForm({
     !DEVAGENTS_UPI_ID.includes("YOUR_UPI_ID_HERE");
 
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     phone: "",
     college: "",
@@ -62,7 +62,7 @@ export default function DevAgentsRegistrationForm({
     branch: "",
     city: "",
     github: "",
-    linkedin: "",
+    linkedIn: "",
     experienceLevel: "",
     whyAttend: "",
     agreeTerms: false,
@@ -73,7 +73,7 @@ export default function DevAgentsRegistrationForm({
     if (user) {
       setFormData((prev) => ({
         ...prev,
-        name: user.displayName || prev.name,
+        fullName: user.displayName || prev.fullName,
         email: user.email || prev.email,
       }));
     }
@@ -102,7 +102,8 @@ export default function DevAgentsRegistrationForm({
     setMounted(true);
     setIsOpen(true);
 
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
     const previousBodyStyles = {
       overflow: document.body.style.overflow,
       paddingRight: document.body.style.paddingRight,
@@ -129,9 +130,11 @@ export default function DevAgentsRegistrationForm({
       }
       document.body.style.overflow = previousBodyStyles.overflow;
       document.body.style.paddingRight = previousBodyStyles.paddingRight;
-      document.body.style.overscrollBehavior = previousBodyStyles.overscrollBehavior;
+      document.body.style.overscrollBehavior =
+        previousBodyStyles.overscrollBehavior;
       document.documentElement.style.overflow = previousDocumentStyles.overflow;
-      document.documentElement.style.overscrollBehavior = previousDocumentStyles.overscrollBehavior;
+      document.documentElement.style.overscrollBehavior =
+        previousDocumentStyles.overscrollBehavior;
     };
   }, []);
 
@@ -204,7 +207,7 @@ export default function DevAgentsRegistrationForm({
 
   /* ── Validation ──────────────────────────────────────────────────── */
   const validateForm = (): boolean => {
-    if (!formData.name.trim()) {
+    if (!formData.fullName.trim()) {
       toast.error("Full name is required");
       return false;
     }
@@ -290,28 +293,18 @@ export default function DevAgentsRegistrationForm({
 
       const payload: Record<string, unknown> = {
         action: "register",
-        timestamp: new Date().toISOString(),
-        eventId: event?.id || "devagents-1-0",
-        eventTitle: event?.title || "DevAgents 1.0",
-        ticketType: "DevAgents 1.0 Pass",
-        price: PRICE,
-        transactionCode,
-        entryNumber: transactionCode,
-        qrCodeValue: transactionCode,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        college: formData.college,
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        college: formData.college.trim(),
         year: formData.year,
-        branch: formData.branch,
-        city: formData.city,
-        github: formData.github || "",
-        linkedin: formData.linkedin || "",
+        branch: formData.branch.trim(),
+        city: formData.city.trim(),
+        github: formData.github.trim(),
+        linkedIn: formData.linkedIn.trim(),
         experienceLevel: formData.experienceLevel,
-        whyAttend: formData.whyAttend,
-        screenshotFileName: paymentScreenshot.name,
+        whyAttend: formData.whyAttend.trim(),
         paymentScreenshot: base64Screenshot,
-        status: "pending_verification",
       };
 
       await sendToGoogleSheet(payload);
@@ -446,7 +439,8 @@ export default function DevAgentsRegistrationForm({
                 Registration Received!
               </h3>
               <p className="text-white/50 text-sm leading-relaxed">
-                We&apos;ve received your registration and payment screenshot. We&apos;ll review it and send a QR approval email to{" "}
+                We&apos;ve received your registration and payment screenshot.
+                We&apos;ll review it and send a QR approval email to{" "}
                 <span className="text-blue-400 font-medium">
                   {formData.email}
                 </span>
@@ -466,7 +460,9 @@ export default function DevAgentsRegistrationForm({
             <button
               onClick={requestClose}
               className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all hover:scale-[1.02]"
-              style={{ background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)" }}
+              style={{
+                background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
+              }}
             >
               Close
             </button>
@@ -530,8 +526,8 @@ export default function DevAgentsRegistrationForm({
             <div
               className="p-4 rounded-xl text-center"
               style={{
-                  background: "rgba(59,130,246,0.07)",
-                  border: "1px solid rgba(59,130,246,0.18)",
+                background: "rgba(59,130,246,0.07)",
+                border: "1px solid rgba(59,130,246,0.18)",
               }}
             >
               <p
@@ -585,7 +581,8 @@ export default function DevAgentsRegistrationForm({
                     href={upiDeepLink}
                     className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white transition-all hover:scale-[1.02]"
                     style={{
-                      background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
+                      background:
+                        "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
                       boxShadow: "0 0 20px rgba(99,102,241,0.3)",
                     }}
                   >
@@ -638,7 +635,9 @@ export default function DevAgentsRegistrationForm({
                   border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
-                <span className="text-white font-mono text-sm">{DEVAGENTS_UPI_ID}</span>
+                <span className="text-white font-mono text-sm">
+                  {DEVAGENTS_UPI_ID}
+                </span>
                 <button
                   onClick={copyUpi}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-blue-400 hover:text-blue-300"
@@ -649,7 +648,8 @@ export default function DevAgentsRegistrationForm({
               </div>
               {!isUpiConfigured && (
                 <p className="mt-1 text-xs text-amber-300">
-                  UPI ID is pending — update <code>NEXT_PUBLIC_DEVAGENTS_UPI_ID</code> in the env file.
+                  UPI ID is pending — update{" "}
+                  <code>NEXT_PUBLIC_DEVAGENTS_UPI_ID</code> in the env file.
                 </p>
               )}
             </div>
@@ -795,8 +795,8 @@ export default function DevAgentsRegistrationForm({
             <div>
               <label className={labelClass}>Full Name *</label>
               <input
-                name="name"
-                value={formData.name}
+                name="fullName"
+                value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Your full name"
                 className={inputClass}
@@ -907,8 +907,8 @@ export default function DevAgentsRegistrationForm({
                   <span className="text-white/30">(optional)</span>
                 </label>
                 <input
-                  name="linkedin"
-                  value={formData.linkedin}
+                  name="linkedIn"
+                  value={formData.linkedIn}
                   onChange={handleChange}
                   placeholder="linkedin.com/in/username"
                   className={inputClass}
