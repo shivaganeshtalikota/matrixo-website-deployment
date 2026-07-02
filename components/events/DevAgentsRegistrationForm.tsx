@@ -13,13 +13,13 @@ import {
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
+import { DEVAGENTS_UPI_ID } from "@/lib/eventBranding";
 
 interface DevAgentsRegistrationFormProps {
   event: any;
   onClose: () => void;
 }
 
-const UPI_ID = "vutukurikishan.8@okaxis";
 const PRICE = 199;
 
 const generateTransactionCode = () => {
@@ -44,6 +44,9 @@ export default function DevAgentsRegistrationForm({
   );
   const [transactionCode] = useState(generateTransactionCode);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isUpiConfigured =
+    DEVAGENTS_UPI_ID.trim().length > 0 &&
+    !DEVAGENTS_UPI_ID.includes("YOUR_UPI_ID_HERE");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -100,7 +103,9 @@ export default function DevAgentsRegistrationForm({
   const GOOGLE_SCRIPT_URL =
     process.env.NEXT_PUBLIC_DEVAGENTS_GOOGLE_SCRIPT_URL || "";
 
-  const upiDeepLink = `upi://pay?pa=${UPI_ID}&pn=matriXO&am=${PRICE}&cu=INR&tn=${encodeURIComponent(`DevAgents1.0-${transactionCode}`)}`;
+  const upiDeepLink = isUpiConfigured
+    ? `upi://pay?pa=${DEVAGENTS_UPI_ID}&pn=matriXO&am=${PRICE}&cu=INR&tn=${encodeURIComponent(`DevAgents1.0-${transactionCode}`)}`
+    : "";
 
   /* ── Handlers ─────────────────────────────────────────────────────── */
   const handleChange = (
@@ -135,7 +140,11 @@ export default function DevAgentsRegistrationForm({
   };
 
   const copyUpi = () => {
-    navigator.clipboard.writeText(UPI_ID);
+    if (!isUpiConfigured) {
+      toast.error("UPI ID is not configured yet");
+      return;
+    }
+    navigator.clipboard.writeText(DEVAGENTS_UPI_ID);
     toast.success("UPI ID copied!");
   };
 
@@ -234,6 +243,8 @@ export default function DevAgentsRegistrationForm({
         ticketType: "DevAgents 1.0 Pass",
         price: PRICE,
         transactionCode,
+        entryNumber: transactionCode,
+        qrCodeValue: transactionCode,
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -250,6 +261,16 @@ export default function DevAgentsRegistrationForm({
       };
 
       await sendToGoogleSheet(payload);
+
+      try {
+        await fetch("/api/devagents/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch {
+        // Receipt email is best-effort; do not block registration.
+      }
 
       // Store in localStorage to prevent duplicate submissions
       const stored: string[] = JSON.parse(
@@ -348,7 +369,7 @@ export default function DevAgentsRegistrationForm({
           <div
             className="h-1 w-full"
             style={{
-              background: "linear-gradient(90deg,#3b82f6,#8b5cf6,#06b6d4)",
+              background: "linear-gradient(90deg,#2563eb,#7c3aed,#ec4899)",
             }}
           />
           <div className="p-8 text-center space-y-5">
@@ -371,14 +392,14 @@ export default function DevAgentsRegistrationForm({
             </motion.div>
             <div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                Registration Submitted!
+                Registration Received!
               </h3>
               <p className="text-white/50 text-sm leading-relaxed">
-                We&apos;ll verify your payment and send a confirmation to{" "}
+                We&apos;ve received your registration and payment screenshot. We&apos;ll review it and send a QR approval email to{" "}
                 <span className="text-blue-400 font-medium">
                   {formData.email}
                 </span>
-                . Confirmation may take up to 24 hours.
+                . Approval may take up to 24 hours.
               </p>
             </div>
             <div
@@ -394,7 +415,7 @@ export default function DevAgentsRegistrationForm({
             <button
               onClick={onClose}
               className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all hover:scale-[1.02]"
-              style={{ background: "linear-gradient(135deg,#2563eb,#7c3aed)" }}
+              style={{ background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)" }}
             >
               Close
             </button>
@@ -423,7 +444,7 @@ export default function DevAgentsRegistrationForm({
           <div
             className="h-1 w-full"
             style={{
-              background: "linear-gradient(90deg,#3b82f6,#8b5cf6,#06b6d4)",
+              background: "linear-gradient(90deg,#2563eb,#7c3aed,#ec4899)",
             }}
           />
           <div className="p-6 space-y-5">
@@ -453,8 +474,8 @@ export default function DevAgentsRegistrationForm({
             <div
               className="p-4 rounded-xl text-center"
               style={{
-                background: "rgba(59,130,246,0.07)",
-                border: "1px solid rgba(59,130,246,0.18)",
+                  background: "rgba(59,130,246,0.07)",
+                  border: "1px solid rgba(59,130,246,0.18)",
               }}
             >
               <p
@@ -502,29 +523,46 @@ export default function DevAgentsRegistrationForm({
 
             {/* QR or deep link */}
             {isMobile ? (
-              <a
-                href={upiDeepLink}
-                className="flex items-center justify-center gap-3 w-full py-4 rounded-xl font-bold text-white transition-all hover:scale-[1.02]"
-                style={{
-                  background: "linear-gradient(135deg,#2563eb,#7c3aed)",
-                  boxShadow: "0 0 20px rgba(99,102,241,0.3)",
-                }}
-              >
-                <span className="text-xl">📱</span>
-                <span>Pay ₹{PRICE} with UPI App</span>
-              </a>
+              <>
+                {isUpiConfigured ? (
+                  <a
+                    href={upiDeepLink}
+                    className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white transition-all hover:scale-[1.02]"
+                    style={{
+                      background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
+                      boxShadow: "0 0 20px rgba(99,102,241,0.3)",
+                    }}
+                  >
+                    <span className="text-xl">📱</span>
+                    <span>Pay ₹{PRICE} with UPI App</span>
+                  </a>
+                ) : (
+                  <div className="w-full rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-5 text-center text-sm text-white/60">
+                    UPI ID will be added soon. Once configured, this button will
+                    open your payment app directly.
+                  </div>
+                )}
+              </>
             ) : (
               <div className="flex flex-col items-center gap-3">
                 <div
                   className="p-4 rounded-2xl"
                   style={{ background: "rgba(255,255,255,0.96)" }}
                 >
-                  <QRCodeSVG
-                    value={upiDeepLink}
-                    size={180}
-                    bgColor="#f5f5f5"
-                    fgColor="#1e1b4b"
-                  />
+                  {isUpiConfigured ? (
+                    <QRCodeSVG
+                      value={upiDeepLink}
+                      size={180}
+                      bgColor="#f5f5f5"
+                      fgColor="#1e1b4b"
+                    />
+                  ) : (
+                    <div className="flex h-[180px] w-[180px] items-center justify-center rounded-xl border border-dashed border-slate-300 text-center text-xs text-slate-500">
+                      UPI QR will appear
+                      <br />
+                      after ID is added
+                    </div>
+                  )}
                 </div>
                 <p className="text-xs text-white/40 text-center">
                   Scan with GPay, PhonePe, Paytm or any UPI app
@@ -544,7 +582,7 @@ export default function DevAgentsRegistrationForm({
                   border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
-                <span className="text-white font-mono text-sm">{UPI_ID}</span>
+                <span className="text-white font-mono text-sm">{DEVAGENTS_UPI_ID}</span>
                 <button
                   onClick={copyUpi}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-blue-400 hover:text-blue-300"
@@ -553,6 +591,11 @@ export default function DevAgentsRegistrationForm({
                   <FaCopy /> Copy
                 </button>
               </div>
+              {!isUpiConfigured && (
+                <p className="mt-1 text-xs text-amber-300">
+                  UPI ID is pending — update <code>NEXT_PUBLIC_DEVAGENTS_UPI_ID</code> in the env file.
+                </p>
+              )}
             </div>
 
             {/* Screenshot upload */}
@@ -608,7 +651,7 @@ export default function DevAgentsRegistrationForm({
               className="w-full py-3.5 rounded-xl font-bold text-white text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 background: paymentScreenshot
-                  ? "linear-gradient(135deg,#2563eb,#7c3aed)"
+                  ? "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)"
                   : "rgba(255,255,255,0.06)",
                 boxShadow: paymentScreenshot
                   ? "0 0 20px rgba(99,102,241,0.3)"
@@ -655,7 +698,7 @@ export default function DevAgentsRegistrationForm({
         <div
           className="h-1 w-full"
           style={{
-            background: "linear-gradient(90deg,#3b82f6,#8b5cf6,#06b6d4)",
+            background: "linear-gradient(90deg,#2563eb,#7c3aed,#ec4899)",
           }}
         />
         <div className="p-6">
@@ -882,7 +925,7 @@ export default function DevAgentsRegistrationForm({
               type="submit"
               className="w-full py-4 rounded-xl font-bold text-white text-sm transition-all hover:scale-[1.02] mt-2"
               style={{
-                background: "linear-gradient(135deg,#2563eb,#7c3aed)",
+                background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
                 boxShadow: "0 0 24px rgba(99,102,241,0.3)",
               }}
             >

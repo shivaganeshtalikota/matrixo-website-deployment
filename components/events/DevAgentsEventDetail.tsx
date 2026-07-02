@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
+import Image from "next/image";
+import { useTheme } from "next-themes";
 import {
   FaCalendar,
   FaMapMarkerAlt,
@@ -21,6 +23,11 @@ import { HiSparkles } from "react-icons/hi";
 import { BiCodeAlt } from "react-icons/bi";
 import { Zap, Lock, CheckCircle2 } from "lucide-react";
 import DevAgentsRegistrationForm from "./DevAgentsRegistrationForm";
+import {
+  DEVAGENTS_SPEAKER_IMAGE_URL,
+  MATRIXO_LOGO_DARK_URL,
+  MATRIXO_LOGO_LIGHT_URL,
+} from "@/lib/eventBranding";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Animation variant (used everywhere)
@@ -277,6 +284,7 @@ interface CountdownType {
    Component
 ═════════════════════════════════════════════════════════════════════════ */
 export default function DevAgentsEventDetail({ event }: { event: any }) {
+  const { resolvedTheme } = useTheme();
   const [showRegistration, setShowRegistration] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [countdown, setCountdown] = useState<CountdownType>({
@@ -288,6 +296,23 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
   const [countdownExpired, setCountdownExpired] = useState(false);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
+  const isDarkMode = resolvedTheme !== "light";
+  const pageBgClass = isDarkMode
+    ? "bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.95),_rgba(2,6,23,1)_55%)]"
+    : "bg-gradient-to-b from-slate-50 via-white to-slate-100";
+  const surfaceClass = isDarkMode
+    ? "bg-white/5 border-white/10 backdrop-blur-xl"
+    : "bg-white/80 border-slate-200/80 backdrop-blur-xl shadow-sm";
+  const textPrimaryClass = isDarkMode ? "text-white" : "text-slate-900";
+  const textSecondaryClass = isDarkMode ? "text-gray-400" : "text-slate-600";
+  const mutedPanelClass = isDarkMode
+    ? "bg-white/5 border-white/10"
+    : "bg-slate-100 border-slate-200";
+  const accentButtonClass =
+    "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-purple-500/25 hover:scale-[1.03] active:scale-[.98]";
+  const secondaryButtonClass = isDarkMode
+    ? "bg-white/5 text-white border border-white/15 hover:bg-white/10"
+    : "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50";
 
   /* Countdown ──────────────────────────────────────────────────────────── */
   useEffect(() => {
@@ -339,11 +364,8 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
   /* ───────────────────────────────────────────────────────────────────── */
   return (
     <div
-      className="min-h-screen font-sans overflow-x-hidden"
-      style={{
-        background:
-          "linear-gradient(180deg, #05050f 0%, #0a0618 50%, #05050f 100%)",
-      }}
+      className={`devagents-shell min-h-screen font-sans overflow-x-hidden ${pageBgClass}`}
+      data-theme={isDarkMode ? "dark" : "light"}
     >
       {/* ── Injected CSS keyframes ────────────────────────────────────────── */}
       <style>{`
@@ -378,6 +400,23 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
         .da-card-hover:hover {
           transform:  translateY(-4px) scale(1.02);
           box-shadow: 0 20px 40px rgba(99,102,241,.25), 0 0 0 1px rgba(99,102,241,.3);
+        }
+
+        .devagents-shell[data-theme="light"] .text-white,
+        .devagents-shell[data-theme="light"] .text-gray-300,
+        .devagents-shell[data-theme="light"] .text-gray-400,
+        .devagents-shell[data-theme="light"] .text-gray-500,
+        .devagents-shell[data-theme="light"] .text-blue-400,
+        .devagents-shell[data-theme="light"] .text-purple-300 {
+          color: #0f172a !important;
+        }
+
+        .devagents-shell[data-theme="light"] .text-transparent {
+          color: transparent !important;
+        }
+
+        .devagents-shell[data-theme="light"] .devagents-light-strong {
+          color: #020617 !important;
         }
       `}</style>
 
@@ -449,9 +488,11 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
         <div
           className="absolute top-6 right-6 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full"
           style={{
-            background: "rgba(0,0,0,.55)",
+            background: isDarkMode ? "rgba(0,0,0,.55)" : "rgba(255,255,255,.8)",
             backdropFilter: "blur(12px)",
-            border: "1px solid rgba(34,197,94,.3)",
+            border: isDarkMode
+              ? "1px solid rgba(34,197,94,.3)"
+              : "1px solid rgba(34,197,94,.18)",
           }}
         >
           <span className="w-2 h-2 rounded-full bg-green-500 da-pulse-dot" />
@@ -472,13 +513,15 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             <div
               className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium"
               style={{
-                background: "rgba(255,255,255,.05)",
+                background: isDarkMode ? "rgba(255,255,255,.05)" : "rgba(15,23,42,.04)",
                 backdropFilter: "blur(12px)",
-                border: "1px solid rgba(99,102,241,.35)",
+                border: isDarkMode
+                  ? "1px solid rgba(99,102,241,.35)"
+                  : "1px solid rgba(99,102,241,.18)",
               }}
             >
               <span className="text-blue-400">✦</span>
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent font-semibold">
+              <span className={`bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-semibold`}>
                 Agentic AI Workshop · matriXO
               </span>
               <span className="text-purple-400">✦</span>
@@ -490,13 +533,13 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
-            className="text-5xl md:text-7xl font-bold font-display leading-tight mb-6"
+            className={`text-5xl md:text-7xl font-bold font-display leading-tight mb-6 ${textPrimaryClass}`}
           >
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Build Your First
             </span>
             <br />
-            <span className="text-white">AI Agent.</span>
+            <span className={textPrimaryClass}>AI Agent.</span>
           </motion.h1>
 
           {/* Sub-headline */}
@@ -504,7 +547,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
-            className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed"
+            className={`text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed ${textSecondaryClass}`}
           >
             Learn to build autonomous AI agents using modern Agentic AI
             frameworks through an immersive, hands-on workshop.
@@ -519,22 +562,18 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
           >
             <button
               onClick={() => setShowRegistration(true)}
-              className="px-8 py-4 rounded-xl font-bold text-white text-lg da-pulse-glow transition-all duration-300 hover:scale-[1.02] active:scale-[.98]"
+              className={`px-8 py-4 rounded-2xl font-bold text-white text-lg transition-all duration-300 ${accentButtonClass}`}
               style={{
-                background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                boxShadow: "0 8px 30px rgba(59,130,246,.25)",
+                boxShadow: isDarkMode
+                  ? "0 8px 30px rgba(59,130,246,.25)"
+                  : "0 8px 24px rgba(79,70,229,.18)",
               }}
             >
               Register Now →
             </button>
             <button
               onClick={scrollToAgenda}
-              className="px-8 py-4 rounded-xl font-semibold text-white text-lg transition-all duration-300 hover:scale-[1.02] active:scale-[.98]"
-              style={{
-                background: "rgba(255,255,255,.05)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,.18)",
-              }}
+              className={`px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] active:scale-[.98] ${secondaryButtonClass}`}
             >
               View Agenda
             </button>
@@ -557,13 +596,15 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 key={s.label}
                 className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium justify-center"
                 style={{
-                  background: "rgba(255,255,255,.05)",
+                    background: isDarkMode ? "rgba(255,255,255,.05)" : "rgba(15,23,42,.04)",
                   backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(255,255,255,.1)",
+                    border: isDarkMode
+                      ? "1px solid rgba(255,255,255,.1)"
+                      : "1px solid rgba(148,163,184,.22)",
                 }}
               >
                 <span>{s.emoji}</span>
-                <span className="text-gray-300">{s.label}</span>
+                  <span className={textSecondaryClass}>{s.label}</span>
               </div>
             ))}
           </motion.div>
@@ -631,12 +672,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="rounded-2xl p-6"
-            style={{
-              background: "rgba(255,255,255,.03)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,.08)",
-            }}
+            className={`rounded-3xl p-6 ${surfaceClass}`}
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
@@ -660,7 +696,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 <div
                   key={item.label}
                   className="flex items-start gap-3 p-3 rounded-xl"
-                  style={{ background: "rgba(255,255,255,.03)" }}
+                  style={{ background: isDarkMode ? "rgba(255,255,255,.03)" : "rgba(15,23,42,.03)" }}
                 >
                   <span className="text-2xl leading-none mt-0.5 flex-shrink-0">
                     {item.icon}
@@ -669,7 +705,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                     <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">
                       {item.label}
                     </p>
-                    <p className="text-sm text-white font-semibold mt-0.5 truncate">
+                    <p className={`text-sm font-semibold mt-0.5 truncate ${textPrimaryClass}`}>
                       {item.value}
                     </p>
                   </div>
@@ -693,7 +729,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold font-display mb-4">
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 About DevAgents 1.0
               </span>
             </h2>
@@ -708,11 +744,11 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               viewport={{ once: true }}
               className="space-y-4"
             >
-              <p className="text-gray-400 leading-relaxed">
+              <p className={`${textSecondaryClass} leading-relaxed`}>
                 {event?.description ||
                   "DevAgents 1.0 is a premier Agentic AI workshop organised by matriXO, designed to introduce participants to the world of autonomous AI agents. This is not just another tech talk — it is an immersive, hands-on experience."}
               </p>
-              <p className="text-gray-400 leading-relaxed">
+              <p className={`${textSecondaryClass} leading-relaxed`}>
                 Whether you are a student exploring AI, a developer looking to
                 upskill, or a founder wanting to integrate AI into your product
                 — DevAgents 1.0 is the perfect launchpad for your AI agent
@@ -727,7 +763,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 ].map((point) => (
                   <li
                     key={point}
-                    className="flex items-start gap-3 text-gray-300 text-sm"
+                    className={`flex items-start gap-3 text-sm ${textSecondaryClass}`}
                   >
                     <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center">
                       <FaCheckCircle className="text-blue-400 text-[10px]" />
@@ -745,14 +781,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <div
-                className="rounded-2xl p-8 space-y-5"
-                style={{
-                  background: "rgba(255,255,255,.03)",
-                  backdropFilter: "blur(20px)",
-                  border: "1px solid rgba(255,255,255,.08)",
-                }}
-              >
+              <div className={`rounded-3xl p-8 space-y-5 ${surfaceClass}`}>
                 {[
                   { stat: "3 Hours", label: "Intensive Workshop", emoji: "⏱️" },
                   { stat: "₹199", label: "All-inclusive Price", emoji: "💰" },
@@ -764,17 +793,17 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 ].map(({ stat, label, emoji }) => (
                   <div
                     key={stat}
-                    className="flex items-center gap-4 p-4 rounded-xl"
-                    style={{ background: "rgba(255,255,255,.04)" }}
+                    className="flex items-center gap-4 p-4 rounded-2xl"
+                    style={{ background: isDarkMode ? "rgba(255,255,255,.04)" : "rgba(15,23,42,.04)" }}
                   >
                     <span className="text-3xl leading-none flex-shrink-0">
                       {emoji}
                     </span>
                     <div>
-                      <p className="text-2xl font-bold font-display bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                      <p className="text-2xl font-bold font-display bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                         {stat}
                       </p>
-                      <p className="text-gray-500 text-sm">{label}</p>
+                      <p className={textSecondaryClass}>{label}</p>
                     </div>
                   </div>
                 ))}
@@ -796,10 +825,10 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold font-display text-white mb-4">
+            <h2 className={`text-3xl md:text-4xl font-bold font-display mb-4 ${textPrimaryClass}`}>
               What You&apos;ll Learn
             </h2>
-            <p className="text-gray-400 max-w-xl mx-auto">
+            <p className={textSecondaryClass}>
               12 core modules packed into an intensive 3-hour session
             </p>
           </motion.div>
@@ -813,12 +842,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 whileInView="visible"
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="da-card-hover da-border-glow p-5 rounded-2xl cursor-default"
-                style={{
-                  background: "rgba(255,255,255,.03)",
-                  backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(255,255,255,.07)",
-                }}
+                className={`da-card-hover da-border-glow p-5 rounded-2xl cursor-default ${surfaceClass}`}
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 text-lg"
@@ -829,10 +853,10 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 >
                   {item.icon}
                 </div>
-                <h3 className="font-bold text-white text-sm mb-1">
+                <h3 className={`font-bold text-sm mb-1 ${textPrimaryClass}`}>
                   {item.title}
                 </h3>
-                <p className="text-xs text-gray-500 leading-relaxed">
+                <p className={`text-xs leading-relaxed ${textSecondaryClass}`}>
                   {item.desc}
                 </p>
               </motion.div>
@@ -1177,13 +1201,26 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               }}
             >
               {/* Gradient avatar */}
-              <div
-                className="w-24 h-24 rounded-full mx-auto mb-5 flex items-center justify-center text-3xl font-bold text-white font-display"
-                style={{
-                  background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-                }}
-              >
-                SG
+              <div className="w-24 h-24 rounded-full mx-auto mb-5 overflow-hidden flex items-center justify-center border border-white/10 bg-white/5">
+                {DEVAGENTS_SPEAKER_IMAGE_URL ? (
+                  <Image
+                    src={DEVAGENTS_SPEAKER_IMAGE_URL}
+                    alt="Shiva Ganesh Talikota"
+                    width={96}
+                    height={96}
+                    className="w-full h-full object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full flex items-center justify-center text-3xl font-bold text-white font-display"
+                    style={{
+                      background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                    }}
+                  >
+                    SG
+                  </div>
+                )}
               </div>
               <h3 className="text-xl font-bold text-white mb-1">
                 Shiva Ganesh Talikota
@@ -1413,72 +1450,6 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
-          13. TESTIMONIALS PLACEHOLDER
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-4">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold font-display text-white mb-4">
-              What Attendees Say
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {(["A", "B", "C"] as const).map((initial, i) => (
-              <motion.div
-                key={initial}
-                variants={fadeInUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="rounded-2xl p-6"
-                style={{
-                  background: "rgba(255,255,255,.03)",
-                  backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(255,255,255,.07)",
-                }}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white font-display flex-shrink-0"
-                    style={{
-                      background: `linear-gradient(135deg,${
-                        [
-                          "#3b82f6,#8b5cf6",
-                          "#8b5cf6,#06b6d4",
-                          "#06b6d4,#3b82f6",
-                        ][i]
-                      })`,
-                    }}
-                  >
-                    {initial}
-                  </div>
-                  <div>
-                    <p className="text-white text-sm font-medium">
-                      Attendee {initial}
-                    </p>
-                    <p className="text-yellow-400 text-xs tracking-widest">
-                      ★★★★★
-                    </p>
-                  </div>
-                </div>
-                <p className="text-gray-500 text-sm italic">
-                  &ldquo;Testimonials will be added after the event.&rdquo;
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════
           14. SPONSORS & PARTNERS
       ══════════════════════════════════════════════════════════════════ */}
       <section className="py-20 px-4">
@@ -1506,17 +1477,21 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               <div
                 className="flex items-center gap-3 px-6 py-3 rounded-full"
                 style={{
-                  background: "rgba(255,255,255,.05)",
-                  border: "1px solid rgba(99,102,241,.3)",
+                  background: isDarkMode ? "rgba(255,255,255,.05)" : "rgba(255,255,255,.8)",
+                  border: isDarkMode
+                    ? "1px solid rgba(99,102,241,.3)"
+                    : "1px solid rgba(148,163,184,.22)",
                 }}
               >
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                  style={{
-                    background: "linear-gradient(135deg,#3b82f6,#8b5cf6)",
-                  }}
-                >
-                  mX
+                <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-white/10 flex-shrink-0">
+                  <Image
+                    src={isDarkMode ? MATRIXO_LOGO_DARK_URL : MATRIXO_LOGO_LIGHT_URL}
+                    alt="matriXO"
+                    width={32}
+                    height={32}
+                    className="object-contain w-full h-full"
+                    unoptimized
+                  />
                 </div>
                 <span className="text-white font-semibold">matriXO</span>
                 <span className="text-xs text-gray-500">— Main Organizer</span>
