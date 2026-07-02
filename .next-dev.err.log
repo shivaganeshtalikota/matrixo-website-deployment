@@ -1,0 +1,122 @@
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+Browserslist: browsers data (caniuse-lite) is 9 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+Error fetching event visibility: Error: Firebase Admin service account not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY (recommended), or FIREBASE_SERVICE_ACCOUNT_JSON, in your environment.
+    at loadServiceAccount (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:80:11)
+    at getAdminApp (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:88:28)
+    at getAdminFirestore (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:102:83)
+    at GET (webpack-internal:///(rsc)/./app/api/event-visibility/route.ts:69:96)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57234
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NoopTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:54:31)
+    at ProxyTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:27:24)
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NextTracerImpl.trace (F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40958)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38293)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at eT.execute (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46881)
+    at eT.handle (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:58771)
+    at doRender (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1588:34)
+    at ResponseCache.get (F:\matrixo-website-deployment\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1496:53)
+Error fetching event visibility: Error: Firebase Admin service account not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY (recommended), or FIREBASE_SERVICE_ACCOUNT_JSON, in your environment.
+    at loadServiceAccount (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:80:11)
+    at getAdminApp (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:88:28)
+    at getAdminFirestore (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:102:83)
+    at GET (webpack-internal:///(rsc)/./app/api/event-visibility/route.ts:69:96)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57234
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NoopTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:54:31)
+    at ProxyTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:27:24)
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NextTracerImpl.trace (F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40958)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38293)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at eT.execute (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46881)
+    at eT.handle (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:58771)
+    at doRender (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1588:34)
+    at ResponseCache.get (F:\matrixo-website-deployment\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1496:53)
+ ⨯ The requested resource isn't a valid image for /events/devagents-banner.png received null
+Error fetching event visibility: Error: Firebase Admin service account not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY (recommended), or FIREBASE_SERVICE_ACCOUNT_JSON, in your environment.
+    at loadServiceAccount (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:80:11)
+    at getAdminApp (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:88:28)
+    at getAdminFirestore (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:102:83)
+    at GET (webpack-internal:///(rsc)/./app/api/event-visibility/route.ts:69:96)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57234
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NoopTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:54:31)
+    at ProxyTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:27:24)
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NextTracerImpl.trace (F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40958)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38293)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at eT.execute (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46881)
+    at eT.handle (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:58771)
+    at doRender (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1588:34)
+    at ResponseCache.get (F:\matrixo-website-deployment\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1496:53)
+Error fetching event visibility: Error: Firebase Admin service account not configured. Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY (recommended), or FIREBASE_SERVICE_ACCOUNT_JSON, in your environment.
+    at loadServiceAccount (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:80:11)
+    at getAdminApp (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:88:28)
+    at getAdminFirestore (webpack-internal:///(rsc)/./lib/firebaseAdmin.ts:102:83)
+    at GET (webpack-internal:///(rsc)/./app/api/event-visibility/route.ts:69:96)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57234
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NoopTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:54:31)
+    at ProxyTracer.startActiveSpan (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:27:24)
+    at F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:14:19)
+    at ContextAPI.with (F:\matrixo-website-deployment\node_modules\@opentelemetry\api\build\src\api\context.js:51:46)
+    at NextTracerImpl.trace (F:\matrixo-website-deployment\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48896
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40958)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47472
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at Object.wrap (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38293)
+    at F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47434
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_context_frame:63:14)
+    at eT.execute (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46881)
+    at eT.handle (F:\matrixo-website-deployment\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:58771)
+    at doRender (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1366:60)
+    at cacheEntry.responseCache.get.routeKind (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1588:34)
+    at ResponseCache.get (F:\matrixo-website-deployment\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (F:\matrixo-website-deployment\node_modules\next\dist\server\base-server.js:1496:53)

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaUniversity, FaGraduationCap, FaMapMarkerAlt, FaBus, FaInfoCircle, FaTimes, FaUpload } from 'react-icons/fa'
 import { toast } from 'sonner'
@@ -16,7 +17,11 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const closeTimerRef = useRef<number | null>(null)
+  const isSubmittingRef = useRef(false)
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -47,6 +52,70 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
+
+  useEffect(() => {
+    isSubmittingRef.current = isSubmitting
+  }, [isSubmitting])
+
+  const requestClose = useCallback((success: boolean = false) => {
+    if (isSubmittingRef.current) return
+
+    setIsOpen(false)
+
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current)
+    }
+
+    closeTimerRef.current = window.setTimeout(() => {
+      onClose(success)
+    }, 220)
+  }, [onClose])
+
+  useEffect(() => {
+    setMounted(true)
+    setIsOpen(true)
+
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    const previousBodyStyles = {
+      overflow: document.body.style.overflow,
+      paddingRight: document.body.style.paddingRight,
+      overscrollBehavior: document.body.style.overscrollBehavior,
+    }
+    const previousDocumentStyles = {
+      overflow: document.documentElement.style.overflow,
+      overscrollBehavior: document.documentElement.style.overscrollBehavior,
+    }
+
+    document.body.style.overflow = 'hidden'
+    document.body.style.overscrollBehavior = 'none'
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.style.overscrollBehavior = 'none'
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        requestClose(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = null
+      }
+      document.body.style.overflow = previousBodyStyles.overflow
+      document.body.style.paddingRight = previousBodyStyles.paddingRight
+      document.body.style.overscrollBehavior = previousBodyStyles.overscrollBehavior
+      document.documentElement.style.overflow = previousDocumentStyles.overflow
+      document.documentElement.style.overscrollBehavior = previousDocumentStyles.overscrollBehavior
+    }
+  }, [requestClose])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -245,7 +314,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
       // Close the form after a short delay and signal success
       setTimeout(() => {
         console.log('✅ Closing form with success=true...')
-        onClose(true) // Pass true to indicate successful registration
+        requestClose(true) // Pass true to indicate successful registration
       }, 2000)
 
     } catch (error: any) {
@@ -275,17 +344,33 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
     toast.info('Complete payment and upload screenshot below')
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+  if (!mounted) {
+    return null
+  }
+
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: isOpen ? 1 : 0 }}
+      transition={{ duration: 0.22, ease: 'easeOut' }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          requestClose(false)
+        }
+      }}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl"
+        animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.95 }}
+        transition={{ duration: 0.22, ease: 'easeOut' }}
+        className="relative w-full max-w-[700px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-3xl shadow-2xl"
+        onMouseDown={(event) => event.stopPropagation()}
       >
         {/* Header */}
         <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6">
           <button
-            onClick={() => onClose(false)}
+            onClick={() => requestClose(false)}
             className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
           >
             <FaTimes className="text-2xl" />
@@ -706,7 +791,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
           <div className="flex gap-4 pt-4">
             <button
               type="button"
-              onClick={() => onClose(false)}
+              onClick={() => requestClose(false)}
               className="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600 
                        text-gray-700 dark:text-gray-300 rounded-lg font-semibold
                        hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -726,6 +811,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
           </div>
         </form>
       </motion.div>
-    </div>
+    </motion.div>,
+    document.body,
   )
 }

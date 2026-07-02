@@ -7,4 +7,8 @@
   - Network:      http://127.0.0.1:3001
 
  ✓ Starting...
- ✓ Ready in 2.1s
+ ✓ Ready in 2.6s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 533ms (115 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 9.7s (1432 modules)

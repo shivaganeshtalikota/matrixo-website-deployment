@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -80,7 +80,6 @@ function DefaultEventDetail({ event }: { event: any }) {
   const [showConfetti, setShowConfetti] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
-  const ticketSectionRef = useRef<HTMLDivElement>(null);
 
   const handleRegisterNow = (ticket: any) => {
     // Check if event has external registration link
@@ -91,13 +90,6 @@ function DefaultEventDetail({ event }: { event: any }) {
 
     setSelectedTicket(ticket);
     setShowRegistration(true);
-  };
-
-  const scrollToTickets = () => {
-    ticketSectionRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
   };
 
   const closeRegistration = (registrationSuccessful: boolean = false) => {
@@ -305,7 +297,12 @@ function DefaultEventDetail({ event }: { event: any }) {
                   </div>
                 ) : (
                   <button
-                    onClick={scrollToTickets}
+                    onClick={() => {
+                      const primaryTicket = event.tickets?.[0];
+                      if (primaryTicket) {
+                        handleRegisterNow(primaryTicket);
+                      }
+                    }}
                     className={`px-8 py-4 ${
                       isTEDxEvent
                         ? "bg-red-600 hover:bg-red-700 shadow-red-600/50"
@@ -782,7 +779,7 @@ function DefaultEventDetail({ event }: { event: any }) {
 
             {/* Right Column - Ticket Booking */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24" ref={ticketSectionRef}>
+              <div className="sticky top-24">
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}

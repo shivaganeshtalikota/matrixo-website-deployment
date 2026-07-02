@@ -121,7 +121,7 @@ export default function Hero() {
                 className="hero-cta"
               >
                 <FaRocket />
-                <span>Explore Features</span>
+                <span>Explore Services</span>
               </motion.button>
             </Link>
 

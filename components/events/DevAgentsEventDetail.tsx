@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -295,7 +295,6 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
   });
   const [countdownExpired, setCountdownExpired] = useState(false);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
-  const ticketRef = useRef<HTMLDivElement>(null);
   const isDarkMode = resolvedTheme !== "light";
   const pageBgClass = isDarkMode
     ? "bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.95),_rgba(2,6,23,1)_55%)]"
@@ -357,9 +356,6 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
     document
       .getElementById("agenda")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  const scrollToTickets = () =>
-    ticketRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   /* ───────────────────────────────────────────────────────────────────── */
   return (
@@ -1058,7 +1054,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
       {/* ══════════════════════════════════════════════════════════════════
           8. TICKET SECTION
       ══════════════════════════════════════════════════════════════════ */}
-      <section id="tickets" className="py-20 px-4" ref={ticketRef}>
+      <section id="tickets" className="py-20 px-4">
         <div className="max-w-lg mx-auto">
           <motion.div
             variants={fadeInUp}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaTimes,
@@ -43,7 +44,11 @@ export default function DevAgentsRegistrationForm({
     null,
   );
   const [transactionCode] = useState(generateTransactionCode);
+  const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const closeTimerRef = useRef<number | null>(null);
+  const isSubmittingRef = useRef(false);
   const isUpiConfigured =
     DEVAGENTS_UPI_ID.trim().length > 0 &&
     !DEVAGENTS_UPI_ID.includes("YOUR_UPI_ID_HERE");
@@ -74,23 +79,70 @@ export default function DevAgentsRegistrationForm({
     }
   }, [user]);
 
+  useEffect(() => {
+    isSubmittingRef.current = isSubmitting;
+  }, [isSubmitting]);
+
+  const requestClose = useCallback(() => {
+    if (isSubmittingRef.current) return;
+
+    setIsOpen(false);
+
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+    }
+
+    closeTimerRef.current = window.setTimeout(() => {
+      onClose();
+    }, 220);
+  }, [onClose]);
+
   // Lock background scroll while the modal is mounted
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
+    setMounted(true);
+    setIsOpen(true);
+
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const previousBodyStyles = {
+      overflow: document.body.style.overflow,
+      paddingRight: document.body.style.paddingRight,
+      overscrollBehavior: document.body.style.overscrollBehavior,
+    };
+    const previousDocumentStyles = {
+      overflow: document.documentElement.style.overflow,
+      overscrollBehavior: document.documentElement.style.overscrollBehavior,
+    };
+
     document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
     return () => {
-      document.body.style.overflow = previousOverflow;
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+      document.body.style.overflow = previousBodyStyles.overflow;
+      document.body.style.paddingRight = previousBodyStyles.paddingRight;
+      document.body.style.overscrollBehavior = previousBodyStyles.overscrollBehavior;
+      document.documentElement.style.overflow = previousDocumentStyles.overflow;
+      document.documentElement.style.overscrollBehavior = previousDocumentStyles.overscrollBehavior;
     };
   }, []);
 
   // Close on Escape (but not while a submission is in flight)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !isSubmitting) onClose();
+      if (e.key === "Escape") requestClose();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, onClose]);
+  }, [requestClose]);
 
   // Mobile detection
   useEffect(() => {
@@ -338,23 +390,30 @@ export default function DevAgentsRegistrationForm({
 
   /* ── Backdrop ────────────────────────────────────────────────────── */
   const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget && !isSubmitting) onClose();
+    if (e.target === e.currentTarget) requestClose();
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   /* ══════════════════════════════════════════════════════════════════
      SUCCESS SCREEN
   ══════════════════════════════════════════════════════════════════ */
   if (step === "success") {
-    return (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center px-4"
+    return createPortal(
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+        className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
         style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
         onClick={handleBackdrop}
       >
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: isOpen ? 1 : 0.95, opacity: isOpen ? 1 : 0 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
           className="rounded-2xl overflow-hidden w-full max-w-md"
           style={cardStyle}
         >
@@ -405,7 +464,7 @@ export default function DevAgentsRegistrationForm({
               <span className="text-white/60 font-mono">{transactionCode}</span>
             </div>
             <button
-              onClick={onClose}
+              onClick={requestClose}
               className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all hover:scale-[1.02]"
               style={{ background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)" }}
             >
@@ -413,7 +472,8 @@ export default function DevAgentsRegistrationForm({
             </button>
           </div>
         </motion.div>
-      </div>
+      </motion.div>,
+      document.body,
     );
   }
 
@@ -421,15 +481,19 @@ export default function DevAgentsRegistrationForm({
      PAYMENT SCREEN
   ══════════════════════════════════════════════════════════════════ */
   if (step === "payment") {
-    return (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center px-4"
+    return createPortal(
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+        className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
         style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
         onClick={handleBackdrop}
       >
         <motion.div
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: isOpen ? 1 : 0.95, opacity: isOpen ? 1 : 0 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
           className="rounded-2xl overflow-hidden w-full max-w-md max-h-[90vh] overflow-y-auto"
           style={cardStyle}
         >
@@ -451,7 +515,7 @@ export default function DevAgentsRegistrationForm({
                 </p>
               </div>
               <button
-                onClick={onClose}
+                onClick={requestClose}
                 disabled={isSubmitting}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-colors"
                 style={{ background: "rgba(255,255,255,0.06)" }}
@@ -668,23 +732,28 @@ export default function DevAgentsRegistrationForm({
             </button>
           </div>
         </motion.div>
-      </div>
+      </motion.div>,
+      document.body,
     );
   }
 
   /* ══════════════════════════════════════════════════════════════════
      REGISTRATION FORM
   ══════════════════════════════════════════════════════════════════ */
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: isOpen ? 1 : 0 }}
+      transition={{ duration: 0.22, ease: "easeOut" }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
       style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
       onClick={handleBackdrop}
     >
       <motion.div
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="rounded-2xl overflow-hidden w-full max-w-lg max-h-[92vh] overflow-y-auto"
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: isOpen ? 1 : 0.95, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
+        className="rounded-2xl overflow-hidden w-full max-w-lg max-h-[90vh] overflow-y-auto"
         style={cardStyle}
       >
         <div
@@ -705,7 +774,7 @@ export default function DevAgentsRegistrationForm({
               </p>
             </div>
             <button
-              onClick={onClose}
+              onClick={requestClose}
               className="w-8 h-8 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-colors"
               style={{ background: "rgba(255,255,255,0.06)" }}
             >
@@ -932,6 +1001,7 @@ export default function DevAgentsRegistrationForm({
           </form>
         </div>
       </motion.div>
-    </div>
+    </motion.div>,
+    document.body,
   );
 }

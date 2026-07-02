@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { QRCodeSVG } from 'qrcode.react'
@@ -39,7 +40,11 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
   const [hasRegistered, setHasRegistered] = useState(false)
   const [checkingRegistration, setCheckingRegistration] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const closeTimerRef = useRef<number | null>(null)
+  const isSubmittingRef = useRef(false)
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false)
   
   const [formData, setFormData] = useState({
@@ -64,6 +69,70 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
   // UPI Payment Link with price locked and unique transaction code
   const transactionCode = generateUniqueCode()
   const UPI_PAYMENT_LINK = `upi://pay?pa=${UPI_ID}&pn=MatriXO&am=${ticket.price}&cu=INR&tn=${encodeURIComponent(`VibeCode IRL - ${transactionCode}`)}`
+
+  useEffect(() => {
+    isSubmittingRef.current = isSubmitting
+  }, [isSubmitting])
+
+  const requestClose = useCallback(() => {
+    if (isSubmittingRef.current) return
+
+    setIsOpen(false)
+
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current)
+    }
+
+    closeTimerRef.current = window.setTimeout(() => {
+      onClose()
+    }, 220)
+  }, [onClose])
+
+  useEffect(() => {
+    setMounted(true)
+    setIsOpen(true)
+
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    const previousBodyStyles = {
+      overflow: document.body.style.overflow,
+      paddingRight: document.body.style.paddingRight,
+      overscrollBehavior: document.body.style.overscrollBehavior,
+    }
+    const previousDocumentStyles = {
+      overflow: document.documentElement.style.overflow,
+      overscrollBehavior: document.documentElement.style.overscrollBehavior,
+    }
+
+    document.body.style.overflow = 'hidden'
+    document.body.style.overscrollBehavior = 'none'
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.style.overscrollBehavior = 'none'
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        requestClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = null
+      }
+      document.body.style.overflow = previousBodyStyles.overflow
+      document.body.style.paddingRight = previousBodyStyles.paddingRight
+      document.body.style.overscrollBehavior = previousBodyStyles.overscrollBehavior
+      document.documentElement.style.overflow = previousDocumentStyles.overflow
+      document.documentElement.style.overscrollBehavior = previousDocumentStyles.overscrollBehavior
+    }
+  }, [requestClose])
 
   // Check if user has already registered (using localStorage)
   useEffect(() => {
@@ -311,7 +380,7 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
       
       // Close modal after delay to let user see the success message
       setTimeout(() => {
-        onClose()
+        requestClose()
       }, 3000)
 
     } catch (error: any) {
@@ -327,28 +396,33 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
       e.stopPropagation()
       return
     }
-    onClose()
+    requestClose()
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (
+    createPortal(
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      animate={{ opacity: isOpen ? 1 : 0 }}
+      transition={{ duration: 0.22, ease: 'easeOut' }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
       onClick={handleModalBackdropClick}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: isOpen ? 1 : 0.95, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.22, ease: 'easeOut' }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-gradient-to-b from-[#0a1525] to-[#0d1830] 
+        className="relative w-full max-w-[700px] max-h-[90vh] overflow-y-auto bg-gradient-to-b from-[#0a1525] to-[#0d1830]
                    border border-cyan-500/30 rounded-3xl shadow-2xl shadow-cyan-500/20"
       >
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={requestClose}
           className="absolute top-6 right-6 p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-all z-10"
         >
           <FaTimes size={20} />
@@ -392,7 +466,7 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
                 Check your email for confirmation details. If you haven't received the email, please check your spam folder or contact us.
               </p>
               <button
-                onClick={onClose}
+                onClick={requestClose}
                 className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-xl transition-all"
               >
                 Close
@@ -576,7 +650,7 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={requestClose}
               disabled={isSubmitting}
               className="flex-1 px-6 py-4 bg-white/5 border border-cyan-500/30 rounded-xl text-white 
                        font-semibold hover:bg-white/10 transition-all disabled:opacity-50"
@@ -754,5 +828,6 @@ export default function VibeCodeRegistrationForm({ event, ticket, onClose }: Vib
         </motion.div>
       )}
     </motion.div>
+    , document.body)
   )
 }

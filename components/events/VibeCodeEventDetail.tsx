@@ -33,7 +33,6 @@ export default function VibeCodeEventDetail({ event }: { event: any }) {
   const [showRegistration, setShowRegistration] = useState(false)
   const [selectedTicket, setSelectedTicket] = useState<any>(null)
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
-  const ticketSectionRef = useRef<HTMLDivElement>(null)
   const scheduleSectionRef = useRef<HTMLDivElement>(null)
 
   const handleRegisterNow = (ticket: any) => {
@@ -48,13 +47,6 @@ export default function VibeCodeEventDetail({ event }: { event: any }) {
     }
     setSelectedTicket(ticket)
     setShowRegistration(true)
-  }
-
-  const scrollToTickets = () => {
-    ticketSectionRef.current?.scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'start' 
-    })
   }
 
   const scrollToSchedule = () => {
@@ -177,10 +169,10 @@ export default function VibeCodeEventDetail({ event }: { event: any }) {
               </div>
             </div>
 
-            {/* CTA Buttons */}
+              {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <motion.button
-                onClick={scrollToTickets}
+                onClick={() => handleRegisterNow(event.googleFormLink ? null : event.tickets[0])}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-bold text-lg text-white
@@ -394,7 +386,7 @@ export default function VibeCodeEventDetail({ event }: { event: any }) {
       </section>
 
       {/* PRICING & REGISTRATION RULES */}
-      <section ref={ticketSectionRef} className="py-20 px-6 bg-gradient-to-b from-transparent via-cyan-950/20 to-transparent" id="pricing">
+      <section className="py-20 px-6 bg-gradient-to-b from-transparent via-cyan-950/20 to-transparent" id="pricing">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
