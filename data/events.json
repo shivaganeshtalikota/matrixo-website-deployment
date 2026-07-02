@@ -39,9 +39,7 @@
         ]
       }
     ],
-    "partners": [
-      "matriXO"
-    ],
+    "partners": ["matriXO"],
     "sponsors": [],
     "agenda": [
       {
@@ -313,9 +311,7 @@
         ]
       }
     ],
-    "partners": [
-      "matriXO"
-    ],
+    "partners": ["matriXO"],
     "sponsors": [],
     "speakers": [
       {
@@ -720,10 +716,7 @@
       {
         "name": "PromptOff Championship",
         "description": "AI Prompt Engineering Competition — 3 rounds testing creativity, logic & technical thinking. Microsoft Participation Certificates for all. Win an exclusive campus tour at Microsoft Hyderabad! Fee: ₹149 (Individual)",
-        "images": [
-          "/events/wranglex/1.png",
-          "/events/wranglex/2.png"
-        ],
+        "images": ["/events/wranglex/1.png", "/events/wranglex/2.png"],
         "image": "/events/wranglex/1.png",
         "registrationLink": "https://datawranglers-jbiet.in/promptoff/",
         "category": "Tech Competition"
@@ -731,10 +724,7 @@
       {
         "name": "Tech Presenta",
         "description": "Technical Presentation Competition — Present innovative ideas through Idea Screening & Final Presentation rounds. Individual: ₹99 | Team of 2: ₹169. Win exciting prize money & certificates!",
-        "images": [
-          "/events/wranglex/3.png",
-          "/events/wranglex/4.png"
-        ],
+        "images": ["/events/wranglex/3.png", "/events/wranglex/4.png"],
         "image": "/events/wranglex/3.png",
         "registrationLink": "https://datawranglers-jbiet.in/tech-presenta/",
         "category": "Tech Competition"
@@ -742,10 +732,7 @@
       {
         "name": "Pottery Workshop",
         "description": "Hands-on clay modelling session — design and build unique pottery with guidance from instructors. Machines & tools provided. Refreshments included. Take home your creation! Team of 3: ₹449 | Team of 4: ₹549",
-        "images": [
-          "/events/wranglex/5.png",
-          "/events/wranglex/6.png"
-        ],
+        "images": ["/events/wranglex/5.png", "/events/wranglex/6.png"],
         "image": "/events/wranglex/5.png",
         "registrationLink": "https://datawranglers-jbiet.in/pottery/",
         "category": "Non-Tech"
@@ -753,10 +740,7 @@
       {
         "name": "BGMI Tournament",
         "description": "Battlegrounds Mobile India esports tournament — Squad Format (4 players). Classic Mode on Erangel, Sanhok & Miramar. Standard competitive rules apply. Prize pool: ₹7500!",
-        "images": [
-          "/events/wranglex/7.png",
-          "/events/wranglex/8.png"
-        ],
+        "images": ["/events/wranglex/7.png", "/events/wranglex/8.png"],
         "image": "/events/wranglex/7.png",
         "registrationLink": "https://datawranglers-jbiet.in/bgmi/",
         "category": "Esports"
@@ -764,14 +748,162 @@
       {
         "name": "Free Fire Tournament",
         "description": "Free Fire battle royale esports tournament — last team standing wins. Form your squad and compete for the prize pool!",
-        "images": [
-          "/events/wranglex/9.png",
-          "/events/wranglex/10.png"
-        ],
+        "images": ["/events/wranglex/9.png", "/events/wranglex/10.png"],
         "image": "/events/wranglex/9.png",
         "registrationLink": "https://datawranglers-jbiet.in/freefire/",
         "category": "Esports"
       }
     ]
+  },
+  {
+    "id": "devagents-1-0",
+    "slug": "devagents-1-0",
+    "title": "DevAgents 1.0",
+    "tagline": "From LLMs to Autonomous AI Agents",
+    "description": "DevAgents 1.0 is a beginner-friendly, hands-on workshop designed for students, developers, AI enthusiasts, and builders who want to learn how modern AI Agents work. Participants will go beyond prompt engineering and build autonomous AI agents capable of reasoning, planning, using tools, memory, and executing workflows.",
+    "date": "2026-08-15T15:30:00",
+    "endDate": "2026-08-15T19:00:00",
+    "venue": "Venue to be announced",
+    "location": "Hyderabad",
+    "totalCapacity": 150,
+    "ticketsSold": 0,
+    "featured": true,
+    "status": "upcoming",
+    "category": "Hands-on Agentic AI Workshop",
+    "isDevAgentsEvent": true,
+    "images": {
+      "banner": "/events/devagents-banner.png",
+      "thumbnail": "/events/devagents-banner.png",
+      "gallery": []
+    },
+    "tickets": [
+      {
+        "id": "devagents-pass",
+        "name": "DevAgents 1.0 Pass",
+        "price": 199,
+        "originalPrice": 299,
+        "available": 150,
+        "description": "Full access to the 3-hour hands-on Agentic AI workshop",
+        "perks": [
+          "3-hour live workshop",
+          "Practical coding session",
+          "Workshop resources & AI prompts",
+          "Source code access",
+          "Community access",
+          "Event stickers",
+          "Networking opportunity",
+          "Digital participation certificate from matriXO"
+        ]
+      }
+    ],
+    "partners": ["matriXO"],
+    "sponsors": [],
+    "speakers": [
+      {
+        "name": "Shiva Ganesh Talikota",
+        "title": "Founder — matriXO",
+        "designation": "Agentic AI Speaker · AI Educator · Startup Founder",
+        "bio": "Shiva Ganesh Talikota is the Founder of matriXO, an Agentic AI speaker, AI educator, and startup founder with a passion for making cutting-edge AI accessible to the next generation of developers.",
+        "image": "",
+        "socialLinks": {
+          "linkedin": "https://www.linkedin.com/in/shiva-ganesh-talikota/",
+          "instagram": "https://www.instagram.com/matrixo.in/"
+        }
+      }
+    ],
+    "agenda": [
+      { "time": "3:30 PM", "title": "Registration, Welcome & Networking" },
+      {
+        "time": "4:00 PM",
+        "title": "Opening Session — Introduction, Future of AI & Why AI Agents Matter"
+      },
+      {
+        "time": "4:30 PM",
+        "title": "Session 1 — Understanding LLMs & Prompt Engineering"
+      },
+      {
+        "time": "5:00 PM",
+        "title": "Session 2 — Introduction to Agentic AI: Autonomous AI, Planning, Reasoning, Tool Calling, Memory & Multi-Agent Systems"
+      },
+      {
+        "time": "5:45 PM",
+        "title": "Session 3 — Hands-on Workshop: Building AI Agents, Live Coding & Real Projects"
+      },
+      {
+        "time": "6:30 PM",
+        "title": "Fireside Chat (Planned) — AI Careers, Future Jobs & Startups"
+      },
+      { "time": "6:45 PM", "title": "Hands-on Challenge + Top 3 Recognition" },
+      {
+        "time": "7:00 PM",
+        "title": "Closing — Certificates, Networking & Group Photo"
+      }
+    ],
+    "tags": [
+      "Agentic AI",
+      "AI Workshop",
+      "AI Agents",
+      "LLM",
+      "Prompt Engineering",
+      "matriXO",
+      "Hyderabad"
+    ],
+    "organizer": "matriXO",
+    "ticketingPartner": "matriXO",
+    "contactEmail": "events@matrixo.in",
+    "socialLinks": {
+      "website": "https://matrixo.in",
+      "instagram": "https://www.instagram.com/matrixo.in/",
+      "linkedin": "https://www.linkedin.com/company/matrixo/"
+    },
+    "highlights": [
+      "Build your first AI agent in a 3-hour session",
+      "Hands-on labs with live coding",
+      "Learn Agentic AI from scratch",
+      "Real-world project experience",
+      "Top 3 performers recognised",
+      "Digital certificate for all attendees",
+      "Networking with 120+ AI enthusiasts"
+    ],
+    "faqs": [
+      {
+        "question": "Is it beginner-friendly?",
+        "answer": "Yes, DevAgents 1.0 is designed for beginners. No prior AI experience is required."
+      },
+      {
+        "question": "Do I need coding knowledge?",
+        "answer": "Basic programming knowledge is recommended. Familiarity with Python is a plus but not mandatory."
+      },
+      {
+        "question": "Should I bring a laptop?",
+        "answer": "Yes. A laptop is mandatory if you want to participate in the hands-on coding session. It is optional if you prefer to attend as an observer."
+      },
+      {
+        "question": "Will I get a certificate?",
+        "answer": "All attendees receive a digital participation certificate from matriXO. Any partner-issued certificates are subject to confirmation."
+      },
+      {
+        "question": "Is food included?",
+        "answer": "To be announced once finalised."
+      },
+      {
+        "question": "Can working professionals attend?",
+        "answer": "Yes, absolutely. The workshop is open to everyone interested in AI."
+      },
+      {
+        "question": "Will recordings be available?",
+        "answer": "Based on organiser policy — to be announced."
+      },
+      {
+        "question": "What is the refund policy?",
+        "answer": "To be announced. Please check back closer to the event date."
+      }
+    ],
+    "paymentInfo": {
+      "gateway": "UPI",
+      "amount": 199,
+      "currency": "INR",
+      "note": "Pay via UPI. Payment confirmation required to finalise registration."
+    }
   }
 ]

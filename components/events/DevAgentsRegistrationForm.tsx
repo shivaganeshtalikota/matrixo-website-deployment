@@ -1,0 +1,884 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaTimes,
+  FaSpinner,
+  FaCheckCircle,
+  FaCopy,
+  FaUpload,
+  FaTrash,
+} from "react-icons/fa";
+import { QRCodeSVG } from "qrcode.react";
+import { toast } from "sonner";
+import { useAuth } from "@/lib/AuthContext";
+
+interface DevAgentsRegistrationFormProps {
+  event: any;
+  onClose: () => void;
+}
+
+const UPI_ID = "vutukurikishan.8@okaxis";
+const PRICE = 199;
+
+const generateTransactionCode = () => {
+  const ts = Date.now();
+  const rand = Math.floor(Math.random() * 9000) + 1000;
+  return `DEVAGENTS-${ts}-${rand}`;
+};
+
+type Step = "form" | "payment" | "success";
+
+export default function DevAgentsRegistrationForm({
+  event,
+  onClose,
+}: DevAgentsRegistrationFormProps) {
+  const { user } = useAuth();
+  const [step, setStep] = useState<Step>("form");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(
+    null,
+  );
+  const [transactionCode] = useState(generateTransactionCode);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    college: "",
+    year: "",
+    branch: "",
+    city: "",
+    github: "",
+    linkedin: "",
+    experienceLevel: "",
+    whyAttend: "",
+    agreeTerms: false,
+  });
+
+  // Auto-fill from auth user
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.displayName || prev.name,
+        email: user.email || prev.email,
+      }));
+    }
+  }, [user]);
+
+  // Mobile detection
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    setIsMobile(
+      /android|iphone|ipad|ipod|mobile/.test(ua) || window.innerWidth < 768,
+    );
+  }, []);
+
+  const GOOGLE_SCRIPT_URL =
+    process.env.NEXT_PUBLIC_DEVAGENTS_GOOGLE_SCRIPT_URL || "";
+
+  const upiDeepLink = `upi://pay?pa=${UPI_ID}&pn=matriXO&am=${PRICE}&cu=INR&tn=${encodeURIComponent(`DevAgents1.0-${transactionCode}`)}`;
+
+  /* ── Handlers ─────────────────────────────────────────────────────── */
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { name, value, type } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    }));
+  };
+
+  const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File size must be under 5 MB");
+      return;
+    }
+    setPaymentScreenshot(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setScreenshotPreview(reader.result as string);
+    reader.readAsDataURL(file);
+    toast.success("Screenshot uploaded!");
+  };
+
+  const copyUpi = () => {
+    navigator.clipboard.writeText(UPI_ID);
+    toast.success("UPI ID copied!");
+  };
+
+  const copyTxCode = () => {
+    navigator.clipboard.writeText(transactionCode);
+    toast.success("Transaction code copied!");
+  };
+
+  /* ── Validation ──────────────────────────────────────────────────── */
+  const validateForm = (): boolean => {
+    if (!formData.name.trim()) {
+      toast.error("Full name is required");
+      return false;
+    }
+    if (!formData.email.trim() || !formData.email.includes("@")) {
+      toast.error("Valid email is required");
+      return false;
+    }
+    if (
+      !formData.phone.trim() ||
+      formData.phone.replace(/\D/g, "").length < 10
+    ) {
+      toast.error("Valid 10-digit phone number is required");
+      return false;
+    }
+    if (!formData.college.trim()) {
+      toast.error("College / Institution is required");
+      return false;
+    }
+    if (!formData.year) {
+      toast.error("Year of study is required");
+      return false;
+    }
+    if (!formData.branch.trim()) {
+      toast.error("Branch / Specialization is required");
+      return false;
+    }
+    if (!formData.city.trim()) {
+      toast.error("City is required");
+      return false;
+    }
+    if (!formData.experienceLevel) {
+      toast.error("Experience level is required");
+      return false;
+    }
+    if (!formData.whyAttend.trim() || formData.whyAttend.trim().length < 20) {
+      toast.error("Please share why you want to attend (min 20 chars)");
+      return false;
+    }
+    if (!formData.agreeTerms) {
+      toast.error("Please agree to the terms & conditions");
+      return false;
+    }
+    return true;
+  };
+
+  /* ── Submit to Google Sheet ──────────────────────────────────────── */
+  const sendToGoogleSheet = async (data: Record<string, unknown>) => {
+    if (!GOOGLE_SCRIPT_URL) return;
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      await new Promise((r) => setTimeout(r, 1500));
+    } catch {
+      // Don't block registration on sheet errors
+    }
+  };
+
+  /* ── Final submit (after payment + screenshot) ───────────────────── */
+  const handleFinalSubmit = async () => {
+    if (!paymentScreenshot) {
+      toast.error("Please upload your payment screenshot");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      // Convert screenshot to base64
+      const toBase64 = (file: File): Promise<string> =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+      const base64Screenshot = await toBase64(paymentScreenshot);
+
+      const payload: Record<string, unknown> = {
+        timestamp: new Date().toISOString(),
+        eventId: event?.id || "devagents-1-0",
+        eventTitle: event?.title || "DevAgents 1.0",
+        ticketType: "DevAgents 1.0 Pass",
+        price: PRICE,
+        transactionCode,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        college: formData.college,
+        year: formData.year,
+        branch: formData.branch,
+        city: formData.city,
+        github: formData.github || "",
+        linkedin: formData.linkedin || "",
+        experienceLevel: formData.experienceLevel,
+        whyAttend: formData.whyAttend,
+        paymentScreenshot: base64Screenshot,
+        status: "pending_verification",
+      };
+
+      await sendToGoogleSheet(payload);
+
+      // Store in localStorage to prevent duplicate submissions
+      const stored: string[] = JSON.parse(
+        localStorage.getItem("devagents_registrations") || "[]",
+      );
+      if (!stored.includes(formData.email)) {
+        stored.push(formData.email);
+        localStorage.setItem("devagents_registrations", JSON.stringify(stored));
+      }
+
+      setStep("success");
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  /* ── Shared styles ───────────────────────────────────────────────── */
+  const cardStyle: React.CSSProperties = {
+    background: "rgba(8,6,20,0.98)",
+    backdropFilter: "blur(24px)",
+    border: "1px solid rgba(99,102,241,0.3)",
+  };
+
+  const inputClass =
+    "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 " +
+    "focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all text-sm";
+
+  const labelClass = "block text-sm font-medium text-white/60 mb-1.5";
+
+  /* ── Step indicator ──────────────────────────────────────────────── */
+  const StepDots = () => (
+    <div className="flex items-center justify-center gap-2 mb-6">
+      {(["form", "payment", "success"] as Step[]).map((s, i) => (
+        <div key={s} className="flex items-center gap-2">
+          <div
+            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+            style={{
+              background:
+                step === s
+                  ? "linear-gradient(135deg,#3b82f6,#8b5cf6)"
+                  : step === "payment" && s === "form"
+                    ? "linear-gradient(135deg,#3b82f6,#8b5cf6)"
+                    : step === "success"
+                      ? "linear-gradient(135deg,#3b82f6,#8b5cf6)"
+                      : "rgba(255,255,255,0.08)",
+              color: "white",
+              boxShadow: step === s ? "0 0 12px rgba(99,102,241,0.5)" : "none",
+            }}
+          >
+            {(step === "payment" && s === "form") || step === "success" ? (
+              <FaCheckCircle className="text-xs" />
+            ) : (
+              i + 1
+            )}
+          </div>
+          {i < 2 && (
+            <div
+              className="w-8 h-px"
+              style={{
+                background:
+                  (step === "payment" && i === 0) || step === "success"
+                    ? "linear-gradient(90deg,#3b82f6,#8b5cf6)"
+                    : "rgba(255,255,255,0.1)",
+              }}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  /* ── Backdrop ────────────────────────────────────────────────────── */
+  const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget && !isSubmitting) onClose();
+  };
+
+  /* ══════════════════════════════════════════════════════════════════
+     SUCCESS SCREEN
+  ══════════════════════════════════════════════════════════════════ */
+  if (step === "success") {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center px-4"
+        style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+        onClick={handleBackdrop}
+      >
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className="rounded-2xl overflow-hidden w-full max-w-md"
+          style={cardStyle}
+        >
+          <div
+            className="h-1 w-full"
+            style={{
+              background: "linear-gradient(90deg,#3b82f6,#8b5cf6,#06b6d4)",
+            }}
+          />
+          <div className="p-8 text-center space-y-5">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 20,
+                delay: 0.1,
+              }}
+              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
+              style={{
+                background: "rgba(34,197,94,0.15)",
+                boxShadow: "0 0 30px rgba(34,197,94,0.25)",
+              }}
+            >
+              <FaCheckCircle className="text-green-400 text-4xl" />
+            </motion.div>
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-2">
+                Registration Submitted!
+              </h3>
+              <p className="text-white/50 text-sm leading-relaxed">
+                We&apos;ll verify your payment and send a confirmation to{" "}
+                <span className="text-blue-400 font-medium">
+                  {formData.email}
+                </span>
+                . Confirmation may take up to 24 hours.
+              </p>
+            </div>
+            <div
+              className="p-3 rounded-xl text-xs text-white/40"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.06)",
+              }}
+            >
+              Transaction ref:{" "}
+              <span className="text-white/60 font-mono">{transactionCode}</span>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all hover:scale-[1.02]"
+              style={{ background: "linear-gradient(135deg,#2563eb,#7c3aed)" }}
+            >
+              Close
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     PAYMENT SCREEN
+  ══════════════════════════════════════════════════════════════════ */
+  if (step === "payment") {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center px-4"
+        style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+        onClick={handleBackdrop}
+      >
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="rounded-2xl overflow-hidden w-full max-w-md max-h-[90vh] overflow-y-auto"
+          style={cardStyle}
+        >
+          <div
+            className="h-1 w-full"
+            style={{
+              background: "linear-gradient(90deg,#3b82f6,#8b5cf6,#06b6d4)",
+            }}
+          />
+          <div className="p-6 space-y-5">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-white">
+                  Complete Payment
+                </h3>
+                <p className="text-xs text-white/40">
+                  Step 2 of 3 — Pay ₹{PRICE} via UPI
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                disabled={isSubmitting}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-colors"
+                style={{ background: "rgba(255,255,255,0.06)" }}
+              >
+                <FaTimes className="text-xs" />
+              </button>
+            </div>
+
+            <StepDots />
+
+            {/* Amount */}
+            <div
+              className="p-4 rounded-xl text-center"
+              style={{
+                background: "rgba(59,130,246,0.07)",
+                border: "1px solid rgba(59,130,246,0.18)",
+              }}
+            >
+              <p
+                className="text-4xl font-bold"
+                style={{
+                  background: "linear-gradient(90deg,#60a5fa,#a78bfa)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                ₹{PRICE}
+              </p>
+              <p className="text-xs text-white/40 mt-1">
+                DevAgents 1.0 — Workshop Pass
+              </p>
+            </div>
+
+            {/* Transaction code */}
+            <div>
+              <p className="text-xs text-white/40 mb-1.5 uppercase tracking-wider">
+                Your Transaction Reference
+              </p>
+              <div
+                className="flex items-center justify-between p-3 rounded-xl gap-2"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <span className="text-white/70 font-mono text-xs truncate">
+                  {transactionCode}
+                </span>
+                <button
+                  onClick={copyTxCode}
+                  className="flex-shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-blue-400 hover:text-blue-300"
+                  style={{ background: "rgba(59,130,246,0.1)" }}
+                >
+                  <FaCopy className="text-xs" /> Copy
+                </button>
+              </div>
+              <p className="text-xs text-white/30 mt-1">
+                Add this as a note in your UPI transaction
+              </p>
+            </div>
+
+            {/* QR or deep link */}
+            {isMobile ? (
+              <a
+                href={upiDeepLink}
+                className="flex items-center justify-center gap-3 w-full py-4 rounded-xl font-bold text-white transition-all hover:scale-[1.02]"
+                style={{
+                  background: "linear-gradient(135deg,#2563eb,#7c3aed)",
+                  boxShadow: "0 0 20px rgba(99,102,241,0.3)",
+                }}
+              >
+                <span className="text-xl">📱</span>
+                <span>Pay ₹{PRICE} with UPI App</span>
+              </a>
+            ) : (
+              <div className="flex flex-col items-center gap-3">
+                <div
+                  className="p-4 rounded-2xl"
+                  style={{ background: "rgba(255,255,255,0.96)" }}
+                >
+                  <QRCodeSVG
+                    value={upiDeepLink}
+                    size={180}
+                    bgColor="#f5f5f5"
+                    fgColor="#1e1b4b"
+                  />
+                </div>
+                <p className="text-xs text-white/40 text-center">
+                  Scan with GPay, PhonePe, Paytm or any UPI app
+                </p>
+              </div>
+            )}
+
+            {/* UPI ID */}
+            <div>
+              <p className="text-xs text-white/40 mb-1.5 uppercase tracking-wider">
+                UPI ID
+              </p>
+              <div
+                className="flex items-center justify-between p-3 rounded-xl"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <span className="text-white font-mono text-sm">{UPI_ID}</span>
+                <button
+                  onClick={copyUpi}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-blue-400 hover:text-blue-300"
+                  style={{ background: "rgba(59,130,246,0.1)" }}
+                >
+                  <FaCopy /> Copy
+                </button>
+              </div>
+            </div>
+
+            {/* Screenshot upload */}
+            <div>
+              <p className={labelClass}>Upload Payment Screenshot *</p>
+              {screenshotPreview ? (
+                <div className="relative">
+                  <img
+                    src={screenshotPreview}
+                    alt="Payment screenshot"
+                    className="w-full h-40 object-cover rounded-xl border border-white/10"
+                  />
+                  <button
+                    onClick={() => {
+                      setPaymentScreenshot(null);
+                      setScreenshotPreview(null);
+                    }}
+                    className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors"
+                    style={{ background: "rgba(239,68,68,0.7)" }}
+                  >
+                    <FaTrash className="text-xs" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-28 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all hover:border-blue-500/40"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.12)",
+                    background: "rgba(255,255,255,0.03)",
+                  }}
+                >
+                  <FaUpload className="text-white/30 text-xl" />
+                  <span className="text-xs text-white/40">
+                    Click to upload (max 5 MB)
+                  </span>
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleScreenshotChange}
+              />
+            </div>
+
+            {/* Confirm button */}
+            <button
+              onClick={handleFinalSubmit}
+              disabled={isSubmitting || !paymentScreenshot}
+              className="w-full py-3.5 rounded-xl font-bold text-white text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: paymentScreenshot
+                  ? "linear-gradient(135deg,#2563eb,#7c3aed)"
+                  : "rgba(255,255,255,0.06)",
+                boxShadow: paymentScreenshot
+                  ? "0 0 20px rgba(99,102,241,0.3)"
+                  : "none",
+              }}
+            >
+              {isSubmitting ? (
+                <>
+                  <FaSpinner className="animate-spin" /> Submitting…
+                </>
+              ) : (
+                "Complete Registration"
+              )}
+            </button>
+
+            <button
+              onClick={() => !isSubmitting && setStep("form")}
+              disabled={isSubmitting}
+              className="w-full text-center text-xs text-white/30 hover:text-white/60 transition-colors"
+            >
+              ← Back to form
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     REGISTRATION FORM
+  ══════════════════════════════════════════════════════════════════ */
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+      onClick={handleBackdrop}
+    >
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="rounded-2xl overflow-hidden w-full max-w-lg max-h-[92vh] overflow-y-auto"
+        style={cardStyle}
+      >
+        <div
+          className="h-1 w-full"
+          style={{
+            background: "linear-gradient(90deg,#3b82f6,#8b5cf6,#06b6d4)",
+          }}
+        />
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="text-xl font-bold text-white">
+                Register for DevAgents 1.0
+              </h3>
+              <p className="text-xs text-white/40 mt-0.5">
+                Step 1 of 3 — Fill in your details
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white/40 hover:text-white transition-colors"
+              style={{ background: "rgba(255,255,255,0.06)" }}
+            >
+              <FaTimes className="text-xs" />
+            </button>
+          </div>
+
+          <StepDots />
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (validateForm()) setStep("payment");
+            }}
+            className="space-y-4"
+          >
+            {/* Row: Name */}
+            <div>
+              <label className={labelClass}>Full Name *</label>
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Your full name"
+                className={inputClass}
+              />
+            </div>
+
+            {/* Row: Email + Phone */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className={labelClass}>Email *</label>
+                <input
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Phone Number *</label>
+                <input
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="10-digit number"
+                  className={inputClass}
+                />
+              </div>
+            </div>
+
+            {/* Row: College */}
+            <div>
+              <label className={labelClass}>College / Institution *</label>
+              <input
+                name="college"
+                value={formData.college}
+                onChange={handleChange}
+                placeholder="Name of your college or organisation"
+                className={inputClass}
+              />
+            </div>
+
+            {/* Row: Year + Branch */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className={labelClass}>Year of Study *</label>
+                <select
+                  name="year"
+                  value={formData.year}
+                  onChange={handleChange}
+                  className={inputClass}
+                >
+                  <option value="" disabled>
+                    Select year
+                  </option>
+                  <option>1st Year</option>
+                  <option>2nd Year</option>
+                  <option>3rd Year</option>
+                  <option>4th Year</option>
+                  <option>Working Professional</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Branch / Specialization *</label>
+                <input
+                  name="branch"
+                  value={formData.branch}
+                  onChange={handleChange}
+                  placeholder="e.g. CSE, ECE, MBA…"
+                  className={inputClass}
+                />
+              </div>
+            </div>
+
+            {/* Row: City */}
+            <div>
+              <label className={labelClass}>City *</label>
+              <input
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="Your current city"
+                className={inputClass}
+              />
+            </div>
+
+            {/* Row: GitHub + LinkedIn */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className={labelClass}>
+                  GitHub Profile{" "}
+                  <span className="text-white/30">(optional)</span>
+                </label>
+                <input
+                  name="github"
+                  value={formData.github}
+                  onChange={handleChange}
+                  placeholder="github.com/username"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>
+                  LinkedIn Profile{" "}
+                  <span className="text-white/30">(optional)</span>
+                </label>
+                <input
+                  name="linkedin"
+                  value={formData.linkedin}
+                  onChange={handleChange}
+                  placeholder="linkedin.com/in/username"
+                  className={inputClass}
+                />
+              </div>
+            </div>
+
+            {/* Experience Level */}
+            <div>
+              <label className={labelClass}>Experience Level *</label>
+              <select
+                name="experienceLevel"
+                value={formData.experienceLevel}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                <option value="" disabled>
+                  Select your level
+                </option>
+                <option>Complete Beginner</option>
+                <option>Some Programming Experience</option>
+                <option>Intermediate Developer</option>
+                <option>Advanced Developer</option>
+              </select>
+            </div>
+
+            {/* Why attend */}
+            <div>
+              <label className={labelClass}>Why do you want to attend? *</label>
+              <textarea
+                name="whyAttend"
+                value={formData.whyAttend}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Tell us what you hope to learn or achieve (min 20 chars)…"
+                className={inputClass + " resize-none"}
+              />
+              <p className="text-xs text-white/20 mt-1 text-right">
+                {formData.whyAttend.length} chars
+              </p>
+            </div>
+
+            {/* Agree to terms */}
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                name="agreeTerms"
+                checked={formData.agreeTerms}
+                onChange={handleChange}
+                className="mt-1 w-4 h-4 rounded border-white/20 accent-blue-500 cursor-pointer"
+              />
+              <span className="text-xs text-white/50 group-hover:text-white/70 transition-colors leading-relaxed">
+                I agree to the{" "}
+                <a
+                  href="/terms"
+                  target="_blank"
+                  className="text-blue-400 underline"
+                >
+                  terms & conditions
+                </a>{" "}
+                and understand the{" "}
+                <a
+                  href="/refund"
+                  target="_blank"
+                  className="text-blue-400 underline"
+                >
+                  refund policy
+                </a>
+                .
+              </span>
+            </label>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full py-4 rounded-xl font-bold text-white text-sm transition-all hover:scale-[1.02] mt-2"
+              style={{
+                background: "linear-gradient(135deg,#2563eb,#7c3aed)",
+                boxShadow: "0 0 24px rgba(99,102,241,0.3)",
+              }}
+            >
+              Continue to Payment →
+            </button>
+
+            <p className="text-center text-xs text-white/20 pb-2">
+              Ticket price:{" "}
+              <span className="text-white/40 font-semibold">₹{PRICE}</span> ·
+              Limited to 150 seats
+            </p>
+          </form>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
