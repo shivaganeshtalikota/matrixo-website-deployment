@@ -18,6 +18,11 @@ import {
   FaRupeeSign,
   FaBolt,
   FaLock,
+  FaSubway,
+  FaBus,
+  FaMotorcycle,
+  FaTaxi,
+  FaExternalLinkAlt,
 } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi";
 import { BiCodeAlt } from "react-icons/bi";
@@ -27,6 +32,10 @@ import {
   DEVAGENTS_SPEAKER_IMAGE_URL,
   MATRIXO_LOGO_DARK_URL,
   MATRIXO_LOGO_LIGHT_URL,
+  THE_STUDENT_SPOT_LOGO_DARK_URL,
+  THE_STUDENT_SPOT_LOGO_LIGHT_URL,
+  ANY_EVENTS_AHEAD_LOGO_DARK_URL,
+  ANY_EVENTS_AHEAD_LOGO_LIGHT_URL,
 } from "@/lib/eventBranding";
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -224,6 +233,21 @@ const WHATS_INCLUDED = [
   "Partner certificates (subject to confirmation)",
 ];
 
+const PARTNERS = [
+  {
+    name: "The Student Spot",
+    role: "Community Partner",
+    logoLight: THE_STUDENT_SPOT_LOGO_LIGHT_URL,
+    logoDark: THE_STUDENT_SPOT_LOGO_DARK_URL,
+  },
+  {
+    name: "Any Events Ahead",
+    role: "Event Partner",
+    logoLight: ANY_EVENTS_AHEAD_LOGO_LIGHT_URL,
+    logoDark: ANY_EVENTS_AHEAD_LOGO_DARK_URL,
+  },
+];
+
 const WHO_SHOULD_ATTEND = [
   { icon: "🎓", label: "Students" },
   { icon: "👨‍💻", label: "Developers" },
@@ -278,6 +302,40 @@ interface CountdownType {
   hours: number;
   minutes: number;
   seconds: number;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Partner logo — theme-aware with graceful fallback if an asset is missing
+───────────────────────────────────────────────────────────────────────── */
+function PartnerLogo({ name, src }: { name: string; src: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <div
+        className="w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0"
+        style={{
+          background: "linear-gradient(135deg,#3b82f6,#8b5cf6)",
+        }}
+      >
+        {name.charAt(0)}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-6 h-6 relative flex-shrink-0">
+      <Image
+        src={src}
+        alt={name}
+        fill
+        sizes="24px"
+        className="object-contain"
+        unoptimized
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
 }
 
 /* ═════════════════════════════════════════════════════════════════════════
@@ -355,6 +413,11 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
   const scrollToAgenda = () =>
     document
       .getElementById("agenda")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const scrollToHowToReach = () =>
+    document
+      .getElementById("how-to-reach")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   /* ───────────────────────────────────────────────────────────────────── */
@@ -697,31 +760,59 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                   label: "Capacity",
                   value: "120 Participants",
                 },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="flex items-start gap-3 p-3 rounded-xl"
-                  style={{
-                    background: isDarkMode
-                      ? "rgba(255,255,255,.03)"
-                      : "rgba(15,23,42,.03)",
-                  }}
-                >
-                  <span className="text-2xl leading-none mt-0.5 flex-shrink-0">
-                    {item.icon}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-xs text-slate-500 uppercase tracking-wider font-medium">
-                      {item.label}
-                    </p>
-                    <p
-                      className={`text-sm font-semibold mt-0.5 truncate ${textPrimaryClass}`}
+              ].map((item) => {
+                const isVenue = item.label === "Venue";
+                const cardContent = (
+                  <>
+                    <span className="text-2xl leading-none mt-0.5 flex-shrink-0">
+                      {item.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs text-slate-500 uppercase tracking-wider font-medium">
+                        {item.label}
+                      </p>
+                      <p
+                        className={`text-sm font-semibold mt-0.5 truncate ${textPrimaryClass}`}
+                      >
+                        {item.value}
+                      </p>
+                    </div>
+                  </>
+                );
+
+                if (isVenue) {
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      onClick={scrollToHowToReach}
+                      aria-label="View directions to DraperU India"
+                      className="flex items-start gap-3 p-3 rounded-xl w-full text-left cursor-pointer transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-[0_0_0_1px_rgba(124,58,237,.4),0_8px_28px_rgba(124,58,237,.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+                      style={{
+                        background: isDarkMode
+                          ? "rgba(255,255,255,.03)"
+                          : "rgba(15,23,42,.03)",
+                      }}
                     >
-                      {item.value}
-                    </p>
+                      {cardContent}
+                    </button>
+                  );
+                }
+
+                return (
+                  <div
+                    key={item.label}
+                    className="flex items-start gap-3 p-3 rounded-xl"
+                    style={{
+                      background: isDarkMode
+                        ? "rgba(255,255,255,.03)"
+                        : "rgba(15,23,42,.03)",
+                    }}
+                  >
+                    {cardContent}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
         </div>
@@ -829,145 +920,146 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
-          4. LEARNING OUTCOMES
+          4. LEARNING OUTCOMES + 5. WORKSHOP AGENDA
       ══════════════════════════════════════════════════════════════════ */}
       <section id="outcomes" className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2
-              className={`text-3xl md:text-4xl font-bold font-display mb-4 ${textPrimaryClass}`}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[6fr_5fr] gap-8 lg:gap-10 items-start">
+          {/* What You'll Learn */}
+          <div>
+            <motion.div
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="text-center mb-12"
             >
-              What You&apos;ll Learn
-            </h2>
-            <p className={textSecondaryClass}>
-              12 core modules packed into an intensive 3-hour session
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {LEARNING_OUTCOMES.map((item, i) => (
-              <motion.div
-                key={item.title}
-                variants={fadeInUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className={`da-card-hover da-border-glow p-5 rounded-2xl cursor-default ${surfaceClass}`}
+              <h2
+                className={`text-3xl md:text-4xl font-bold font-display mb-4 ${textPrimaryClass}`}
               >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 text-lg"
-                  style={{
-                    background:
-                      "linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.2))",
-                  }}
-                >
-                  {item.icon}
-                </div>
-                <h3 className={`font-bold text-sm mb-1 ${textPrimaryClass}`}>
-                  {item.title}
-                </h3>
-                <p className={`text-xs leading-relaxed ${textSecondaryClass}`}>
-                  {item.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                What You&apos;ll Learn
+              </h2>
+              <p className={textSecondaryClass}>
+                12 core modules packed into an intensive 3-hour session
+              </p>
+            </motion.div>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          5. WORKSHOP AGENDA
-      ══════════════════════════════════════════════════════════════════ */}
-      <section id="agenda" className="py-20 px-4">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-14"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold font-display text-white mb-4">
-              Workshop Agenda
-            </h2>
-            <p className="text-slate-400">
-              A packed 3.5-hour journey into Agentic AI
-            </p>
-          </motion.div>
-
-          <div className="relative">
-            {/* Glowing vertical timeline line */}
-            <div
-              className="absolute left-[44px] top-0 bottom-0 w-px"
-              style={{
-                background: "linear-gradient(to bottom, #3b82f6, #8b5cf6)",
-              }}
-            />
-
-            <div className="space-y-5">
-              {AGENDA.map((item, index) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {LEARNING_OUTCOMES.map((item, i) => (
                 <motion.div
-                  key={index}
+                  key={item.title}
                   variants={fadeInUp}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.06 }}
-                  className="relative flex gap-6 items-start"
+                  transition={{ delay: i * 0.05 }}
+                  className={`da-card-hover da-border-glow p-4 rounded-2xl cursor-default flex flex-col items-center text-center aspect-square ${surfaceClass}`}
                 >
-                  {/* Icon + time */}
-                  <div className="flex-shrink-0 flex flex-col items-center gap-1 w-[88px]">
-                    <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center text-base z-10 relative"
-                      style={{
-                        background: "linear-gradient(135deg,#1e40af,#5b21b6)",
-                        border: "2px solid rgba(124,58,237,.5)",
-                      }}
-                    >
-                      {item.icon}
-                    </div>
-                    <span className="text-[11px] text-blue-400 font-semibold tabular-nums font-display">
-                      {item.time}
-                    </span>
-                  </div>
-
-                  {/* Content card */}
                   <div
-                    className="flex-1 p-4 rounded-xl mb-1"
+                    className="w-9 h-9 rounded-xl flex items-center justify-center mb-2 text-base"
                     style={{
-                      background: "rgba(22,22,35,.85)",
-                      border: "1px solid rgba(255,255,255,.08)",
+                      background:
+                        "linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.2))",
                     }}
                   >
-                    <div className="flex flex-wrap items-start justify-between gap-2">
-                      <h3 className="font-bold text-white text-sm">
-                        {item.title}
-                      </h3>
-                      {item.badge && (
-                        <span
-                          className="text-xs px-2 py-0.5 rounded-full text-yellow-400 font-medium flex-shrink-0"
-                          style={{
-                            background: "rgba(234,179,8,.1)",
-                            border: "1px solid rgba(234,179,8,.25)",
-                          }}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                      {item.desc}
-                    </p>
+                    {item.icon}
                   </div>
+                  <h3 className={`font-bold text-sm mb-1 ${textPrimaryClass}`}>
+                    {item.title}
+                  </h3>
+                  <p
+                    className={`text-xs leading-relaxed ${textSecondaryClass}`}
+                  >
+                    {item.desc}
+                  </p>
                 </motion.div>
               ))}
+            </div>
+          </div>
+
+          {/* Workshop Agenda */}
+          <div id="agenda">
+            <motion.div
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold font-display text-white mb-4">
+                Workshop Agenda
+              </h2>
+              <p className="text-slate-400">
+                A packed 3.5-hour journey into Agentic AI
+              </p>
+            </motion.div>
+
+            <div className="relative">
+              {/* Glowing vertical timeline line */}
+              <div
+                className="absolute left-[44px] top-0 bottom-0 w-px"
+                style={{
+                  background: "linear-gradient(to bottom, #3b82f6, #8b5cf6)",
+                }}
+              />
+
+              <div className="space-y-4">
+                {AGENDA.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    variants={fadeInUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.06 }}
+                    className="relative flex gap-6 items-start"
+                  >
+                    {/* Icon + time */}
+                    <div className="flex-shrink-0 flex flex-col items-center gap-1 w-[88px]">
+                      <div
+                        className="w-9 h-9 rounded-full flex items-center justify-center text-base z-10 relative"
+                        style={{
+                          background: "linear-gradient(135deg,#1e40af,#5b21b6)",
+                          border: "2px solid rgba(124,58,237,.5)",
+                        }}
+                      >
+                        {item.icon}
+                      </div>
+                      <span className="text-[11px] text-blue-400 font-semibold tabular-nums font-display">
+                        {item.time}
+                      </span>
+                    </div>
+
+                    {/* Content card */}
+                    <div
+                      className="flex-1 p-3 rounded-xl mb-1"
+                      style={{
+                        background: "rgba(22,22,35,.85)",
+                        border: "1px solid rgba(255,255,255,.08)",
+                      }}
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <h3 className="font-bold text-white text-sm">
+                          {item.title}
+                        </h3>
+                        {item.badge && (
+                          <span
+                            className="text-xs px-2 py-0.5 rounded-full text-yellow-400 font-medium flex-shrink-0"
+                            style={{
+                              background: "rgba(234,179,8,.1)",
+                              border: "1px solid rgba(234,179,8,.25)",
+                            }}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -1069,6 +1161,282 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 ))}
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          7.5 HOW TO REACH
+      ══════════════════════════════════════════════════════════════════ */}
+      <section id="how-to-reach" className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2
+              className={`text-3xl md:text-4xl font-bold font-display mb-4 ${textPrimaryClass}`}
+            >
+              📍 How to Reach?
+            </h2>
+            <p className={textSecondaryClass}>
+              Getting to DraperU India is quick and easy
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr] gap-6 lg:gap-8 items-stretch">
+            {/* Map Card */}
+            <motion.div
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className={`da-card-hover rounded-[20px] overflow-hidden flex flex-col ${surfaceClass}`}
+            >
+              <div className="p-6 pb-4 flex items-start gap-3">
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{
+                    background:
+                      "linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.2))",
+                  }}
+                >
+                  <FaMapMarkerAlt className="text-blue-400 text-lg" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className={`font-bold text-lg ${textPrimaryClass}`}>
+                    DraperU India
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    (Formerly Draper Startup House Hyderabad)
+                  </p>
+                  <p className={`text-sm mt-1 ${textSecondaryClass}`}>
+                    Rajiv Gandhi Nagar, Gachibowli, Hyderabad - 500032
+                  </p>
+                </div>
+              </div>
+
+              <div className="w-full h-[320px] lg:h-[380px] px-6">
+                <iframe
+                  src="https://www.google.com/maps?q=DraperU%20India%20Rajiv%20Gandhi%20Nagar%20Gachibowli%20Hyderabad%20500032&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="DraperU India location map"
+                  className="w-full h-full rounded-2xl"
+                />
+              </div>
+
+              <div className="p-6 pt-4 mt-auto">
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=DraperU+India+Rajiv+Gandhi+Nagar+Gachibowli+Hyderabad+500032"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[.98] ${accentButtonClass}`}
+                >
+                  <FaMapMarkerAlt />
+                  Open in Google Maps
+                  <FaExternalLinkAlt className="text-xs" />
+                </a>
+              </div>
+            </motion.div>
+
+            {/* Transport Cards */}
+            <div className="flex flex-col gap-5">
+              {/* Metro */}
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ delay: 0.05 }}
+                className={`da-card-hover rounded-[20px] p-6 ${surfaceClass}`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.2))",
+                    }}
+                  >
+                    <FaSubway className="text-blue-400" />
+                  </div>
+                  <h3 className={`font-bold ${textPrimaryClass}`}>By Metro</h3>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">Nearest Metro</span>
+                    <span
+                      className={`font-semibold text-right ${textPrimaryClass}`}
+                    >
+                      Raidurg Metro Station
+                    </span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">Distance</span>
+                    <span className={`font-semibold ${textPrimaryClass}`}>
+                      ~2 km
+                    </span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span className="text-slate-500">Travel Time</span>
+                    <span
+                      className={`font-semibold text-right ${textPrimaryClass}`}
+                    >
+                      5–8 min by cab/auto
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Bus */}
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className={`da-card-hover rounded-[20px] p-6 ${surfaceClass}`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.2))",
+                    }}
+                  >
+                    <FaBus className="text-violet-400" />
+                  </div>
+                  <h3 className={`font-bold ${textPrimaryClass}`}>By Bus</h3>
+                </div>
+
+                <p className="text-xs uppercase tracking-wider text-slate-500 font-medium mb-2">
+                  Nearby Bus Stops
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {["Indra Nagar", "Gachibowli X Road", "IIIT Bus Stop"].map(
+                    (stop) => (
+                      <span
+                        key={stop}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${textSecondaryClass}`}
+                        style={{
+                          background: isDarkMode
+                            ? "rgba(255,255,255,.05)"
+                            : "rgba(15,23,42,.04)",
+                          borderColor: isDarkMode
+                            ? "rgba(255,255,255,.1)"
+                            : "rgba(15,23,42,.1)",
+                        }}
+                      >
+                        {stop}
+                      </span>
+                    ),
+                  )}
+                </div>
+
+                <p className="text-xs uppercase tracking-wider text-slate-500 font-medium mb-2">
+                  Bus Routes
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {["113M/W", "198", "216M", "217D/A", "17H/47W"].map(
+                    (route) => (
+                      <span
+                        key={route}
+                        className="px-3 py-1 rounded-full text-xs font-bold text-violet-300"
+                        style={{
+                          background:
+                            "linear-gradient(135deg,rgba(59,130,246,.15),rgba(139,92,246,.15))",
+                          border: "1px solid rgba(124,58,237,.3)",
+                        }}
+                      >
+                        {route}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Rapido / Uber */}
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ delay: 0.15 }}
+                className={`da-card-hover rounded-[20px] p-6 ${surfaceClass}`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.2))",
+                    }}
+                  >
+                    <FaTaxi className="text-pink-400" />
+                  </div>
+                  <h3 className={`font-bold ${textPrimaryClass}`}>
+                    Rapido / Uber
+                  </h3>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    {
+                      icon: <FaMotorcycle className="text-blue-400" />,
+                      label: "Rapido Bike",
+                      time: "5–8 min",
+                      price: "₹35–70",
+                    },
+                    {
+                      icon: <FaTaxi className="text-violet-400" />,
+                      label: "Uber/Ola Auto",
+                      time: "5–10 min",
+                      price: "₹60–120",
+                    },
+                    {
+                      icon: <FaTaxi className="text-pink-400" />,
+                      label: "Uber Cab",
+                      time: "5–8 min",
+                      price: "₹120–220",
+                    },
+                  ].map((r) => (
+                    <div
+                      key={r.label}
+                      className="flex items-center justify-between gap-3 p-3 rounded-xl"
+                      style={{
+                        background: isDarkMode
+                          ? "rgba(255,255,255,.03)"
+                          : "rgba(15,23,42,.03)",
+                      }}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {r.icon}
+                        <span
+                          className={`text-sm font-semibold truncate ${textPrimaryClass}`}
+                        >
+                          {r.label}
+                        </span>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className={`text-sm font-bold ${textPrimaryClass}`}>
+                          {r.price}
+                        </p>
+                        <p className="text-xs text-slate-500">{r.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -1523,23 +1891,30 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               </div>
             </motion.div>
 
-            {/* Partner spot placeholders */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
-              {[1, 2, 3].map((n) => (
+            {/* Partner cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full max-w-lg mx-auto">
+              {PARTNERS.map((partner) => (
                 <motion.div
-                  key={n}
+                  key={partner.name}
                   variants={fadeInUp}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  className="h-20 rounded-xl flex items-center justify-center"
+                  className="h-20 rounded-xl flex flex-col items-center justify-center gap-0.5 px-2"
                   style={{
                     border: "1px dashed rgba(255,255,255,.1)",
                     background: "rgba(255,255,255,.02)",
                   }}
                 >
-                  <p className="text-slate-600 text-xs">
-                    Partner Spot Available
+                  <PartnerLogo
+                    name={partner.name}
+                    src={isDarkMode ? partner.logoDark : partner.logoLight}
+                  />
+                  <p className="text-slate-300 text-[11px] font-semibold leading-tight text-center">
+                    {partner.name}
+                  </p>
+                  <p className="text-slate-600 text-[10px] leading-tight text-center">
+                    {partner.role}
                   </p>
                 </motion.div>
               ))}
