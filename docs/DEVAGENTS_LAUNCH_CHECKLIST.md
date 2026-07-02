@@ -5,8 +5,8 @@
 - Placeholder testimonial section removed from the DevAgents page.
 - Speaker/logo handling now supports Firebase-hosted asset URLs with local fallbacks.
 - Payment modal now uses the main-site gradient palette.
-- Registration receipt email endpoint added at `/api/devagents/register`.
-- Approval email endpoint added at `/api/devagents/approve` with QR code support.
+- Registration now posts directly to the DevAgents Google Apps Script web app.
+- Approval emails are sent from the same Google Apps Script web app.
 
 ## What you still need to provide
 1. **UPI ID**
@@ -21,20 +21,17 @@
      - `NEXT_PUBLIC_MATRIXO_LOGO_LIGHT_URL`
      - `NEXT_PUBLIC_MATRIXO_LOGO_DARK_URL`
 
-3. **Email delivery**
-   - Set `RESEND_API_KEY` and `RESEND_FROM_EMAIL`.
-   - Make sure the sender domain is verified in Resend.
-
-4. **Google Sheet / Apps Script**
+3. **Google Sheet / Apps Script**
    - Keep `NEXT_PUBLIC_DEVAGENTS_GOOGLE_SCRIPT_URL` pointed at the sheet endpoint.
    - Confirm the script stores the entry number / transaction code and screenshot status.
+   - Configure the Apps Script sender with `MailApp.sendEmail()` or `GmailApp.sendEmail()`.
 
 ## Recommended approval workflow
 1. User submits the registration form.
 2. The site sends the payment screenshot to Google Sheets.
-3. `/api/devagents/register` sends the **registration received** email.
+3. Google Apps Script saves the registration in Sheets and sends the **registration received** email.
 4. Employee checks the payment screenshot in the sheet.
-5. After approval, call `/api/devagents/approve` with:
+5. After approval, call the Apps Script with:
    - `name`
    - `email`
    - `entryNumber`

@@ -203,14 +203,24 @@ export default function DevAgentsRegistrationForm({
 
   /* ── Submit to Google Sheet ──────────────────────────────────────── */
   const sendToGoogleSheet = async (data: Record<string, unknown>) => {
-    if (!GOOGLE_SCRIPT_URL) return;
+    const targetUrl = GOOGLE_SCRIPT_URL || "/api/devagents/register";
+
     try {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      if (GOOGLE_SCRIPT_URL) {
+        await fetch(targetUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=UTF-8" },
+          body: JSON.stringify(data),
+        });
+      } else {
+        await fetch(targetUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      }
+
       await new Promise((r) => setTimeout(r, 1500));
     } catch {
       // Don't block registration on sheet errors
@@ -237,6 +247,7 @@ export default function DevAgentsRegistrationForm({
       const base64Screenshot = await toBase64(paymentScreenshot);
 
       const payload: Record<string, unknown> = {
+        action: "register",
         timestamp: new Date().toISOString(),
         eventId: event?.id || "devagents-1-0",
         eventTitle: event?.title || "DevAgents 1.0",
@@ -256,21 +267,12 @@ export default function DevAgentsRegistrationForm({
         linkedin: formData.linkedin || "",
         experienceLevel: formData.experienceLevel,
         whyAttend: formData.whyAttend,
+        screenshotFileName: paymentScreenshot.name,
         paymentScreenshot: base64Screenshot,
         status: "pending_verification",
       };
 
       await sendToGoogleSheet(payload);
-
-      try {
-        await fetch("/api/devagents/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-      } catch {
-        // Receipt email is best-effort; do not block registration.
-      }
 
       // Store in localStorage to prevent duplicate submissions
       const stored: string[] = JSON.parse(
