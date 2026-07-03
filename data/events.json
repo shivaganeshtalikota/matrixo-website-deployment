@@ -781,7 +781,7 @@
         "id": "devagents-pass",
         "name": "DevAgents 1.0 Pass",
         "price": 199,
-        "originalPrice": 299,
+        "originalPrice": 499,
         "available": 150,
         "description": "Full access to the 3-hour hands-on Agentic AI workshop",
         "perks": [

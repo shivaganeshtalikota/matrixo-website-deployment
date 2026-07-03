@@ -768,6 +768,7 @@ export default function EventRegistrationForm({
                         height={180}
                         className="rounded-lg"
                         priority
+                        unoptimized
                       />
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
@@ -793,6 +794,7 @@ export default function EventRegistrationForm({
                         height={200}
                         className="rounded-lg"
                         priority
+                        unoptimized
                       />
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
