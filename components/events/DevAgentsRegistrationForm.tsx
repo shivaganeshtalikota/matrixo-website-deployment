@@ -303,7 +303,15 @@ export default function DevAgentsRegistrationForm({
         github: formData.github.trim(),
         linkedIn: formData.linkedIn.trim(),
         experienceLevel: formData.experienceLevel,
+<<<<<<< HEAD
+<<<<<<< HEAD
         whyAttend: formData.whyAttend.trim(),
+=======
+        screenshotFileName: paymentScreenshot.name,
+>>>>>>> 7af1d77 (removed the 20 min char from regform)
+=======
+        whyAttend: formData.whyAttend.trim(),
+>>>>>>> f65f17e (removed the 20 min char from regform)
         paymentScreenshot: base64Screenshot,
       };
 

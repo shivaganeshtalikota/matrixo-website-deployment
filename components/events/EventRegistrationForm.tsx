@@ -22,7 +22,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
   const fileInputRef = useRef<HTMLInputElement>(null)
   const closeTimerRef = useRef<number | null>(null)
   const isSubmittingRef = useRef(false)
-  
+
   const [formData, setFormData] = useState({
     fullName: '',
     contactNumber: '',
@@ -166,22 +166,22 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
       // First, check if event is sold out
       console.log('🔍 Checking ticket availability...')
       console.log('🔍 Event ID:', data.eventId)
-      
+
       try {
         const checkResponse = await fetch(`${GOOGLE_SCRIPT_URL}?action=getTicketCount&eventId=${data.eventId}`, {
           method: 'GET',
           cache: 'no-store',
         })
         const checkData = await checkResponse.json()
-        
+
         console.log('📊 Ticket check response:', checkData)
-        
+
         if (checkData.success) {
           const eventIdLower = data.eventId.toLowerCase()
           const soldOutLimit = eventIdLower.includes('tedxkprit') ? 100 : 2000
           console.log(`🎫 Event ID check: "${eventIdLower}" includes "tedxkprit"? ${eventIdLower.includes('tedxkprit')}`)
           console.log(`🎫 Current tickets: ${checkData.ticketsSold}/${soldOutLimit}`)
-          
+
           if (checkData.ticketsSold >= soldOutLimit) {
             console.log('🚫 EVENT IS SOLD OUT!')
             throw new Error('Event is sold out')
@@ -211,17 +211,17 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
 
       console.log('✅ Request sent successfully')
       console.log('⏳ Waiting for Google Script to process...')
-      
+
       // Wait for Google Script to process
       await new Promise(resolve => setTimeout(resolve, 2000))
-      
+
       console.log('✅ Data sent to Google Sheet successfully')
       return true
     } catch (error: any) {
       console.error('❌ ERROR in sendToGoogleSheet:', error)
       console.error('❌ Error message:', error.message)
       console.error('❌ Error stack:', error.stack)
-      
+
       // Re-throw the error as-is so we can handle it properly in handleSubmit
       throw error
     }
@@ -243,7 +243,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
 
     try {
       let base64Image = ''
-      
+
       if (paymentScreenshot) {
         // Convert screenshot to base64
         console.log('🔄 Converting screenshot to base64...')
@@ -284,14 +284,14 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
       // Send data to Google Apps Script
       console.log('📤 Sending to Google Apps Script...')
       toast.info('Submitting registration...')
-      
+
       await sendToGoogleSheet(registrationData)
 
       console.log('🎉 Registration submitted successfully!')
-      
+
       // Success message
       toast.success('✅ Registration submitted successfully! We will verify your payment and send confirmation via email.')
-      
+
       // Reset form
       setFormData({
         fullName: '',
@@ -310,7 +310,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
         hearAboutEvent: ''
       })
       setPaymentScreenshot(null)
-      
+
       // Close the form after a short delay and signal success
       setTimeout(() => {
         console.log('✅ Closing form with success=true...')
@@ -324,7 +324,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
         stack: error.stack,
         name: error.name
       })
-      
+
       // Check if it's a sold out error
       if (error.message && error.message.includes('sold out')) {
         toast.error('🎫 SOLD OUT! This event has reached its maximum capacity of 144 registrations per day.', {
@@ -399,7 +399,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.fullName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your full name"
@@ -416,7 +416,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="your.email@example.com"
@@ -434,7 +434,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   onChange={handleChange}
                   required
                   pattern="[0-9]{10}"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="10-digit mobile number"
@@ -452,7 +452,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   onChange={handleChange}
                   required
                   pattern="[0-9]{10}"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Emergency contact number"
@@ -471,7 +471,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.city}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your city"
@@ -488,7 +488,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.state}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your state"
@@ -515,7 +515,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.studentId}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Your roll number"
@@ -532,7 +532,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.collegeName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Your college name"
@@ -549,7 +549,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.department}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="e.g., Computer Science"
@@ -565,7 +565,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.year}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >  <option value="">Select Year</option>
@@ -592,7 +592,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                     placeholder="e.g. 2023"
                     maxLength={4}
                     required={formData.year === 'Graduate'}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                              focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -620,7 +620,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                     value={formData.wantCertificate}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                              focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
@@ -639,7 +639,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.wantTransport}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
@@ -657,7 +657,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   value={formData.hearAboutEvent}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
@@ -691,12 +691,12 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                       <p className="text-lg font-bold text-gray-900 dark:text-white text-center">Ticket Price: ₹{ticket.price}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400 text-center">Choose your payment method</p>
                     </div>
-                    
+
                     {/* Pay Now Button */}
                     <button
                       type="button"
                       onClick={handlePaymentClick}
-                      className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 
+                      className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600
                                text-white rounded-lg font-semibold shadow-lg text-lg
                                hover:shadow-xl transform hover:scale-105 transition-all
                                flex items-center justify-center gap-2"
@@ -712,7 +712,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
 
                     {/* QR Code */}
                     <div className="bg-white p-4 rounded-lg shadow-lg">
-                      <Image 
+                      <Image
                         src="/payment-qr.jpg"
                         alt="Payment QR Code"
                         width={180}
@@ -722,7 +722,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                       />
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                      Scan with any UPI app 
+                      Scan with any UPI app
                       (Google Pay, PhonePe, Paytm, etc.)
                     </p>
                   </div>
@@ -734,7 +734,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                       <p className="text-sm text-gray-600 dark:text-gray-400 text-center">Scan QR code to pay via UPI</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-lg">
-                      <Image 
+                      <Image
                         src="/payment-qr.jpg"
                         alt="Payment QR Code"
                         width={200}
@@ -792,7 +792,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
             <button
               type="button"
               onClick={() => requestClose(false)}
-              className="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600 
+              className="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600
                        text-gray-700 dark:text-gray-300 rounded-lg font-semibold
                        hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
@@ -801,7 +801,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600
                        text-white rounded-lg font-semibold shadow-lg
                        hover:shadow-xl transform hover:scale-105 transition-all
                        disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
