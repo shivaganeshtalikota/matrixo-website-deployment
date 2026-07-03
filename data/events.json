@@ -1,5 +1,122 @@
 [
   {
+    "id": "devagents-1-2026",
+    "slug": "devagents-1",
+    "title": "DevAgents 1.0",
+    "tagline": "Building the Future with Autonomous AI Agents",
+    "description": "DevAgents 1.0 is a premier full-day hands-on workshop and hackathon on building, deploying, and orchestrating autonomous AI agent systems. Learn to build agents that solve real-world problems, leverage multi-agent frameworks, and compete to win exciting prizes.",
+    "date": "2026-03-15T09:30:00",
+    "endDate": "2026-03-15T18:00:00",
+    "venue": "Seminar Hall, A-Block, KPRIT",
+    "location": "Kommuri Pratap Reddy Institute of Technology, Hyderabad",
+    "totalCapacity": 150,
+    "ticketsSold": 0,
+    "featured": true,
+    "status": "upcoming",
+    "category": "Workshop",
+    "isDevAgentsEvent": true,
+    "images": {
+      "banner": "/events/devagents-banner.jpeg",
+      "thumbnail": "/events/devagents-banner.jpeg",
+      "gallery": []
+    },
+    "tickets": [
+      {
+        "id": "devagents-pass",
+        "name": "DevAgents Pass",
+        "price": 99,
+        "originalPrice": 149,
+        "available": 150,
+        "description": "Full access to DevAgents 1.0 workshop, competitions, lunch, and certificate",
+        "perks": [
+          "Hands-on AI Agent building sessions",
+          "Access to multi-agent framework templates",
+          "Agent hackathon with cash prizes",
+          "Matrixo DevAgents certification",
+          "Lunch & refreshments",
+          "DevAgents exclusive swags"
+        ]
+      }
+    ],
+    "partners": ["matriXO"],
+    "sponsors": [],
+    "agenda": [
+      { "time": "09:30 AM - 10:00 AM", "title": "Check-in & Registration" },
+      { "time": "10:00 AM - 10:30 AM", "title": "Keynote: The Rise of Agentic AI" },
+      { "time": "10:30 AM - 12:30 PM", "title": "Session 1: Building your first autonomous agent" },
+      { "time": "12:30 PM - 01:30 PM", "title": "Lunch Break" },
+      { "time": "01:30 PM - 03:30 PM", "title": "Session 2: Multi-agent orchestration & systems" },
+      { "time": "03:30 PM - 05:30 PM", "title": "Agent Hackathon & Coding Competition" },
+      { "time": "05:30 PM - 06:00 PM", "title": "Closing Ceremony & Prize Distribution" }
+    ],
+    "tags": ["Workshop", "AI Agents", "Agentic AI", "Hackathon", "matriXO"],
+    "organizer": "matriXO",
+    "ticketingPartner": "matriXO",
+    "contactEmail": "hello@matrixo.in",
+    "socialLinks": {
+      "website": "https://matrixo.in",
+      "instagram": "https://www.instagram.com/matrixo.in/",
+      "linkedin": "https://www.linkedin.com/company/matrixo/"
+    },
+    "highlights": [
+      "Hands-on autonomous agent development",
+      "Multi-agent frameworks & orchestration",
+      "Interactive agent coding challenge",
+      "Certificate of participation & merit",
+      "Lunch & goodies included"
+    ],
+    "benefits": [
+      {
+        "title": "Participation Certificate",
+        "description": "Physical certificate for everyone who participated",
+        "icon": "certificate"
+      },
+      {
+        "title": "Swags for Winners",
+        "description": "Special goodies for top hackathon teams",
+        "icon": "gift"
+      },
+      {
+        "title": "Cash Prizes",
+        "description": "Cash rewards for the best agent implementations",
+        "icon": "trophy"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What is DevAgents 1.0?",
+        "answer": "DevAgents 1.0 is an intensive, one-day workshop and hackathon focused on building autonomous AI agents. You will learn to use modern agent frameworks and deploy active systems."
+      },
+      {
+        "question": "Is prior AI experience required?",
+        "answer": "Basic Python and programming knowledge is highly recommended. No prior deep learning or AI experience is required as we build up from the basics."
+      },
+      {
+        "question": "What should I bring?",
+        "answer": "Please bring a laptop with Python installed and a charger. We will provide all necessary API keys and resources for the workshop."
+      }
+    ],
+    "registrationFields": [
+      "Full Name",
+      "Email",
+      "Phone Number",
+      "College Name",
+      "Year of Study",
+      "Branch",
+      "City",
+      "GitHub Profile (Optional)",
+      "LinkedIn Profile (Optional)",
+      "Experience Level",
+      "Why do you want to attend?"
+    ],
+    "paymentInfo": {
+      "gateway": "UPI",
+      "amount": 99,
+      "currency": "INR",
+      "note": "Payment is required to reserve your seat. Upload your screenshot to complete verification."
+    }
+  },
+  {
     "id": "vibecoding-irl-kprit-2026",
     "slug": "vibecoding-irl-kprit",
     "title": "VibeCode IRL",

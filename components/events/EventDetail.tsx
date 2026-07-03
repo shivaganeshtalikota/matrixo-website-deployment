@@ -9,12 +9,18 @@ import { FaCalendar, FaMapMarkerAlt, FaClock, FaUsers, FaTag } from 'react-icons
 import EventRegistrationForm from './EventRegistrationForm'
 import Confetti from '../Confetti'
 import VibeCodeEventDetail from './VibeCodeEventDetail'
+import DevAgentsEventDetail from './DevAgentsEventDetail'
 import HeadingHighlight from '@/components/HeadingHighlight'
 
 export default function EventDetail({ event }: { event: any }) {
   // Check if this is a VibeCode event - render dedicated component
   if (event.isVibeCodeEvent) {
     return <VibeCodeEventDetail event={event} />
+  }
+
+  // Check if this is a DevAgents event - render dedicated component
+  if (event.isDevAgentsEvent) {
+    return <DevAgentsEventDetail event={event} />
   }
 
   return <DefaultEventDetail event={event} />
