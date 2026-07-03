@@ -27,7 +27,7 @@ export default function Hero() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300/50 dark:via-white/[0.06] to-transparent" />
 
       {/* Content */}
-      <div className="relative z-10 container-custom px-4 sm:px-6 py-20 sm:py-24 md:py-32 text-center">
+      <div className="relative z-10 container-custom px-4 sm:px-6 py-28 sm:py-24 md:py-32 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,12 +56,12 @@ export default function Hero() {
             <img
               src="/logos/logo-light.png"
               alt="matriXO"
-              className="h-14 md:h-32 lg:h-20 w-auto mx-auto block dark:hidden"
+              className="h-10 sm:h-14 md:h-32 lg:h-20 w-auto mx-auto block dark:hidden"
             />
             <img
               src="/logos/logo-dark.png"
               alt="matriXO"
-              className="h-14 md:h-32 lg:h-20 w-auto mx-auto transform hidden dark:block"
+              className="h-10 sm:h-14 md:h-32 lg:h-20 w-auto mx-auto transform hidden dark:block"
             />
           </motion.div>
 
@@ -70,7 +70,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl md:text-3xl lg:text-4xl font-light text-slate-700 dark:text-gray-300 mb-4 max-w-4xl mx-auto"
+            className="text-xl md:text-3xl lg:text-4xl font-light text-slate-700 dark:text-gray-300 mb-3 md:mb-4 max-w-4xl mx-auto"
           >
             <HeadingHighlight text="Where AI Meets Your Career Journey" />
           </motion.p>
@@ -80,7 +80,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-2xl md:text-3xl font-display font-bold text-slate-800 dark:text-white mb-12"
+            className="text-2xl md:text-3xl font-display font-bold text-slate-800 dark:text-white mb-6 md:mb-12"
           >
             <HeadingHighlight text="Map Your Skills. Grow Smarter. Prove Your Worth." />
           </motion.p>
@@ -90,7 +90,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="text-lg md:text-xl text-slate-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto"
+            className="text-lg md:text-xl text-slate-600 dark:text-gray-400 mb-8 md:mb-12 max-w-3xl mx-auto"
           >
             AI-driven skill analysis, personalized learning paths, blockchain-verified credentials,
             and AI-matched mentorship — everything you need to become industry-ready, in one platform.
@@ -101,7 +101,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.75 }}
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center"
           >
             <Link href="/events">
               <motion.button

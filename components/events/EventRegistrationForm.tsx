@@ -1,259 +1,298 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { createPortal } from 'react-dom'
-import { motion } from 'framer-motion'
-import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaUniversity, FaGraduationCap, FaMapMarkerAlt, FaBus, FaInfoCircle, FaTimes, FaUpload } from 'react-icons/fa'
-import { toast } from 'sonner'
-import Image from 'next/image'
+import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaIdCard,
+  FaUniversity,
+  FaGraduationCap,
+  FaMapMarkerAlt,
+  FaBus,
+  FaInfoCircle,
+  FaTimes,
+  FaUpload,
+} from "react-icons/fa";
+import { toast } from "sonner";
+import Image from "next/image";
 
 interface EventRegistrationFormProps {
-  event: any
-  ticket: any
-  onClose: (success?: boolean) => void
+  event: any;
+  ticket: any;
+  onClose: (success?: boolean) => void;
 }
 
-export default function EventRegistrationForm({ event, ticket, onClose }: EventRegistrationFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const closeTimerRef = useRef<number | null>(null)
-  const isSubmittingRef = useRef(false)
+export default function EventRegistrationForm({
+  event,
+  ticket,
+  onClose,
+}: EventRegistrationFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const closeTimerRef = useRef<number | null>(null);
+  const isSubmittingRef = useRef(false);
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    contactNumber: '',
-    email: '',
-    studentId: '',
-    collegeName: '',
-    department: '',
-    year: '',
-    graduationYear: '',
-    emergencyContact: '',
-    city: '',
-    state: '',
-    wantCertificate: 'no',
-    wantTransport: 'no',
-    hearAboutEvent: ''
-  })
+    fullName: "",
+    contactNumber: "",
+    email: "",
+    studentId: "",
+    collegeName: "",
+    department: "",
+    year: "",
+    graduationYear: "",
+    emergencyContact: "",
+    city: "",
+    state: "",
+    wantCertificate: "no",
+    wantTransport: "no",
+    hearAboutEvent: "",
+  });
 
   // UPI Payment Link for TEDxKPRIT
-  const UPI_PAYMENT_LINK = 'upi://pay?pa=bhuvaneshwaripothuraju2005@oksbi'
+  const UPI_PAYMENT_LINK = "upi://pay?pa=bhuvaneshwaripothuraju2005@oksbi";
 
   // Detect mobile device
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
-    isSubmittingRef.current = isSubmitting
-  }, [isSubmitting])
+    isSubmittingRef.current = isSubmitting;
+  }, [isSubmitting]);
 
-  const requestClose = useCallback((success: boolean = false) => {
-    if (isSubmittingRef.current) return
+  const requestClose = useCallback(
+    (success: boolean = false) => {
+      if (isSubmittingRef.current) return;
 
-    setIsOpen(false)
+      setIsOpen(false);
 
-    if (closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current)
-    }
+      if (closeTimerRef.current !== null) {
+        window.clearTimeout(closeTimerRef.current);
+      }
 
-    closeTimerRef.current = window.setTimeout(() => {
-      onClose(success)
-    }, 220)
-  }, [onClose])
+      closeTimerRef.current = window.setTimeout(() => {
+        onClose(success);
+      }, 220);
+    },
+    [onClose],
+  );
 
   useEffect(() => {
-    setMounted(true)
-    setIsOpen(true)
+    setMounted(true);
+    setIsOpen(true);
 
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
     const previousBodyStyles = {
       overflow: document.body.style.overflow,
       paddingRight: document.body.style.paddingRight,
       overscrollBehavior: document.body.style.overscrollBehavior,
-    }
+    };
     const previousDocumentStyles = {
       overflow: document.documentElement.style.overflow,
       overscrollBehavior: document.documentElement.style.overscrollBehavior,
-    }
+    };
 
-    document.body.style.overflow = 'hidden'
-    document.body.style.overscrollBehavior = 'none'
-    document.documentElement.style.overflow = 'hidden'
-    document.documentElement.style.overscrollBehavior = 'none'
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
 
     if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        requestClose(false)
+      if (event.key === "Escape") {
+        requestClose(false);
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener("keydown", handleKeyDown);
       if (closeTimerRef.current !== null) {
-        window.clearTimeout(closeTimerRef.current)
-        closeTimerRef.current = null
+        window.clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
       }
-      document.body.style.overflow = previousBodyStyles.overflow
-      document.body.style.paddingRight = previousBodyStyles.paddingRight
-      document.body.style.overscrollBehavior = previousBodyStyles.overscrollBehavior
-      document.documentElement.style.overflow = previousDocumentStyles.overflow
-      document.documentElement.style.overscrollBehavior = previousDocumentStyles.overscrollBehavior
-    }
-  }, [requestClose])
+      document.body.style.overflow = previousBodyStyles.overflow;
+      document.body.style.paddingRight = previousBodyStyles.paddingRight;
+      document.body.style.overscrollBehavior =
+        previousBodyStyles.overscrollBehavior;
+      document.documentElement.style.overflow = previousDocumentStyles.overflow;
+      document.documentElement.style.overscrollBehavior =
+        previousDocumentStyles.overscrollBehavior;
+    };
+  }, [requestClose]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
       // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast.error('Please upload an image file')
-        return
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please upload an image file");
+        return;
       }
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image size should be less than 5MB')
-        return
+        toast.error("Image size should be less than 5MB");
+        return;
       }
-      setPaymentScreenshot(file)
-      toast.success('Screenshot uploaded successfully')
+      setPaymentScreenshot(file);
+      toast.success("Screenshot uploaded successfully");
     }
-  }
+  };
 
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = error => reject(error)
-    })
-  }
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const sendToGoogleSheet = async (data: any) => {
     try {
-      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL
+      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
 
-      console.log('🔍 DEBUG: Starting submission')
-      console.log('🔍 Script URL:', GOOGLE_SCRIPT_URL)
+      console.log("🔍 DEBUG: Starting submission");
+      console.log("🔍 Script URL:", GOOGLE_SCRIPT_URL);
 
       if (!GOOGLE_SCRIPT_URL) {
-        console.error('❌ Google Script URL is missing!')
-        throw new Error('Google Script URL not configured. Please check .env.local file.')
+        console.error("❌ Google Script URL is missing!");
+        throw new Error(
+          "Google Script URL not configured. Please check .env.local file.",
+        );
       }
 
       // First, check if event is sold out
-      console.log('🔍 Checking ticket availability...')
-      console.log('🔍 Event ID:', data.eventId)
+      console.log("🔍 Checking ticket availability...");
+      console.log("🔍 Event ID:", data.eventId);
 
       try {
-        const checkResponse = await fetch(`${GOOGLE_SCRIPT_URL}?action=getTicketCount&eventId=${data.eventId}`, {
-          method: 'GET',
-          cache: 'no-store',
-        })
-        const checkData = await checkResponse.json()
+        const checkResponse = await fetch(
+          `${GOOGLE_SCRIPT_URL}?action=getTicketCount&eventId=${data.eventId}`,
+          {
+            method: "GET",
+            cache: "no-store",
+          },
+        );
+        const checkData = await checkResponse.json();
 
-        console.log('📊 Ticket check response:', checkData)
+        console.log("📊 Ticket check response:", checkData);
 
         if (checkData.success) {
-          const eventIdLower = data.eventId.toLowerCase()
-          const soldOutLimit = eventIdLower.includes('tedxkprit') ? 100 : 2000
-          console.log(`🎫 Event ID check: "${eventIdLower}" includes "tedxkprit"? ${eventIdLower.includes('tedxkprit')}`)
-          console.log(`🎫 Current tickets: ${checkData.ticketsSold}/${soldOutLimit}`)
+          const eventIdLower = data.eventId.toLowerCase();
+          const soldOutLimit = eventIdLower.includes("tedxkprit") ? 100 : 2000;
+          console.log(
+            `🎫 Event ID check: "${eventIdLower}" includes "tedxkprit"? ${eventIdLower.includes("tedxkprit")}`,
+          );
+          console.log(
+            `🎫 Current tickets: ${checkData.ticketsSold}/${soldOutLimit}`,
+          );
 
           if (checkData.ticketsSold >= soldOutLimit) {
-            console.log('🚫 EVENT IS SOLD OUT!')
-            throw new Error('Event is sold out')
+            console.log("🚫 EVENT IS SOLD OUT!");
+            throw new Error("Event is sold out");
           }
-          console.log(`✅ Tickets available: ${checkData.ticketsSold}/${soldOutLimit}`)
+          console.log(
+            `✅ Tickets available: ${checkData.ticketsSold}/${soldOutLimit}`,
+          );
         }
       } catch (checkError: any) {
-        console.error('❌ Ticket check error:', checkError)
-        if (checkError.message && checkError.message.includes('sold out')) {
-          throw checkError
+        console.error("❌ Ticket check error:", checkError);
+        if (checkError.message && checkError.message.includes("sold out")) {
+          throw checkError;
         }
-        console.warn('⚠️ Could not verify ticket count, proceeding with submission')
+        console.warn(
+          "⚠️ Could not verify ticket count, proceeding with submission",
+        );
       }
 
-      console.log('📊 Data to send:', data)
-      console.log('🚀 Sending request to Google Apps Script...')
+      console.log("📊 Data to send:", data);
+      console.log("🚀 Sending request to Google Apps Script...");
 
       // Send to Google Apps Script
       const response = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: "POST",
+        mode: "no-cors",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      })
+      });
 
-      console.log('✅ Request sent successfully')
-      console.log('⏳ Waiting for Google Script to process...')
+      console.log("✅ Request sent successfully");
+      console.log("⏳ Waiting for Google Script to process...");
 
       // Wait for Google Script to process
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      console.log('✅ Data sent to Google Sheet successfully')
-      return true
+      console.log("✅ Data sent to Google Sheet successfully");
+      return true;
     } catch (error: any) {
-      console.error('❌ ERROR in sendToGoogleSheet:', error)
-      console.error('❌ Error message:', error.message)
-      console.error('❌ Error stack:', error.stack)
+      console.error("❌ ERROR in sendToGoogleSheet:", error);
+      console.error("❌ Error message:", error.message);
+      console.error("❌ Error stack:", error.stack);
 
       // Re-throw the error as-is so we can handle it properly in handleSubmit
-      throw error
+      throw error;
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    console.log('🚀 Form submission started')
+    console.log("🚀 Form submission started");
 
     // Validate payment screenshot for paid events
     if (ticket.price > 0 && !paymentScreenshot) {
-      console.error('❌ No payment screenshot uploaded')
-      toast.error('Please upload payment screenshot before submitting')
-      return
+      console.error("❌ No payment screenshot uploaded");
+      toast.error("Please upload payment screenshot before submitting");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      let base64Image = ''
+      let base64Image = "";
 
       if (paymentScreenshot) {
         // Convert screenshot to base64
-        console.log('🔄 Converting screenshot to base64...')
-        toast.info('Processing payment screenshot...')
-        base64Image = await convertFileToBase64(paymentScreenshot)
-        console.log('✅ Screenshot converted to base64')
+        console.log("🔄 Converting screenshot to base64...");
+        toast.info("Processing payment screenshot...");
+        base64Image = await convertFileToBase64(paymentScreenshot);
+        console.log("✅ Screenshot converted to base64");
       }
 
       // Prepare data to send to Google Sheet
-      console.log('📝 Preparing registration data...')
+      console.log("📝 Preparing registration data...");
       const registrationData = {
         timestamp: new Date().toISOString(),
         eventId: event.id,
@@ -272,98 +311,102 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
         city: formData.city,
         state: formData.state,
         paymentScreenshot: base64Image,
-        screenshotFileName: paymentScreenshot?.name || '',
+        screenshotFileName: paymentScreenshot?.name || "",
         wantCertificate: formData.wantCertificate,
         wantTransport: formData.wantTransport,
         hearAboutEvent: formData.hearAboutEvent,
-        status: ''
-      }
+        status: "",
+      };
 
-      console.log('✅ Registration data prepared')
+      console.log("✅ Registration data prepared");
 
       // Send data to Google Apps Script
-      console.log('📤 Sending to Google Apps Script...')
-      toast.info('Submitting registration...')
+      console.log("📤 Sending to Google Apps Script...");
+      toast.info("Submitting registration...");
 
-      await sendToGoogleSheet(registrationData)
+      await sendToGoogleSheet(registrationData);
 
-      console.log('🎉 Registration submitted successfully!')
+      console.log("🎉 Registration submitted successfully!");
 
       // Success message
-      toast.success('✅ Registration submitted successfully! We will verify your payment and send confirmation via email.')
+      toast.success(
+        "✅ Registration submitted successfully! We will verify your payment and send confirmation via email.",
+      );
 
       // Reset form
       setFormData({
-        fullName: '',
-        contactNumber: '',
-        email: '',
-        studentId: '',
-        collegeName: '',
-        department: '',
-        year: '',
-        graduationYear: '',
-        emergencyContact: '',
-        city: '',
-        state: '',
-        wantCertificate: 'no',
-        wantTransport: 'no',
-        hearAboutEvent: ''
-      })
-      setPaymentScreenshot(null)
+        fullName: "",
+        contactNumber: "",
+        email: "",
+        studentId: "",
+        collegeName: "",
+        department: "",
+        year: "",
+        graduationYear: "",
+        emergencyContact: "",
+        city: "",
+        state: "",
+        wantCertificate: "no",
+        wantTransport: "no",
+        hearAboutEvent: "",
+      });
+      setPaymentScreenshot(null);
 
       // Close the form after a short delay and signal success
       setTimeout(() => {
-        console.log('✅ Closing form with success=true...')
-        requestClose(true) // Pass true to indicate successful registration
-      }, 2000)
-
+        console.log("✅ Closing form with success=true...");
+        requestClose(true); // Pass true to indicate successful registration
+      }, 2000);
     } catch (error: any) {
-      console.error('❌❌❌ REGISTRATION ERROR:', error)
-      console.error('Error details:', {
+      console.error("❌❌❌ REGISTRATION ERROR:", error);
+      console.error("Error details:", {
         message: error.message,
         stack: error.stack,
-        name: error.name
-      })
+        name: error.name,
+      });
 
       // Check if it's a sold out error
-      if (error.message && error.message.includes('sold out')) {
-        toast.error('🎫 SOLD OUT! This event has reached its maximum capacity of 144 registrations per day.', {
-          duration: 5000,
-        })
+      if (error.message && error.message.includes("sold out")) {
+        toast.error(
+          "🎫 SOLD OUT! This event has reached its maximum capacity of 144 registrations per day.",
+          {
+            duration: 5000,
+          },
+        );
       } else {
-        toast.error(`Failed to submit: ${error.message || 'Please try again'}`)
+        toast.error(`Failed to submit: ${error.message || "Please try again"}`);
       }
     } finally {
-      setIsSubmitting(false)
-      console.log('Form submission process completed')
+      setIsSubmitting(false);
+      console.log("Form submission process completed");
     }
-  }
+  };
 
   const handlePaymentClick = () => {
-    window.location.href = UPI_PAYMENT_LINK
-    toast.info('Complete payment and upload screenshot below')
-  }
+    window.location.href = UPI_PAYMENT_LINK;
+    toast.info("Complete payment and upload screenshot below");
+  };
 
   if (!mounted) {
-    return null
+    return null;
   }
 
   return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: isOpen ? 1 : 0 }}
-      transition={{ duration: 0.22, ease: 'easeOut' }}
+      transition={{ duration: 0.22, ease: "easeOut" }}
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
-          requestClose(false)
+          requestClose(false);
         }
       }}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: isOpen ? 1 : 0, scale: isOpen ? 1 : 0.95 }}
-        transition={{ duration: 0.22, ease: 'easeOut' }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
         className="relative w-full max-w-[700px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-3xl shadow-2xl"
         onMouseDown={(event) => event.stopPropagation()}
       >
@@ -568,7 +611,9 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >  <option value="">Select Year</option>
+                >
+                  {" "}
+                  <option value="">Select Year</option>
                   <option value="1st Year">1st Year</option>
                   <option value="2nd Year">2nd Year</option>
                   <option value="3rd Year">3rd Year</option>
@@ -579,7 +624,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
               </div>
 
               {/* Graduation Year - Only show if Graduate is selected */}
-              {formData.year === 'Graduate' && (
+              {formData.year === "Graduate" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Year of Graduation *
@@ -591,7 +636,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                     onChange={handleChange}
                     placeholder="e.g. 2023"
                     maxLength={4}
-                    required={formData.year === 'Graduate'}
+                    required={formData.year === "Graduate"}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
                              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                              focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -610,7 +655,7 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
 
             <div className="grid md:grid-cols-2 gap-4">
               {/* Hide certificate option for TEDxKPRIT */}
-              {event.id !== 'tedxkprit-2025' && (
+              {event.id !== "tedxkprit-2025" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Do you prefer a certificate? *
@@ -688,8 +733,12 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                 {isMobile ? (
                   <div className="flex flex-col items-center space-y-4">
                     <div className="w-full">
-                      <p className="text-lg font-bold text-gray-900 dark:text-white text-center">Ticket Price: ₹{ticket.price}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">Choose your payment method</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white text-center">
+                        Ticket Price: ₹{ticket.price}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                        Choose your payment method
+                      </p>
                     </div>
 
                     {/* Pay Now Button */}
@@ -722,16 +771,19 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                       />
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                      Scan with any UPI app
-                      (Google Pay, PhonePe, Paytm, etc.)
+                      Scan with any UPI app (Google Pay, PhonePe, Paytm, etc.)
                     </p>
                   </div>
                 ) : (
                   /* Desktop: Show QR Code */
                   <div className="flex flex-col items-center space-y-4">
                     <div>
-                      <p className="text-lg font-bold text-gray-900 dark:text-white text-center">Ticket Price: ₹{ticket.price}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">Scan QR code to pay via UPI</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white text-center">
+                        Ticket Price: ₹{ticket.price}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                        Scan QR code to pay via UPI
+                      </p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-lg">
                       <Image
@@ -751,7 +803,8 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
 
                 <div className="border-t border-orange-300 dark:border-orange-700 pt-4">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Upload Payment Screenshot (Transaction Number Should Be  Visible For Verification)*
+                    Upload Payment Screenshot (Transaction Number Should Be
+                    Visible For Verification)*
                   </label>
                   <div className="flex items-center gap-4">
                     <input
@@ -780,7 +833,8 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                     )}
                   </div>
                   <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    After making payment, please upload the screenshot here (Max 5MB, image only)
+                    After making payment, please upload the screenshot here (Max
+                    5MB, image only)
                   </p>
                 </div>
               </div>
@@ -806,12 +860,12 @@ export default function EventRegistrationForm({ event, ticket, onClose }: EventR
                        hover:shadow-xl transform hover:scale-105 transition-all
                        disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              {isSubmitting ? 'Submitting...' : 'Complete Registration'}
+              {isSubmitting ? "Submitting..." : "Complete Registration"}
             </button>
           </div>
         </form>
       </motion.div>
     </motion.div>,
     document.body,
-  )
+  );
 }

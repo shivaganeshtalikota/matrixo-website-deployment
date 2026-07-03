@@ -300,6 +300,11 @@ export default function DevAgentsRegistrationForm({
         github: formData.github.trim(),
         linkedIn: formData.linkedIn.trim(),
         experienceLevel: formData.experienceLevel,
+<<<<<<< HEAD
+=======
+        whyAttend: formData.whyAttend.trim(),
+        screenshotFileName: paymentScreenshot.name,
+>>>>>>> 452b145 (optimized for Android and iOS)
         paymentScreenshot: base64Screenshot,
       };
 
