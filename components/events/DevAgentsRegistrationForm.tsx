@@ -155,12 +155,28 @@ export default function DevAgentsRegistrationForm({
     );
   }, []);
 
+  // UPI link for QR code (scanned directly by apps, works fine as upi://)
   const upiDeepLink = isUpiConfigured
     ? `upi://pay?pa=karthikchinthakindi5@okicici`
     : "";
 
   const handlePaymentClick = () => {
-    window.location.href = upiDeepLink;
+    if (!isUpiConfigured) return;
+
+    // Android intent URI — triggers native app chooser in Chrome
+    // This is the official way to open UPI apps from a web page on Android
+    const intentUri =
+      `intent://pay?pa=karthikchinthakindi5@okicici#Intent;scheme=upi;end`;
+
+    // Try intent:// first (works in Chrome on Android)
+    // Fall back to upi:// for other browsers
+    const link = document.createElement("a");
+    link.setAttribute("href", intentUri);
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     toast.info("Complete payment and upload screenshot below");
   };
 
