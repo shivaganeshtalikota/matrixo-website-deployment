@@ -40,15 +40,11 @@ function getConfig_() {
 }
 
 /**
- * Required spreadsheet header structure (exactly as requested)
+ * Required spreadsheet header structure
  */
 // Column order MUST match the appendRow() call in register_() exactly.
-// 18 columns — do not add, remove, or reorder without updating register_() too.
+// 17 columns — do not add, remove, or reorder without updating register_() too.
 const SHEET_HEADERS_ = [
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f65f17e (removed the 20 min char from regform)
   "Timestamp", // [0]
   "Entry Number", // [1]  generated internally — never from frontend
   "Full Name", // [2]
@@ -61,49 +57,16 @@ const SHEET_HEADERS_ = [
   "GitHub", // [9]
   "LinkedIn", // [10]
   "Experience Level", // [11]
-  "Why do you want to attend?", // [12]
-  "Payment Screenshot", // [13]  =IMAGE() formula pointing to Drive thumbnail
-  "Payment Status", // [14]
-  "Approval Status", // [15]
-  "Drive File URL", // [16]  direct Google Drive link to screenshot file
-  "Registration Status", // [17]
-<<<<<<< HEAD
-=======
-  "Timestamp",
-  "Entry Number",
-  "Full Name",
-  "Email",
-  "Phone",
-  "College",
-  "Year",
-  "Branch",
-  "City",
-  "GitHub",
-  "LinkedIn",
-  "Experience Level",
-  "Payment Screenshot",
-  "Payment Status",
-  "Approval Status",
-  "QR Code",
-  "Check-in Status",
-  "Approved By",
-  "Approval Time",
->>>>>>> 7af1d77 (removed the 20 min char from regform)
-=======
->>>>>>> f65f17e (removed the 20 min char from regform)
+  "Payment Screenshot", // [12]  =IMAGE() formula pointing to Drive thumbnail
+  "Payment Status", // [13]
+  "Approval Status", // [14]
+  "Drive File URL", // [15]  direct Google Drive link to screenshot file
+  "Registration Status", // [16]
 ];
 
 const DEFAULT_PAYMENT_STATUS_ = "Pending";
 const DEFAULT_APPROVAL_STATUS_ = "Pending";
-<<<<<<< HEAD
-<<<<<<< HEAD
 const DEFAULT_REGISTRATION_STATUS_ = "Pending";
-=======
-const DEFAULT_CHECKIN_STATUS_ = "Not Checked In";
->>>>>>> 7af1d77 (removed the 20 min char from regform)
-=======
-const DEFAULT_REGISTRATION_STATUS_ = "Pending";
->>>>>>> f65f17e (removed the 20 min char from regform)
 
 function doGet() {
   return jsonResponse_({
@@ -136,7 +99,7 @@ function doPost(e) {
 
     const action = String(data.action || "register");
 
-    // Prepared admin helpers for future use
+    // Admin helpers
     if (action === "approveRegistration") return approveRegistration_(data);
     if (action === "rejectRegistration") return rejectRegistration_(data);
     if (action === "sendApprovalEmail") return sendApprovalEmail_(data);
@@ -175,19 +138,12 @@ function register_(data) {
     const github = String(data.github || "").trim();
     const linkedIn = String(data.linkedIn || data.linkedin || "").trim();
     const experienceLevel = String(data.experienceLevel || "").trim();
-<<<<<<< HEAD
-<<<<<<< HEAD
-    const whyAttend = String(data.whyAttend || "").trim();
-=======
->>>>>>> 7af1d77 (removed the 20 min char from regform)
-=======
-    const whyAttend = String(data.whyAttend || "").trim();
->>>>>>> f65f17e (removed the 20 min char from regform)
     const city = String(data.city || "").trim();
 
     // Base64 required by spec
     const paymentScreenshot =
       data.paymentScreenshot || data.paymentScreenshotBase64 || "";
+
     if (!fullName || !email) {
       return jsonError_(
         "MISSING_FIELDS",
@@ -207,64 +163,49 @@ function register_(data) {
 
     const sheet = getOrInitSheet_(cfg.spreadsheetId);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+    // Check for duplicate registration by email
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      const emailCol = 4; // Column D = Email (1-indexed)
+      const emailValues = sheet
+        .getRange(2, emailCol, lastRow - 1, 1)
+        .getValues();
+      for (var i = 0; i < emailValues.length; i++) {
+        if (
+          String(emailValues[i][0]).trim().toLowerCase() === email.toLowerCase()
+        ) {
+          return jsonError_(
+            "DUPLICATE_EMAIL",
+            "You have already registered for this event. Check your email for confirmation.",
+            409,
+            { email: email },
+          );
+        }
+      }
+    }
+
     // 1. Generate Entry Number internally — NEVER taken from the frontend payload.
     const entryNumber = generateEntryNumber_(cfg.entryPrefix);
 
     // 2. Upload Base64 screenshot to Google Drive.
-    //    paymentScreenshot must be a data:image/... Base64 Data URL.
-=======
-    // Sequential entry numbers (never timestamp-based)
-    const entryNumber = generateEntryNumber_(cfg.entryPrefix);
-
-    // Upload to Drive
->>>>>>> 7af1d77 (removed the 20 min char from regform)
-=======
-    // 1. Generate Entry Number internally — NEVER taken from the frontend payload.
-    const entryNumber = generateEntryNumber_(cfg.entryPrefix);
-
-    // 2. Upload Base64 screenshot to Google Drive.
-    //    paymentScreenshot must be a data:image/... Base64 Data URL.
->>>>>>> f65f17e (removed the 20 min char from regform)
     const driveInfo = uploadPaymentScreenshotToDrive_(
       cfg.driveFolderId,
       paymentScreenshot,
       entryNumber,
     );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // 3. Build =IMAGE() formula for the thumbnail cell (Payment Screenshot column).
-    //    The actual Drive link goes into the separate Drive File URL column.
+    // 3. Build =IMAGE() formula for the thumbnail cell.
     const screenshotFormula = buildImageFormula_(driveInfo.url);
 
-=======
-    // QR code in sheet (formula). If later you want QR as Drive file, we can extend.
-    const qrFormula = buildQrCodeFormula_(entryNumber);
-
-    // Payment Screenshot in sheet: thumbnail image via IMAGE(url).
-    // We store screenshot only in Drive (not Base64 in Sheets).
-=======
-    // 3. Build =IMAGE() formula for the thumbnail cell (Payment Screenshot column).
-    //    The actual Drive link goes into the separate Drive File URL column.
->>>>>>> f65f17e (removed the 20 min char from regform)
-    const screenshotFormula = buildImageFormula_(driveInfo.url);
-
->>>>>>> 7af1d77 (removed the 20 min char from regform)
     const nowIso = new Date().toISOString();
 
     // -----------------------------------------------------------------------
     // CRITICAL: this array MUST stay in exact sync with SHEET_HEADERS_ above.
-    // Position [0..17] — 18 elements, no more, no less.
+    // Position [0..16] — 17 elements, no more, no less.
     // -----------------------------------------------------------------------
     const row = [
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f65f17e (removed the 20 min char from regform)
       nowIso, // [0]  Timestamp
-      entryNumber, // [1]  Entry Number   ← generated above, NOT from payload
+      entryNumber, // [1]  Entry Number
       fullName, // [2]  Full Name
       email, // [3]  Email
       phone, // [4]  Phone
@@ -275,36 +216,11 @@ function register_(data) {
       github, // [9]  GitHub
       linkedIn, // [10] LinkedIn
       experienceLevel, // [11] Experience Level
-      whyAttend, // [12] Why do you want to attend?
-      screenshotFormula, // [13] Payment Screenshot  (=IMAGE formula)
-      DEFAULT_PAYMENT_STATUS_, // [14] Payment Status      = Pending
-      DEFAULT_APPROVAL_STATUS_, // [15] Approval Status     = Pending
-      driveInfo.url, // [16] Drive File URL      (direct Drive link)
-      DEFAULT_REGISTRATION_STATUS_, // [17] Registration Status = Pending
-<<<<<<< HEAD
-=======
-      nowIso, // Timestamp
-      entryNumber, // Entry Number
-      fullName, // Full Name
-      email, // Email
-      phone, // Phone
-      college, // College
-      year, // Year
-      branch, // Branch
-      city, // City
-      github, // GitHub
-      linkedIn, // LinkedIn
-      experienceLevel, // Experience Level
-      screenshotFormula, // Payment Screenshot (thumbnail)
-      DEFAULT_PAYMENT_STATUS_, // Payment Status = Pending
-      DEFAULT_APPROVAL_STATUS_, // Approval Status = Pending
-      qrFormula, // QR Code
-      DEFAULT_CHECKIN_STATUS_, // Check-in Status
-      "", // Approved By
-      "", // Approval Time
->>>>>>> 7af1d77 (removed the 20 min char from regform)
-=======
->>>>>>> f65f17e (removed the 20 min char from regform)
+      screenshotFormula, // [12] Payment Screenshot (=IMAGE formula)
+      DEFAULT_PAYMENT_STATUS_, // [13] Payment Status
+      DEFAULT_APPROVAL_STATUS_, // [14] Approval Status
+      driveInfo.url, // [15] Drive File URL
+      DEFAULT_REGISTRATION_STATUS_, // [16] Registration Status
     ];
 
     sheet.appendRow(row);
@@ -313,12 +229,12 @@ function register_(data) {
     sendRegistrationReceivedEmail_(cfg.adminEmail, {
       toEmail: email,
       participantName: fullName,
-      entryNumber,
+      entryNumber: entryNumber,
       paymentVerificationPending: true,
       paymentScreenshotReceived: true,
     });
 
-    return jsonResponse_({ success: true, entryNumber });
+    return jsonResponse_({ success: true, entryNumber: entryNumber });
   } catch (error) {
     Logger.log(
       "register_ error: " + (error && error.stack ? error.stack : error),
@@ -336,7 +252,6 @@ function register_(data) {
 // ADMIN WORKFLOW (helpers prepared)
 // =============================
 function approveRegistration_(data) {
-  // Prepared for future use.
   try {
     return jsonResponse_({
       success: true,
@@ -357,7 +272,6 @@ function approveRegistration_(data) {
 }
 
 function rejectRegistration_(data) {
-  // Prepared for future use.
   try {
     return jsonResponse_({
       success: true,
@@ -378,7 +292,6 @@ function rejectRegistration_(data) {
 }
 
 function sendApprovalEmail_(data) {
-  // Prepared for future use.
   try {
     return jsonResponse_({
       success: true,
@@ -399,7 +312,6 @@ function sendApprovalEmail_(data) {
 }
 
 function generateQRCode_(data) {
-  // Prepared: generate QR formula payload.
   try {
     const entryNumber = String(data.entryNumber || "").trim();
     if (!entryNumber) throw new Error("Missing entryNumber");
@@ -421,7 +333,6 @@ function generateQRCode_(data) {
 }
 
 function markCheckedIn_(data) {
-  // Prepared: update sheet check-in fields in future.
   try {
     return jsonResponse_({
       success: true,
@@ -482,7 +393,7 @@ function generateEntryNumber_(prefix) {
     props.setProperty("DEVAGENTS_ENTRY_COUNTER", String(next));
 
     // DA1001, DA1002...
-    return `${prefix}${next}`;
+    return prefix + next;
   } finally {
     lock.releaseLock();
   }
@@ -490,30 +401,31 @@ function generateEntryNumber_(prefix) {
 
 function uploadPaymentScreenshotToDrive_(folderId, dataUrl, entryNumber) {
   try {
-    const dataUrlStr = String(dataUrl);
+    var dataUrlStr = String(dataUrl);
     if (!dataUrlStr.startsWith("data:image")) {
       throw new Error(
         "paymentScreenshot must be a base64 data URL starting with data:image",
       );
     }
 
-    const folder = DriveApp.getFolderById(folderId);
+    var folder = DriveApp.getFolderById(folderId);
 
-    const base64 = dataUrlStr.split(",")[1];
-    const mimeType = dataUrlStr.split(",")[0].split(":")[1].split(";")[0];
-    const ext = mimeType.includes("png")
-      ? "png"
-      : mimeType.includes("jpeg")
-        ? "jpg"
-        : "png";
+    var base64 = dataUrlStr.split(",")[1];
+    var mimeType = dataUrlStr.split(",")[0].split(":")[1].split(";")[0];
+    var ext =
+      mimeType.indexOf("png") !== -1
+        ? "png"
+        : mimeType.indexOf("jpeg") !== -1
+          ? "jpg"
+          : "png";
 
-    const blob = Utilities.newBlob(
+    var blob = Utilities.newBlob(
       Utilities.base64Decode(base64),
       mimeType,
-      `${entryNumber}.${ext}`,
+      entryNumber + "." + ext,
     );
 
-    const file = folder.createFile(blob);
+    var file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
 
     return {
@@ -530,74 +442,72 @@ function uploadPaymentScreenshotToDrive_(folderId, dataUrl, entryNumber) {
 }
 
 function buildImageFormula_(driveFileUrl) {
-  // IMPORTANT: Use an embeddable Drive direct image URL for IMAGE().
-  // This avoids failures with regular file "getUrl()" pages.
-  //
-  // driveFileUrl example: https://drive.google.com/file/d/<FILE_ID>/view
-  //
-  // We convert to:
-  //   https://drive.google.com/uc?export=view&id=<FILE_ID>
+  var match = String(driveFileUrl).match(/\/d\/([^/]+)\/view/);
+  var fileId = match ? match[1] : "";
 
-  const match = String(driveFileUrl).match(/\/d\/([^/]+)\/view/);
-  const fileId = match ? match[1] : "";
-
-  const directUrl = fileId
-    ? `https://drive.google.com/uc?export=view&id=${fileId}`
+  var directUrl = fileId
+    ? "https://drive.google.com/uc?export=view&id=" + fileId
     : String(driveFileUrl);
 
-  return `=IMAGE("${directUrl}")`;
+  return '=IMAGE("' + directUrl + '")';
 }
 
 function buildQrCodeFormula_(value) {
-  // Uses an external QR generator for simplicity.
-  // If you want to store QR images in Drive later, we can extend.
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(value)}`;
-  return `=IMAGE("${qrUrl}")`;
+  var qrUrl =
+    "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=" +
+    encodeURIComponent(value);
+  return '=IMAGE("' + qrUrl + '")';
 }
 
 function sendRegistrationReceivedEmail_(adminEmail, opts) {
-  const toEmail = String(opts.toEmail || "").trim();
-  const participantName = String(opts.participantName || "").trim();
-  const entryNumber = String(opts.entryNumber || "").trim();
+  var toEmail = String(opts.toEmail || "").trim();
+  var participantName = String(opts.participantName || "").trim();
+  var entryNumber = String(opts.entryNumber || "").trim();
 
   if (!toEmail)
     throw new Error("sendRegistrationReceivedEmail_: missing toEmail");
 
-  // Professional HTML email (no plain text)
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 680px; margin: 0 auto; padding: 18px; color: #0f172a;">
-      <div style="background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899); padding: 26px; border-radius: 18px; color: #ffffff; text-align: center;">
-        <h1 style="margin: 0; font-size: 28px;">DevAgents 1.0 Registration Received</h1>
-        <p style="margin: 10px 0 0; font-size: 14px; opacity: 0.95;">Registration successful</p>
-      </div>
-
-      <div style="margin-top: 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 18px;">
-        <p style="margin: 0 0 12px; font-size: 16px;">Hi <b>${participantName}</b>,</p>
-        <p style="margin: 0 0 14px; font-size: 14px; line-height: 1.7; color: #334155;">
-          Your registration is successful. We have received your payment screenshot.
-          Payment verification is currently <b>pending</b>.
-        </p>
-
-        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 14px; margin: 12px 0;">
-          <div style="font-size: 12px; color: #1d4ed8; font-weight: 700; margin-bottom: 6px;">Entry Number</div>
-          <div style="font-family: monospace; font-size: 20px; color: #0f172a;">${entryNumber}</div>
-        </div>
-
-        <div style="font-size: 14px; color: #334155;">
-          <p style="margin: 8px 0;"><b>Payment Screenshot:</b> ${opts.paymentScreenshotReceived ? "Received" : "Not Received"}</p>
-          <p style="margin: 8px 0;"><b>Payment Verification:</b> ${opts.paymentVerificationPending ? "Pending" : "Completed"}</p>
-        </div>
-
-        <div style="margin-top: 16px; font-size: 13px; color: #475569; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px;">
-          <b>Need help?</b><br/>
-          Contact: <a href="mailto:${adminEmail}" style="color:#2563eb; text-decoration:none;">${adminEmail}</a><br/>
-          Website: <a href="https://matrixo.in" style="color:#2563eb; text-decoration:none;">https://matrixo.in</a>
-        </div>
-      </div>
-
-      <div style="margin-top: 14px; text-align: center; color: #64748b; font-size: 12px;">matriXO</div>
-    </div>
-  `;
+  // Professional HTML email
+  var html =
+    '<div style="font-family: Arial, sans-serif; max-width: 680px; margin: 0 auto; padding: 18px; color: #0f172a;">' +
+    '<div style="background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899); padding: 26px; border-radius: 18px; color: #ffffff; text-align: center;">' +
+    '<h1 style="margin: 0; font-size: 28px;">DevAgents 1.0 Registration Received</h1>' +
+    '<p style="margin: 10px 0 0; font-size: 14px; opacity: 0.95;">Registration successful</p>' +
+    "</div>" +
+    '<div style="margin-top: 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 18px;">' +
+    '<p style="margin: 0 0 12px; font-size: 16px;">Hi <b>' +
+    participantName +
+    "</b>,</p>" +
+    '<p style="margin: 0 0 14px; font-size: 14px; line-height: 1.7; color: #334155;">' +
+    "Your registration is successful. We have received your payment screenshot. " +
+    "Payment verification is currently <b>pending</b>." +
+    "</p>" +
+    '<div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 14px; margin: 12px 0;">' +
+    '<div style="font-size: 12px; color: #1d4ed8; font-weight: 700; margin-bottom: 6px;">Entry Number</div>' +
+    '<div style="font-family: monospace; font-size: 20px; color: #0f172a;">' +
+    entryNumber +
+    "</div>" +
+    "</div>" +
+    '<div style="font-size: 14px; color: #334155;">' +
+    '<p style="margin: 8px 0;"><b>Payment Screenshot:</b> ' +
+    (opts.paymentScreenshotReceived ? "Received" : "Not Received") +
+    "</p>" +
+    '<p style="margin: 8px 0;"><b>Payment Verification:</b> ' +
+    (opts.paymentVerificationPending ? "Pending" : "Completed") +
+    "</p>" +
+    "</div>" +
+    '<div style="margin-top: 16px; font-size: 13px; color: #475569; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px;">' +
+    "<b>Need help?</b><br/>" +
+    'Contact: <a href="mailto:' +
+    adminEmail +
+    '" style="color:#2563eb; text-decoration:none;">' +
+    adminEmail +
+    "</a><br/>" +
+    'Website: <a href="https://matrixo.in" style="color:#2563eb; text-decoration:none;">https://matrixo.in</a>' +
+    "</div>" +
+    "</div>" +
+    '<div style="margin-top: 14px; text-align: center; color: #64748b; font-size: 12px;">matriXO</div>' +
+    "</div>";
 
   GmailApp.sendEmail(toEmail, "DevAgents 1.0 Registration Received", "", {
     htmlBody: html,
@@ -622,7 +532,6 @@ function jsonResponse_(payload) {
 }
 
 function jsonError_(errorCode, message, status, details) {
-  // Web apps return body JSON. Include status for frontend.
   return jsonResponse_({
     success: false,
     errorCode: errorCode,
