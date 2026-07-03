@@ -156,7 +156,7 @@ export default function DevAgentsRegistrationForm({
   }, []);
 
   const upiDeepLink = isUpiConfigured
-    ? `upi://pay?pa=shivaganesh9108@okhdfcbank`
+    ? `upi://pay?pa=karthikchinthakindi5@okicici`
     : "";
 
   const handlePaymentClick = () => {
