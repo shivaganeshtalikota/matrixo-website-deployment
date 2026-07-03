@@ -64,6 +64,7 @@ export default function DevAgentsRegistrationForm({
     github: "",
     linkedIn: "",
     experienceLevel: "",
+    whyAttend: "",
     agreeTerms: false,
   });
 
@@ -300,11 +301,8 @@ export default function DevAgentsRegistrationForm({
         github: formData.github.trim(),
         linkedIn: formData.linkedIn.trim(),
         experienceLevel: formData.experienceLevel,
-<<<<<<< HEAD
-=======
         whyAttend: formData.whyAttend.trim(),
         screenshotFileName: paymentScreenshot.name,
->>>>>>> 452b145 (optimized for Android and iOS)
         paymentScreenshot: base64Screenshot,
       };
 
@@ -938,6 +936,23 @@ export default function DevAgentsRegistrationForm({
                 <option>Intermediate Developer</option>
                 <option>Advanced Developer</option>
               </select>
+            </div>
+
+            {/* Why Attend */}
+            <div>
+              <label className={labelClass}>
+                Why do you want to attend?{" "}
+                <span className="text-white/30">(optional)</span>
+              </label>
+              <textarea
+                name="whyAttend"
+                value={formData.whyAttend}
+                onChange={handleChange}
+                placeholder="Tell us briefly what you hope to learn or build…"
+                rows={3}
+                className={inputClass}
+                style={{ resize: "none" }}
+              />
             </div>
 
             {/* Agree to terms */}
