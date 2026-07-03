@@ -64,6 +64,7 @@ export default function DevAgentsRegistrationForm({
     github: "",
     linkedIn: "",
     experienceLevel: "",
+    whyAttend: "",
     agreeTerms: false,
   });
 
@@ -241,6 +242,10 @@ export default function DevAgentsRegistrationForm({
       toast.error("Experience level is required");
       return false;
     }
+    if (!formData.whyAttend.trim() || formData.whyAttend.trim().length < 20) {
+      toast.error("Please share why you want to attend (min 20 chars)");
+      return false;
+    }
     if (!formData.agreeTerms) {
       toast.error("Please agree to the terms & conditions");
       return false;
@@ -299,10 +304,14 @@ export default function DevAgentsRegistrationForm({
         linkedIn: formData.linkedIn.trim(),
         experienceLevel: formData.experienceLevel,
 <<<<<<< HEAD
+<<<<<<< HEAD
         whyAttend: formData.whyAttend.trim(),
 =======
         screenshotFileName: paymentScreenshot.name,
 >>>>>>> 7af1d77 (removed the 20 min char from regform)
+=======
+        whyAttend: formData.whyAttend.trim(),
+>>>>>>> f65f17e (removed the 20 min char from regform)
         paymentScreenshot: base64Screenshot,
       };
 

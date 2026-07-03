@@ -28,3 +28,5 @@
  GET /api/event-visibility 500 in 115ms
  ✓ Compiled in 7.6s (1593 modules)
  GET /events/devagents-1-0?_rsc=1c7q8 200 in 568ms
+ ✓ Compiled in 4.6s (1560 modules)
+ GET /events/devagents-1-0?_rsc=1c7q8 200 in 459ms
