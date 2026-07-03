@@ -45,6 +45,7 @@ function getConfig_() {
 // Column order MUST match the appendRow() call in register_() exactly.
 // 18 columns — do not add, remove, or reorder without updating register_() too.
 const SHEET_HEADERS_ = [
+<<<<<<< HEAD
   "Timestamp", // [0]
   "Entry Number", // [1]  generated internally — never from frontend
   "Full Name", // [2]
@@ -63,11 +64,36 @@ const SHEET_HEADERS_ = [
   "Approval Status", // [15]
   "Drive File URL", // [16]  direct Google Drive link to screenshot file
   "Registration Status", // [17]
+=======
+  "Timestamp",
+  "Entry Number",
+  "Full Name",
+  "Email",
+  "Phone",
+  "College",
+  "Year",
+  "Branch",
+  "City",
+  "GitHub",
+  "LinkedIn",
+  "Experience Level",
+  "Payment Screenshot",
+  "Payment Status",
+  "Approval Status",
+  "QR Code",
+  "Check-in Status",
+  "Approved By",
+  "Approval Time",
+>>>>>>> 7af1d77 (removed the 20 min char from regform)
 ];
 
 const DEFAULT_PAYMENT_STATUS_ = "Pending";
 const DEFAULT_APPROVAL_STATUS_ = "Pending";
+<<<<<<< HEAD
 const DEFAULT_REGISTRATION_STATUS_ = "Pending";
+=======
+const DEFAULT_CHECKIN_STATUS_ = "Not Checked In";
+>>>>>>> 7af1d77 (removed the 20 min char from regform)
 
 function doGet() {
   return jsonResponse_({
@@ -139,7 +165,10 @@ function register_(data) {
     const github = String(data.github || "").trim();
     const linkedIn = String(data.linkedIn || data.linkedin || "").trim();
     const experienceLevel = String(data.experienceLevel || "").trim();
+<<<<<<< HEAD
     const whyAttend = String(data.whyAttend || "").trim();
+=======
+>>>>>>> 7af1d77 (removed the 20 min char from regform)
     const city = String(data.city || "").trim();
 
     // Base64 required by spec
@@ -164,21 +193,38 @@ function register_(data) {
 
     const sheet = getOrInitSheet_(cfg.spreadsheetId);
 
+<<<<<<< HEAD
     // 1. Generate Entry Number internally — NEVER taken from the frontend payload.
     const entryNumber = generateEntryNumber_(cfg.entryPrefix);
 
     // 2. Upload Base64 screenshot to Google Drive.
     //    paymentScreenshot must be a data:image/... Base64 Data URL.
+=======
+    // Sequential entry numbers (never timestamp-based)
+    const entryNumber = generateEntryNumber_(cfg.entryPrefix);
+
+    // Upload to Drive
+>>>>>>> 7af1d77 (removed the 20 min char from regform)
     const driveInfo = uploadPaymentScreenshotToDrive_(
       cfg.driveFolderId,
       paymentScreenshot,
       entryNumber,
     );
 
+<<<<<<< HEAD
     // 3. Build =IMAGE() formula for the thumbnail cell (Payment Screenshot column).
     //    The actual Drive link goes into the separate Drive File URL column.
     const screenshotFormula = buildImageFormula_(driveInfo.url);
 
+=======
+    // QR code in sheet (formula). If later you want QR as Drive file, we can extend.
+    const qrFormula = buildQrCodeFormula_(entryNumber);
+
+    // Payment Screenshot in sheet: thumbnail image via IMAGE(url).
+    // We store screenshot only in Drive (not Base64 in Sheets).
+    const screenshotFormula = buildImageFormula_(driveInfo.url);
+
+>>>>>>> 7af1d77 (removed the 20 min char from regform)
     const nowIso = new Date().toISOString();
 
     // -----------------------------------------------------------------------
@@ -186,6 +232,7 @@ function register_(data) {
     // Position [0..17] — 18 elements, no more, no less.
     // -----------------------------------------------------------------------
     const row = [
+<<<<<<< HEAD
       nowIso, // [0]  Timestamp
       entryNumber, // [1]  Entry Number   ← generated above, NOT from payload
       fullName, // [2]  Full Name
@@ -204,6 +251,27 @@ function register_(data) {
       DEFAULT_APPROVAL_STATUS_, // [15] Approval Status     = Pending
       driveInfo.url, // [16] Drive File URL      (direct Drive link)
       DEFAULT_REGISTRATION_STATUS_, // [17] Registration Status = Pending
+=======
+      nowIso, // Timestamp
+      entryNumber, // Entry Number
+      fullName, // Full Name
+      email, // Email
+      phone, // Phone
+      college, // College
+      year, // Year
+      branch, // Branch
+      city, // City
+      github, // GitHub
+      linkedIn, // LinkedIn
+      experienceLevel, // Experience Level
+      screenshotFormula, // Payment Screenshot (thumbnail)
+      DEFAULT_PAYMENT_STATUS_, // Payment Status = Pending
+      DEFAULT_APPROVAL_STATUS_, // Approval Status = Pending
+      qrFormula, // QR Code
+      DEFAULT_CHECKIN_STATUS_, // Check-in Status
+      "", // Approved By
+      "", // Approval Time
+>>>>>>> 7af1d77 (removed the 20 min char from regform)
     ];
 
     sheet.appendRow(row);
