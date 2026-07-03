@@ -12,6 +12,7 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import { QRCodeSVG } from "qrcode.react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
 import { DEVAGENTS_UPI_ID } from "@/lib/eventBranding";
@@ -155,9 +156,7 @@ export default function DevAgentsRegistrationForm({
     );
   }, []);
 
-  const upiDeepLink = isUpiConfigured
-    ? `upi://pay?pa=shivaganesh9108@okhdfcbank&pn=Shiva+Ganesh+Talikota&am=${PRICE}&cu=INR&tn=${encodeURIComponent(`DevAgents1.0-${transactionCode}`)}`
-    : "";
+  const upiDeepLink = "upi://pay?pa=karthikchinthakindi5@okicici";
 
   /* ── Handlers ─────────────────────────────────────────────────────── */
   const handleChange = (
@@ -578,47 +577,60 @@ export default function DevAgentsRegistrationForm({
 
             {/* QR or deep link */}
             {isMobile ? (
-              <>
-                {isUpiConfigured ? (
-                  <a
-                    href={upiDeepLink}
-                    className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white transition-all hover:scale-[1.02]"
-                    style={{
-                      background:
-                        "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
-                      boxShadow: "0 0 20px rgba(124,58,237,0.35)",
-                    }}
-                  >
-                    <span className="text-xl">📱</span>
-                    <span>Pay ₹{PRICE} with UPI App</span>
-                  </a>
-                ) : (
-                  <div className="w-full rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-5 text-center text-sm text-white/60">
-                    UPI ID will be added soon. Once configured, this button will
-                    open your payment app directly.
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="flex flex-col items-center gap-3">
-                <div
-                  className="p-4 rounded-2xl"
-                  style={{ background: "rgba(255,255,255,0.96)" }}
+              <div className="flex flex-col items-center space-y-4 w-full">
+                {/* Pay Now — raw <a> tag, NO JavaScript redirect */}
+                <a
+                  href={upiDeepLink}
+                  className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white transition-all hover:scale-[1.02] no-underline"
+                  style={{
+                    background:
+                      "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
+                    boxShadow: "0 0 20px rgba(124,58,237,0.35)",
+                  }}
                 >
-                  {isUpiConfigured ? (
-                    <QRCodeSVG
-                      value={upiDeepLink}
-                      size={180}
-                      bgColor="#f5f5f5"
-                      fgColor="#1e1b4b"
-                    />
-                  ) : (
-                    <div className="flex h-[180px] w-[180px] items-center justify-center rounded-xl border border-dashed border-slate-300 text-center text-xs text-slate-500">
-                      UPI QR will appear
-                      <br />
-                      after ID is added
-                    </div>
-                  )}
+                  <span className="text-xl">📱</span>
+                  <span>Pay ₹{PRICE} with UPI App</span>
+                </a>
+
+                {/* OR divider */}
+                <div className="w-full text-center">
+                  <p className="text-sm text-white/40 mb-3">
+                    OR scan QR code below
+                  </p>
+                </div>
+
+                {/* Static QR Code Image */}
+                <div className="bg-white p-4 rounded-2xl shadow-lg">
+                  <Image
+                    src="https://www.matrixo.in/payment-qr.jpg"
+                    alt="Payment QR Code"
+                    width={200}
+                    height={200}
+                    className="rounded-lg"
+                    priority
+                  />
+                </div>
+                <p className="text-xs text-white/40 text-center">
+                  Scan with any UPI app (Google Pay, PhonePe, Paytm, etc.)
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-4">
+                {/* Static QR Code Image */}
+                <div>
+                  <p className="text-sm text-white/60 text-center mb-3">
+                    Scan QR code to pay via UPI
+                  </p>
+                </div>
+                <div className="bg-white p-4 rounded-2xl shadow-lg">
+                  <Image
+                    src="https://www.matrixo.in/payment-qr.jpg"
+                    alt="Payment QR Code"
+                    width={200}
+                    height={200}
+                    className="rounded-lg"
+                    priority
+                  />
                 </div>
                 <p className="text-xs text-white/40 text-center">
                   Scan with GPay, PhonePe, Paytm or any UPI app
