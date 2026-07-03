@@ -34,7 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
- 
+
 # Additional ignores for this Next.js/Node workspace
 
 # editor
@@ -44,6 +44,12 @@ next-env.d.ts
 
 # os-specific
 Thumbs.db
+
+# Windows reserved device names accidentally created by shell
+# redirects (e.g. `command > out.log 2>nul` run outside cmd.exe).
+# Git cannot track these paths on Windows, so keep them ignored.
+nul
+NUL
 
 # build caches and outputs
 dist/

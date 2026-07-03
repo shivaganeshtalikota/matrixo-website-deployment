@@ -328,9 +328,9 @@ export default function DevAgentsRegistrationForm({
 
   /* ── Shared styles ───────────────────────────────────────────────── */
   const cardStyle: React.CSSProperties = {
-    background: "rgba(8,6,20,0.98)",
+    background: "rgba(22,22,35,0.95)",
     backdropFilter: "blur(24px)",
-    border: "1px solid rgba(99,102,241,0.3)",
+    border: "1px solid rgba(124,58,237,0.35)",
   };
 
   const inputClass =
@@ -356,7 +356,7 @@ export default function DevAgentsRegistrationForm({
                       ? "linear-gradient(135deg,#3b82f6,#8b5cf6)"
                       : "rgba(255,255,255,0.08)",
               color: "white",
-              boxShadow: step === s ? "0 0 12px rgba(99,102,241,0.5)" : "none",
+              boxShadow: step === s ? "0 0 12px rgba(124,58,237,0.5)" : "none",
             }}
           >
             {(step === "payment" && s === "form") || step === "success" ? (
@@ -400,7 +400,7 @@ export default function DevAgentsRegistrationForm({
         animate={{ opacity: isOpen ? 1 : 0 }}
         transition={{ duration: 0.22, ease: "easeOut" }}
         className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
-        style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+        style={{ background: "rgba(9,9,15,0.85)", backdropFilter: "blur(8px)" }}
         onClick={handleBackdrop}
       >
         <motion.div
@@ -451,7 +451,7 @@ export default function DevAgentsRegistrationForm({
               className="p-3 rounded-xl text-xs text-white/40"
               style={{
                 background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.08)",
               }}
             >
               Transaction ref:{" "}
@@ -483,7 +483,7 @@ export default function DevAgentsRegistrationForm({
         animate={{ opacity: isOpen ? 1 : 0 }}
         transition={{ duration: 0.22, ease: "easeOut" }}
         className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
-        style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+        style={{ background: "rgba(9,9,15,0.85)", backdropFilter: "blur(8px)" }}
         onClick={handleBackdrop}
       >
         <motion.div
@@ -533,7 +533,7 @@ export default function DevAgentsRegistrationForm({
               <p
                 className="text-4xl font-bold"
                 style={{
-                  background: "linear-gradient(90deg,#60a5fa,#a78bfa)",
+                  background: "linear-gradient(90deg,#4F8BFF,#8B5CF6)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -583,7 +583,7 @@ export default function DevAgentsRegistrationForm({
                     style={{
                       background:
                         "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
-                      boxShadow: "0 0 20px rgba(99,102,241,0.3)",
+                      boxShadow: "0 0 20px rgba(124,58,237,0.35)",
                     }}
                   >
                     <span className="text-xl">📱</span>
@@ -710,7 +710,7 @@ export default function DevAgentsRegistrationForm({
                   ? "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)"
                   : "rgba(255,255,255,0.06)",
                 boxShadow: paymentScreenshot
-                  ? "0 0 20px rgba(99,102,241,0.3)"
+                  ? "0 0 20px rgba(124,58,237,0.35)"
                   : "none",
               }}
             >
@@ -746,7 +746,7 @@ export default function DevAgentsRegistrationForm({
       animate={{ opacity: isOpen ? 1 : 0 }}
       transition={{ duration: 0.22, ease: "easeOut" }}
       className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
-      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+      style={{ background: "rgba(9,9,15,0.85)", backdropFilter: "blur(8px)" }}
       onClick={handleBackdrop}
     >
       <motion.div
@@ -935,22 +935,6 @@ export default function DevAgentsRegistrationForm({
               </select>
             </div>
 
-            {/* Why attend */}
-            <div>
-              <label className={labelClass}>Why do you want to attend? *</label>
-              <textarea
-                name="whyAttend"
-                value={formData.whyAttend}
-                onChange={handleChange}
-                rows={3}
-                placeholder="Tell us what you hope to learn or achieve (min 20 chars)…"
-                className={inputClass + " resize-none"}
-              />
-              <p className="text-xs text-white/20 mt-1 text-right">
-                {formData.whyAttend.length} chars
-              </p>
-            </div>
-
             {/* Agree to terms */}
             <label className="flex items-start gap-3 cursor-pointer group">
               <input
@@ -987,7 +971,7 @@ export default function DevAgentsRegistrationForm({
               className="w-full py-4 rounded-xl font-bold text-white text-sm transition-all hover:scale-[1.02] mt-2"
               style={{
                 background: "linear-gradient(135deg,#2563eb,#7c3aed,#ec4899)",
-                boxShadow: "0 0 24px rgba(99,102,241,0.3)",
+                boxShadow: "0 0 24px rgba(124,58,237,0.35)",
               }}
             >
               Continue to Payment →
