@@ -379,7 +379,8 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
 
   /* Countdown ──────────────────────────────────────────────────────────── */
   useEffect(() => {
-    const targetDate = event?.date ? new Date(event.date) : null;
+    // Hardcoded to the postponed date: July 11, 2026 at 3:00 PM IST
+    const targetDate = new Date("2026-07-11T15:00:00+05:30");
     if (!targetDate || isNaN(targetDate.getTime())) return;
 
     const tick = () => {
@@ -429,7 +430,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
   /* ───────────────────────────────────────────────────────────────────── */
   return (
     <div
-      className={`devagents-shell min-h-screen font-sans overflow-x-hidden ${pageBgClass}`}
+      className={`devagents-shell min-h-screen font-sans overflow-x-hidden ${pageBgClass} -mt-24`}
       data-theme={isDarkMode ? "dark" : "light"}
     >
       {/* ── Injected CSS keyframes ────────────────────────────────────────── */}
@@ -574,7 +575,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
-            className="inline-flex mb-8 w-full max-w-2xl mx-auto"
+            className="flex mb-8 w-full max-w-2xl mx-auto"
           >
             <div
               className="flex items-start gap-4 px-6 py-4 rounded-2xl text-sm font-medium w-full text-left shadow-2xl shadow-red-500/10"
@@ -1650,7 +1651,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 Agentic AI Speaker · AI Educator · Startup Founder
               </p>
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/shivaganesht/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs text-blue-400 transition-colors hover:text-blue-300"
