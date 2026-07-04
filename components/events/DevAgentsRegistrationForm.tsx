@@ -728,7 +728,15 @@ export default function DevAgentsRegistrationForm({
                   priority
                 />
               </div>
-              <p className="text-[11px] text-white/30 text-center">
+              <a
+                href="/payment-qr.jpg"
+                download="DevAgents-Payment-QR.jpg"
+                onClick={() => toast.success("QR saved! Open your UPI app and scan from gallery.")}
+                className="mt-2 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10"
+              >
+                <span>⬇️</span> Download QR Code
+              </a>
+              <p className="text-[11px] text-white/30 text-center mt-1">
                 Works with GPay, PhonePe, Paytm & all UPI apps
               </p>
             </div>
