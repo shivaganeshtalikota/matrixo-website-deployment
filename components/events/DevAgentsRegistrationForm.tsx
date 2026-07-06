@@ -447,9 +447,9 @@ export default function DevAgentsRegistrationForm({
 
   /* ── Shared styles ───────────────────────────────────────────────── */
   const cardStyle: React.CSSProperties = {
-    background: "rgba(22,22,35,0.95)",
-    backdropFilter: "blur(24px)",
-    border: "1px solid rgba(124,58,237,0.35)",
+    background: "#09090b",
+    border: "1px solid rgba(255,255,255,0.1)",
+    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 40px rgba(34,197,94,0.05)",
   };
 
   const inputClass =
@@ -663,32 +663,33 @@ export default function DevAgentsRegistrationForm({
 
             <StepDots />
 
-            {/* Amount Hero */}
+            {/* Premium Amount Hero */}
             <div
-              className="p-4 rounded-2xl text-center relative overflow-hidden"
+              className="p-5 rounded-2xl text-center relative overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))",
-                border: "1px solid rgba(99,102,241,0.2)",
+                background: "linear-gradient(180deg, #18181b 0%, #09090b 100%)",
+                border: "1px solid rgba(255,255,255,0.05)",
               }}
             >
+              <div className="flex items-center justify-center gap-1.5 mb-2 opacity-60">
+                <FaLock className="text-[10px] text-green-400" />
+                <span className="text-[10px] uppercase tracking-widest font-semibold text-green-400">100% Secure Payment</span>
+              </div>
               <p
-                className="text-4xl font-extrabold tracking-tight"
+                className="text-5xl font-extrabold tracking-tighter"
                 style={{
-                  background: "linear-gradient(90deg,#60a5fa,#a78bfa,#f472b6)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  color: "#ffffff",
+                  textShadow: "0 0 20px rgba(255,255,255,0.2)"
                 }}
               >
                 ₹{PRICE}
               </p>
-              <p className="text-sm text-white/50 mt-1">
+              <p className="text-sm text-zinc-400 mt-2 font-medium">
                 DevAgents 1.0 — Workshop Pass
               </p>
-              <div className="flex items-center justify-center gap-1.5 mt-2.5">
-                <span className="inline-block w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-                <span className="text-xs font-semibold text-orange-300">
-                  Only few seats left — Book now!
-                </span>
+              <div className="flex items-center justify-center gap-2 mt-4 inline-flex px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 mx-auto">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Only 14 Seats Left</span>
               </div>
             </div>
 

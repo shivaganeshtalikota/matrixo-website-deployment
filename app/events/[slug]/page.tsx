@@ -78,5 +78,56 @@ export default function EventPage({ params }: Props) {
     notFound()
   }
 
-  return <EventDetail event={event} />
+  const eventUrl = `https://matrixo.in/events/${event.slug}`
+  const eventImage = event.images.banner.startsWith('http') 
+    ? event.images.banner 
+    : `https://matrixo.in${event.images.banner}`
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": event.title,
+    "description": event.description,
+    "image": eventImage,
+    "startDate": event.date,
+    "endDate": event.endDate || event.date,
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "name": event.venue,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": event.location,
+        "addressCountry": "IN"
+      }
+    },
+    "performer": event.speakers ? event.speakers.map(speaker => ({
+      "@type": "Person",
+      "name": speaker.name
+    })) : undefined,
+    "organizer": {
+      "@type": "Organization",
+      "name": event.organizer,
+      "url": "https://matrixo.in"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": eventUrl,
+      "price": event.tickets?.[0]?.price || 0,
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock",
+      "validFrom": "2024-01-01T00:00:00Z"
+    }
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <EventDetail event={event} />
+    </>
+  )
 }

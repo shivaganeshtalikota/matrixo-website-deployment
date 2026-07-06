@@ -643,36 +643,79 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
-            className={`text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed ${textSecondaryClass}`}
+            className={`text-lg md:text-xl max-w-3xl mx-auto mb-4 leading-relaxed ${textSecondaryClass}`}
           >
             Learn to build autonomous AI agents using modern Agentic AI
             frameworks through an immersive, hands-on workshop.
           </motion.p>
+          
+          {/* Social Proof Sub-heading */}
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            className="flex items-center justify-center gap-2 mb-10"
+          >
+            <div className="flex -space-x-2">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-[10px] text-white font-bold z-10" style={{ zIndex: 10 - i }}>
+                  {String.fromCharCode(64 + i)}
+                </div>
+              ))}
+            </div>
+            <p className="text-sm font-medium text-slate-400">Join <strong className="text-white">100+ developers</strong> from top tech companies & universities.</p>
+          </motion.div>
 
           {/* CTA row */}
           <motion.div
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+            className="flex flex-col items-center gap-4 justify-center mb-10"
           >
-            <button
-              onClick={() => setShowRegistration(true)}
-              className={`px-8 py-4 rounded-2xl font-bold text-white text-lg transition-all duration-300 ${accentButtonClass}`}
-              style={{
-                boxShadow: isDarkMode
-                  ? "0 8px 30px rgba(124,58,237,.35)"
-                  : "0 8px 24px rgba(124,58,237,.20)",
-              }}
-            >
-              Register Now →
-            </button>
-            <button
-              onClick={scrollToAgenda}
-              className={`px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] active:scale-[.98] ${secondaryButtonClass}`}
-            >
-              View Agenda
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-lg">
+              <button
+                onClick={() => setShowRegistration(true)}
+                className={`flex-1 px-8 py-4 rounded-2xl font-extrabold text-white text-lg transition-all duration-300 relative overflow-hidden group ${accentButtonClass}`}
+                style={{
+                  boxShadow: isDarkMode
+                    ? "0 8px 30px rgba(124,58,237,.45)"
+                    : "0 8px 24px rgba(124,58,237,.30)",
+                }}
+              >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  Secure Your Seat - ₹199 <span className="animate-bounce">👉</span>
+                </span>
+              </button>
+            </div>
+            
+            {/* Scarcity Trigger */}
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
+              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-xs font-semibold text-orange-400 tracking-wide uppercase">Selling Fast: Only 14 Seats Left</span>
+            </div>
+          </motion.div>
+
+          {/* Trust Anchors */}
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-wrap justify-center gap-6 max-w-3xl mx-auto mb-12 opacity-80"
+          >
+            <div className="flex items-center gap-2">
+              <FaLock className="text-slate-400" />
+              <span className="text-xs font-medium text-slate-400">100% Secure Checkout</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <FaCheckCircle className="text-slate-400" />
+              <span className="text-xs font-medium text-slate-400">Microsoft Learn Curriculum</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <HiSparkles className="text-slate-400" />
+              <span className="text-xs font-medium text-slate-400">Digital Certificate Included</span>
+            </div>
           </motion.div>
 
           {/* Stat chips */}
@@ -2237,21 +2280,29 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               }}
             >
               <div>
-                <p className="text-white font-semibold text-sm">
+                <p className="text-white font-bold text-sm">
                   DevAgents 1.0
                 </p>
-                <p className="text-blue-400 text-xs font-bold">₹199 Only</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <p className="text-emerald-400 text-xs font-bold">₹199 Only</p>
+                  <span className="w-1 h-1 rounded-full bg-slate-600" />
+                  <p className="text-orange-400 text-[10px] font-bold uppercase tracking-wide flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                    14 Left
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => setShowRegistration(true)}
-                className="flex-shrink-0 px-6 py-2.5 rounded-xl font-bold text-white text-sm transition-all duration-200 hover:scale-[1.03] active:scale-[.97]"
+                className="flex-shrink-0 px-6 py-3 rounded-xl font-extrabold text-white text-sm transition-all duration-200 hover:scale-[1.03] active:scale-[.97] relative overflow-hidden group"
                 style={{
                   background:
                     "linear-gradient(135deg, #2563EB, #8B5CF6, #EC4899)",
-                  boxShadow: "0 4px 20px rgba(124,58,237,.35)",
+                  boxShadow: "0 4px 20px rgba(124,58,237,.45)",
                 }}
               >
-                Register Now →
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
+                <span className="relative z-10">Secure Seat →</span>
               </button>
             </div>
           </motion.div>
