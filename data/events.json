@@ -758,9 +758,9 @@
   {
     "id": "devagents-1-0",
     "slug": "devagents-1-0",
-    "title": "DevAgents 1.0",
+    "title": "DevAgentic 1.0",
     "tagline": "From LLMs to Autonomous AI Agents",
-    "description": "DevAgents 1.0 by matriXO is a beginner-friendly, hands-on Agentic AI workshop in Hyderabad. Learn to build autonomous AI agents from scratch using LLMs, prompt engineering, tool calling, memory, and multi-agent systems. Join students, developers, and AI enthusiasts for this live coding event to go beyond ChatGPT.",
+    "description": "DevAgentic 1.0 by matriXO is a beginner-friendly, hands-on Agentic AI workshop in Hyderabad. Learn to build autonomous AI agents from scratch using LLMs, prompt engineering, tool calling, memory, and multi-agent systems. Join students, developers, and AI enthusiasts for this live coding event to go beyond ChatGPT.",
     "date": "2026-07-11T15:00:00",
     "endDate": "2026-07-11T18:00:00",
     "venue": "DraperU India",
@@ -779,7 +779,7 @@
     "tickets": [
       {
         "id": "devagents-pass",
-        "name": "DevAgents 1.0 Pass",
+        "name": "DevAgentic 1.0 Pass",
         "price": 199,
         "originalPrice": 499,
         "available": 120,
@@ -872,7 +872,7 @@
     "faqs": [
       {
         "question": "Is it beginner-friendly?",
-        "answer": "Yes, DevAgents 1.0 is designed for beginners. No prior AI experience is required."
+        "answer": "Yes, DevAgentic 1.0 is designed for beginners. No prior AI experience is required."
       },
       {
         "question": "Do I need coding knowledge?",

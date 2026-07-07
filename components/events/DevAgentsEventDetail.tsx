@@ -268,7 +268,7 @@ const WHO_SHOULD_ATTEND = [
 const FAQS = [
   {
     q: "Is it beginner-friendly?",
-    a: "Yes! DevAgents 1.0 is designed for beginners. No prior AI experience is required to attend and benefit from this workshop.",
+    a: "Yes! DevAgentic 1.0 is designed for beginners. No prior AI experience is required to attend and benefit from this workshop.",
   },
   {
     q: "Do I need coding knowledge?",
@@ -288,7 +288,7 @@ const FAQS = [
   },
   {
     q: "Can working professionals attend?",
-    a: "Yes, absolutely! DevAgents 1.0 is open to students, developers, founders, and working professionals alike.",
+    a: "Yes, absolutely! DevAgentic 1.0 is open to students, developers, founders, and working professionals alike.",
   },
   {
     q: "Will recordings be available?",
@@ -915,7 +915,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
           >
             <h2 className="text-3xl md:text-4xl font-bold font-display mb-4">
               <span className="bg-gradient-to-r from-[#4F8BFF] via-violet-500 to-pink-500 bg-clip-text text-transparent">
-                About DevAgents 1.0
+                About DevAgentic 1.0
               </span>
             </h2>
           </motion.div>
@@ -931,12 +931,12 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             >
               <p className={`${textSecondaryClass} leading-relaxed`}>
                 {event?.description ||
-                  "DevAgents 1.0 is a premier Agentic AI workshop organised by matriXO, designed to introduce participants to the world of autonomous AI agents. This is not just another tech talk — it is an immersive, hands-on experience."}
+                  "DevAgentic 1.0 is a premier Agentic AI workshop organised by matriXO, designed to introduce participants to the world of autonomous AI agents. This is not just another tech talk — it is an immersive, hands-on experience."}
               </p>
               <p className={`${textSecondaryClass} leading-relaxed`}>
                 Whether you are a student exploring AI, a developer looking to
                 upskill, or a founder wanting to integrate AI into your product
-                — DevAgents 1.0 is the perfect launchpad for your AI agent
+                — DevAgentic 1.0 is the perfect launchpad for your AI agent
                 journey.
               </p>
               <ul className="space-y-3 pt-2">
@@ -1166,7 +1166,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 Event Highlights
               </h2>
               <p className="text-slate-400">
-                Everything you get at DevAgents 1.0
+                Everything you get at DevAgentic 1.0
               </p>
             </motion.div>
 
@@ -1539,7 +1539,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             <h2 className="text-3xl md:text-4xl font-bold font-display text-white mb-4">
               Get Your Pass
             </h2>
-            <p className="text-slate-400">Secure your spot at DevAgents 1.0</p>
+            <p className="text-slate-400">Secure your spot at DevAgentic 1.0</p>
           </motion.div>
 
           <motion.div
@@ -1573,7 +1573,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                     border: "1px solid rgba(124,58,237,.35)",
                   }}
                 >
-                  DevAgents 1.0 Pass
+                  DevAgentic 1.0 Pass
                 </span>
               </div>
 
@@ -1826,7 +1826,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               Who Should Attend
             </h2>
             <p className="text-slate-400">
-              DevAgents 1.0 is for everyone curious about AI
+              DevAgentic 1.0 is for everyone curious about AI
             </p>
           </motion.div>
 
@@ -2184,7 +2184,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             viewport={{ once: true }}
           >
             <h3 className="text-3xl font-bold font-display bg-gradient-to-r from-[#4F8BFF] via-violet-500 to-pink-500 bg-clip-text text-transparent">
-              DevAgents 1.0
+              DevAgentic 1.0
             </h3>
             <p className="text-slate-600 text-sm mt-1">Built by matriXO</p>
           </motion.div>
@@ -2289,7 +2289,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             >
               <div>
                 <p className="text-white font-bold text-sm">
-                  DevAgents 1.0
+                  DevAgentic 1.0
                 </p>
                 <div className="flex items-center gap-2 mt-0.5">
                   <p className="text-emerald-400 text-xs font-bold">₹199 Only</p>
