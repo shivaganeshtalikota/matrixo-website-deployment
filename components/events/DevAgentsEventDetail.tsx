@@ -573,31 +573,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               </span>
             </div>
           </div>
-          {/* Postponement Alert */}
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            className="flex mb-8 w-full max-w-2xl mx-auto"
-          >
-            <div
-              className="flex items-start gap-4 px-6 py-4 rounded-2xl text-sm font-medium w-full text-left shadow-2xl shadow-red-500/10"
-              style={{
-                background: "rgba(220, 38, 38, 0.15)",
-                backdropFilter: "blur(16px)",
-                border: "1px solid rgba(239, 68, 68, 0.4)",
-              }}
-            >
-              <span className="text-red-400 text-2xl mt-0.5">⚠️</span>
-              <div className="flex-1">
-                <span className="text-red-400 font-bold text-base block mb-1 tracking-wide">URGENT: EVENT POSTPONED</span>
-                <span className="text-white/90 text-sm leading-relaxed">
-                  Due to extremely high demand, the event has been rescheduled to <strong className="text-white">Saturday, 11th July 2026 (3:00 PM - 6:00 PM)</strong>. 
-                  All existing registrations remain completely valid.
-                </span>
-              </div>
-            </div>
-          </motion.div>
+
           {/* Badge pill */}
           <motion.div
             variants={fadeInUp}
@@ -761,8 +737,8 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                      border: "1px solid rgba(124,58,237,.2)"
                    }}>
                 <div className="flex flex-col md:flex-row items-center gap-4">
-                  <Image src={MATRIXO_LOGO_LIGHT_URL} alt="matriXO" width={120} height={40} className="hidden dark:block" />
-                  <Image src={MATRIXO_LOGO_DARK_URL} alt="matriXO" width={120} height={40} className="block dark:hidden" />
+                  <Image src={MATRIXO_LOGO_DARK_URL} alt="matriXO" width={120} height={40} className="hidden dark:block" />
+                  <Image src={MATRIXO_LOGO_LIGHT_URL} alt="matriXO" width={120} height={40} className="block dark:hidden" />
                   <div className="h-8 w-px bg-slate-700 hidden md:block"></div>
                   <p className="text-xs font-semibold tracking-widest uppercase text-slate-400 mt-2 md:mt-0">
                     Event Starts In
@@ -2164,6 +2140,37 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          15.5. POSTPONEMENT ALERT (MOVED TO BOTTOM)
+      ══════════════════════════════════════════════════════════════════ */}
+      <section className="py-8 px-4">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="flex w-full max-w-2xl mx-auto"
+        >
+          <div
+            className="flex items-start gap-4 px-6 py-4 rounded-2xl text-sm font-medium w-full text-left shadow-2xl shadow-red-500/10"
+            style={{
+              background: "rgba(220, 38, 38, 0.15)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid rgba(239, 68, 68, 0.4)",
+            }}
+          >
+            <span className="text-red-400 text-2xl mt-0.5">⚠️</span>
+            <div className="flex-1">
+              <span className="text-red-400 font-bold text-base block mb-1 tracking-wide">URGENT: EVENT POSTPONED</span>
+              <span className="text-white/90 text-sm leading-relaxed">
+                Due to extremely high demand, the event has been rescheduled to <strong className="text-white">Saturday, 11th July 2026 (3:00 PM - 6:00 PM)</strong>. 
+                All existing registrations remain completely valid.
+              </span>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════

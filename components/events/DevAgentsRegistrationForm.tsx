@@ -1159,7 +1159,7 @@ export default function DevAgentsRegistrationForm({
             <div className="flex items-center justify-center gap-2 pb-2">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
               <p className="text-xs text-white/30">
-                <span className="text-white/50 font-semibold">₹{PRICE}</span> · Limited to 150 seats · Instant confirmation
+                <span className="text-white/50 font-semibold">₹{PRICE}</span> · Limited to 120 seats · Instant confirmation
               </p>
             </div>
           </form>
