@@ -136,6 +136,22 @@ export async function POST(request: Request) {
         response.status,
         raw.slice(0, 500),
       );
+    } else {
+      // Trigger background email processor immediately without waiting
+      // We use the hostname of the current request if available
+      try {
+        const protocol = request.headers.get("x-forwarded-proto") || "http";
+        const host = request.headers.get("host") || "localhost:3000";
+        const cronSecret = process.env.CRON_SECRET || "";
+        const cronUrl = `${protocol}://${host}/api/cron/process-emails${cronSecret ? `?secret=${cronSecret}` : ""}`;
+        
+        console.log(`[DevAgents] Triggering immediate email processing via ${cronUrl}`);
+        fetch(cronUrl).catch((err) => {
+          console.error("[DevAgents] Background email process trigger failed:", err);
+        });
+      } catch (err) {
+        console.error("[DevAgents] Error generating cron trigger URL:", err);
+      }
     }
 
     return NextResponse.json(

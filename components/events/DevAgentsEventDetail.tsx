@@ -176,44 +176,44 @@ const AGENDA: AgendaItem[] = [
     desc: "Check-in, meet fellow participants, and settle in",
   },
   {
-    time: "3:20 PM",
+    time: "4:00 PM",
     icon: "🚀",
     title: "Opening Session",
     desc: "Introduction, the Future of AI, and why AI Agents matter today",
   },
   {
-    time: "3:40 PM",
+    time: "4:30 PM",
     icon: "🧠",
     title: "Session 1: LLMs & Prompt Engineering",
     desc: "Deep dive into large language models and crafting effective prompts",
   },
   {
-    time: "4:10 PM",
+    time: "5:00 PM",
     icon: "🤖",
     title: "Session 2: Agentic AI Deep Dive",
     desc: "Autonomous AI, Planning, Reasoning, Tool Calling, Memory & Multi-Agent Systems",
   },
   {
-    time: "4:40 PM",
+    time: "5:45 PM",
     icon: "💻",
     title: "Session 3: Hands-on Workshop",
     desc: "Live Coding — Build your own AI agents and work on real projects",
   },
   {
-    time: "5:20 PM",
+    time: "6:30 PM",
     icon: "🔥",
     title: "Fireside Chat (Planned)",
     desc: "AI Careers, Future Jobs, and Startups",
     badge: "Subject to confirmation",
   },
   {
-    time: "5:40 PM",
+    time: "6:45 PM",
     icon: "🏆",
     title: "Hands-on Challenge + Recognition",
     desc: "Top 3 participants get special recognition and prizes",
   },
   {
-    time: "5:50 PM",
+    time: "7:00 PM",
     icon: "🎓",
     title: "Closing Ceremony",
     desc: "Certificates, Networking, and Group Photo",
@@ -415,6 +415,20 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
     } catch {
       return "TBA";
     }
+  };
+
+  const formatEventTime = (dateStr: string): string => {
+    try {
+      return format(new Date(dateStr), "h:mm aa");
+    } catch {
+      return "TBA";
+    }
+  };
+
+  const eventTimeRange = (): string => {
+    const start = event?.date ? formatEventTime(event.date) : "TBA";
+    const end = event?.endDate ? formatEventTime(event.endDate) : null;
+    return end ? `${start} – ${end}` : start;
   };
 
   const scrollToAgenda = () =>
@@ -627,7 +641,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             Learn to build autonomous AI agents using modern Agentic AI
             frameworks through an immersive, hands-on workshop.
           </motion.p>
-          
+
           {/* Social Proof Sub-heading */}
           <motion.div
             variants={fadeInUp}
@@ -661,7 +675,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 </span>
               </button>
             </div>
-            
+
             {/* Scarcity Trigger */}
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
               <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
@@ -731,11 +745,11 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               className="mt-8 mb-4 w-full"
             >
               <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-6 px-8 py-6 rounded-3xl"
-                   style={{
-                     background: "rgba(22,22,35,.6)",
-                     backdropFilter: "blur(20px)",
-                     border: "1px solid rgba(124,58,237,.2)"
-                   }}>
+                style={{
+                  background: "rgba(22,22,35,.6)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(124,58,237,.2)"
+                }}>
                 <div className="flex flex-col md:flex-row items-center gap-4">
                   <Image src={MATRIXO_LOGO_DARK_URL} alt="matriXO" width={120} height={40} className="hidden dark:block" />
                   <Image src={MATRIXO_LOGO_LIGHT_URL} alt="matriXO" width={120} height={40} className="block dark:hidden" />
@@ -813,7 +827,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                     event?.venue ||
                     "DraperU India(Formerly Draper Startup House Hyderabad), Rajiv gandhi Nagar, Gachibowli, Hyderabad, Telangana 500032",
                 },
-                { icon: "⏰", label: "Time", value: "3:00 PM – 6:00 PM" },
+                { icon: "⏰", label: "Time", value: "3:30 PM – 7:00 PM" },
                 {
                   icon: "👥",
                   label: "Capacity",
@@ -2165,7 +2179,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             <div className="flex-1">
               <span className="text-red-400 font-bold text-base block mb-1 tracking-wide">URGENT: EVENT POSTPONED</span>
               <span className="text-white/90 text-sm leading-relaxed">
-                Due to extremely high demand, the event has been rescheduled to <strong className="text-white">Saturday, 11th July 2026 (3:00 PM - 6:00 PM)</strong>. 
+                Due to extremely high demand, the event has been rescheduled to <strong className="text-white">Saturday, 11th July 2026 (3:00 PM - 6:00 PM)</strong>.
                 All existing registrations remain completely valid.
               </span>
             </div>
