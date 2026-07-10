@@ -268,7 +268,7 @@ const WHO_SHOULD_ATTEND = [
 const FAQS = [
   {
     q: "Is it beginner-friendly?",
-    a: "Yes! DevAgents 1.0 is designed for beginners. No prior AI experience is required to attend and benefit from this workshop.",
+    a: "Yes! DevAgentic 1.0 is designed for beginners. No prior AI experience is required to attend and benefit from this workshop.",
   },
   {
     q: "Do I need coding knowledge?",
@@ -288,7 +288,7 @@ const FAQS = [
   },
   {
     q: "Can working professionals attend?",
-    a: "Yes, absolutely! DevAgents 1.0 is open to students, developers, founders, and working professionals alike.",
+    a: "Yes, absolutely! DevAgentic 1.0 is open to students, developers, founders, and working professionals alike.",
   },
   {
     q: "Will recordings be available?",
@@ -490,7 +490,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
       {/* ══════════════════════════════════════════════════════════════════
           1. HERO SECTION
       ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-36 pb-16">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 md:pt-36 pb-16">
         {/* Background stack */}
         <div className="absolute inset-0 pointer-events-none select-none">
           {/* Base gradient */}
@@ -551,50 +551,29 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
           ))}
         </div>
 
-        {/* LIVE · OFFLINE badge */}
-        <div
-          className="absolute top-28 right-6 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full"
-          style={{
-            background: isDarkMode ? "rgba(9,9,15,.6)" : "rgba(255,255,255,.8)",
-            backdropFilter: "blur(12px)",
-            border: isDarkMode
-              ? "1px solid rgba(34,197,94,.3)"
-              : "1px solid rgba(34,197,94,.18)",
-          }}
-        >
-          <span className="w-2 h-2 rounded-full bg-green-500 da-pulse-dot" />
-          <span className="text-xs font-semibold tracking-widest text-green-400">
-            LIVE · OFFLINE
-          </span>
-        </div>
+        {/* Removed absolute LIVE OFFLINE badge to be placed below */}
 
         {/* Hero content */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-          {/* Postponement Alert */}
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            className="flex mb-8 w-full max-w-2xl mx-auto"
-          >
+          {/* LIVE · OFFLINE badge */}
+          <div className="flex justify-center mb-6 mt-2 md:mt-4">
             <div
-              className="flex items-start gap-4 px-6 py-4 rounded-2xl text-sm font-medium w-full text-left shadow-2xl shadow-red-500/10"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
               style={{
-                background: "rgba(220, 38, 38, 0.15)",
-                backdropFilter: "blur(16px)",
-                border: "1px solid rgba(239, 68, 68, 0.4)",
+                background: isDarkMode ? "rgba(9,9,15,.6)" : "rgba(255,255,255,.8)",
+                backdropFilter: "blur(12px)",
+                border: isDarkMode
+                  ? "1px solid rgba(34,197,94,.3)"
+                  : "1px solid rgba(34,197,94,.18)",
               }}
             >
-              <span className="text-red-400 text-2xl mt-0.5">⚠️</span>
-              <div className="flex-1">
-                <span className="text-red-400 font-bold text-base block mb-1 tracking-wide">URGENT: EVENT POSTPONED</span>
-                <span className="text-white/90 text-sm leading-relaxed">
-                  Due to extremely high demand, the event has been rescheduled to <strong className="text-white">Saturday, 11th July 2026 (3:00 PM - 6:00 PM)</strong>. 
-                  All existing registrations remain completely valid.
-                </span>
-              </div>
+              <span className="w-2 h-2 rounded-full bg-green-500 da-pulse-dot" />
+              <span className="text-xs font-bold tracking-widest text-green-400">
+                LIVE · OFFLINE
+              </span>
             </div>
-          </motion.div>
+          </div>
+
           {/* Badge pill */}
           <motion.div
             variants={fadeInUp}
@@ -656,13 +635,6 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             animate="visible"
             className="flex items-center justify-center gap-2 mb-10"
           >
-            <div className="flex -space-x-2">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-[10px] text-white font-bold z-10" style={{ zIndex: 10 - i }}>
-                  {String.fromCharCode(64 + i)}
-                </div>
-              ))}
-            </div>
             <p className="text-sm font-medium text-slate-400">Join <strong className="text-white">100+ developers</strong> from top tech companies & universities.</p>
           </motion.div>
 
@@ -756,47 +728,59 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               variants={fadeInUp}
               initial="hidden"
               animate="visible"
-              className="flex flex-col items-center gap-4"
+              className="mt-8 mb-4 w-full"
             >
-              <p className="text-xs font-medium tracking-widest uppercase text-slate-500">
-                Event Starts In
-              </p>
-              <div className="flex gap-3">
-                {(
-                  [
-                    { v: countdown.days, l: "Days" },
-                    { v: countdown.hours, l: "Hours" },
-                    { v: countdown.minutes, l: "Minutes" },
-                    { v: countdown.seconds, l: "Seconds" },
-                  ] as { v: number; l: string }[]
-                ).map(({ v, l }) => (
-                  <div key={l} className="flex flex-col items-center gap-1">
-                    <div
-                      className="w-16 h-16 md:w-20 md:h-20 rounded-xl flex items-center justify-center"
-                      style={{
-                        background: "rgba(22,22,35,.85)",
-                        backdropFilter: "blur(12px)",
-                        border: "1px solid rgba(124,58,237,.3)",
-                      }}
-                    >
-                      <AnimatePresence mode="wait">
-                        <motion.span
-                          key={v}
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 8 }}
-                          transition={{ duration: 0.2 }}
-                          className="text-2xl md:text-3xl font-bold font-display text-white tabular-nums"
-                        >
-                          {String(v).padStart(2, "0")}
-                        </motion.span>
-                      </AnimatePresence>
+              <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-6 px-8 py-6 rounded-3xl"
+                   style={{
+                     background: "rgba(22,22,35,.6)",
+                     backdropFilter: "blur(20px)",
+                     border: "1px solid rgba(124,58,237,.2)"
+                   }}>
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                  <Image src={MATRIXO_LOGO_DARK_URL} alt="matriXO" width={120} height={40} className="hidden dark:block" />
+                  <Image src={MATRIXO_LOGO_LIGHT_URL} alt="matriXO" width={120} height={40} className="block dark:hidden" />
+                  <div className="h-8 w-px bg-slate-700 hidden md:block"></div>
+                  <p className="text-xs font-semibold tracking-widest uppercase text-slate-400 mt-2 md:mt-0">
+                    Event Starts In
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  {(
+                    [
+                      { v: countdown.days, l: "Days" },
+                      { v: countdown.hours, l: "Hours" },
+                      { v: countdown.minutes, l: "Minutes" },
+                      { v: countdown.seconds, l: "Seconds" },
+                    ] as { v: number; l: string }[]
+                  ).map(({ v, l }) => (
+                    <div key={l} className="flex flex-col items-center gap-1">
+                      <div
+                        className="w-14 h-14 md:w-16 md:h-16 rounded-xl flex items-center justify-center"
+                        style={{
+                          background: "rgba(22,22,35,.85)",
+                          backdropFilter: "blur(12px)",
+                          border: "1px solid rgba(124,58,237,.3)",
+                        }}
+                      >
+                        <AnimatePresence mode="wait">
+                          <motion.span
+                            key={v}
+                            initial={{ opacity: 0, y: -8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 8 }}
+                            transition={{ duration: 0.2 }}
+                            className="text-xl md:text-2xl font-bold font-display text-white tabular-nums"
+                          >
+                            {String(v).padStart(2, "0")}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-medium">
+                        {l}
+                      </span>
                     </div>
-                    <span className="text-[11px] text-slate-500 font-medium">
-                      {l}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </motion.div>
           )}
@@ -847,7 +831,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                         {item.label}
                       </p>
                       <p
-                        className={`text-sm font-semibold mt-0.5 truncate ${textPrimaryClass}`}
+                        className={`text-sm font-semibold mt-0.5 ${textPrimaryClass}`}
                       >
                         {item.value}
                       </p>
@@ -907,7 +891,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
           >
             <h2 className="text-3xl md:text-4xl font-bold font-display mb-4">
               <span className="bg-gradient-to-r from-[#4F8BFF] via-violet-500 to-pink-500 bg-clip-text text-transparent">
-                About DevAgents 1.0
+                About DevAgentic 1.0
               </span>
             </h2>
           </motion.div>
@@ -923,12 +907,12 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             >
               <p className={`${textSecondaryClass} leading-relaxed`}>
                 {event?.description ||
-                  "DevAgents 1.0 is a premier Agentic AI workshop organised by matriXO, designed to introduce participants to the world of autonomous AI agents. This is not just another tech talk — it is an immersive, hands-on experience."}
+                  "DevAgentic 1.0 is a premier Agentic AI workshop organised by matriXO, designed to introduce participants to the world of autonomous AI agents. This is not just another tech talk — it is an immersive, hands-on experience."}
               </p>
               <p className={`${textSecondaryClass} leading-relaxed`}>
                 Whether you are a student exploring AI, a developer looking to
                 upskill, or a founder wanting to integrate AI into your product
-                — DevAgents 1.0 is the perfect launchpad for your AI agent
+                — DevAgentic 1.0 is the perfect launchpad for your AI agent
                 journey.
               </p>
               <ul className="space-y-3 pt-2">
@@ -1158,7 +1142,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                 Event Highlights
               </h2>
               <p className="text-slate-400">
-                Everything you get at DevAgents 1.0
+                Everything you get at DevAgentic 1.0
               </p>
             </motion.div>
 
@@ -1531,7 +1515,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             <h2 className="text-3xl md:text-4xl font-bold font-display text-white mb-4">
               Get Your Pass
             </h2>
-            <p className="text-slate-400">Secure your spot at DevAgents 1.0</p>
+            <p className="text-slate-400">Secure your spot at DevAgentic 1.0</p>
           </motion.div>
 
           <motion.div
@@ -1565,7 +1549,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
                     border: "1px solid rgba(124,58,237,.35)",
                   }}
                 >
-                  DevAgents 1.0 Pass
+                  DevAgentic 1.0 Pass
                 </span>
               </div>
 
@@ -1818,7 +1802,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
               Who Should Attend
             </h2>
             <p className="text-slate-400">
-              DevAgents 1.0 is for everyone curious about AI
+              DevAgentic 1.0 is for everyone curious about AI
             </p>
           </motion.div>
 
@@ -2159,6 +2143,37 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
+          15.5. POSTPONEMENT ALERT (MOVED TO BOTTOM)
+      ══════════════════════════════════════════════════════════════════ */}
+      <section className="py-8 px-4">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="flex w-full max-w-2xl mx-auto"
+        >
+          <div
+            className="flex items-start gap-4 px-6 py-4 rounded-2xl text-sm font-medium w-full text-left shadow-2xl shadow-red-500/10"
+            style={{
+              background: "rgba(220, 38, 38, 0.15)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid rgba(239, 68, 68, 0.4)",
+            }}
+          >
+            <span className="text-red-400 text-2xl mt-0.5">⚠️</span>
+            <div className="flex-1">
+              <span className="text-red-400 font-bold text-base block mb-1 tracking-wide">URGENT: EVENT POSTPONED</span>
+              <span className="text-white/90 text-sm leading-relaxed">
+                Due to extremely high demand, the event has been rescheduled to <strong className="text-white">Saturday, 11th July 2026 (3:00 PM - 6:00 PM)</strong>. 
+                All existing registrations remain completely valid.
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════
           16. DEVAGENTS FOOTER (special pre-footer)
       ══════════════════════════════════════════════════════════════════ */}
       <footer
@@ -2176,7 +2191,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             viewport={{ once: true }}
           >
             <h3 className="text-3xl font-bold font-display bg-gradient-to-r from-[#4F8BFF] via-violet-500 to-pink-500 bg-clip-text text-transparent">
-              DevAgents 1.0
+              DevAgentic 1.0
             </h3>
             <p className="text-slate-600 text-sm mt-1">Built by matriXO</p>
           </motion.div>
@@ -2281,7 +2296,7 @@ export default function DevAgentsEventDetail({ event }: { event: any }) {
             >
               <div>
                 <p className="text-white font-bold text-sm">
-                  DevAgents 1.0
+                  DevAgentic 1.0
                 </p>
                 <div className="flex items-center gap-2 mt-0.5">
                   <p className="text-emerald-400 text-xs font-bold">₹199 Only</p>

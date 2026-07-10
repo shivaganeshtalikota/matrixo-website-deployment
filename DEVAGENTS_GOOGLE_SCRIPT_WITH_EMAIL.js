@@ -1,5 +1,5 @@
 // ================================================
-// DevAgents 1.0 - Production-ready Google Apps Script
+// DevAgentic 1.0 - Production-ready Google Apps Script
 // Web App:
 //   Execute as: Me
 //   Who has access: Anyone
@@ -471,7 +471,7 @@ function sendRegistrationReceivedEmail_(adminEmail, opts) {
   var html =
     '<div style="font-family: Arial, sans-serif; max-width: 680px; margin: 0 auto; padding: 18px; color: #0f172a;">' +
     '<div style="background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899); padding: 26px; border-radius: 18px; color: #ffffff; text-align: center;">' +
-    '<h1 style="margin: 0; font-size: 28px;">DevAgents 1.0 Registration Received</h1>' +
+    '<h1 style="margin: 0; font-size: 28px;">DevAgentic 1.0 Registration Received</h1>' +
     '<p style="margin: 10px 0 0; font-size: 14px; opacity: 0.95;">Registration successful</p>' +
     "</div>" +
     '<div style="margin-top: 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 18px;">' +
@@ -509,7 +509,7 @@ function sendRegistrationReceivedEmail_(adminEmail, opts) {
     '<div style="margin-top: 14px; text-align: center; color: #64748b; font-size: 12px;">matriXO</div>' +
     "</div>";
 
-  GmailApp.sendEmail(toEmail, "DevAgents 1.0 Registration Received", "", {
+  GmailApp.sendEmail(toEmail, "DevAgentic 1.0 Registration Received", "", {
     htmlBody: html,
     name: "matriXO Events",
     replyTo: adminEmail,

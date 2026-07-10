@@ -685,7 +685,7 @@ export default function DevAgentsRegistrationForm({
                 ₹{PRICE}
               </p>
               <p className="text-sm text-zinc-400 mt-2 font-medium">
-                DevAgents 1.0 — Workshop Pass
+                DevAgentic 1.0 — Workshop Pass
               </p>
               <div className="flex items-center justify-center gap-2 mt-4 inline-flex px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 mx-auto">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -929,7 +929,7 @@ export default function DevAgentsRegistrationForm({
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="text-xl font-bold text-white">
-                Register for DevAgents 1.0
+                Register for DevAgentic 1.0
               </h3>
               <p className="text-xs text-white/40 mt-0.5">
                 Step 1 of 3 — Fill in your details
@@ -1159,7 +1159,7 @@ export default function DevAgentsRegistrationForm({
             <div className="flex items-center justify-center gap-2 pb-2">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
               <p className="text-xs text-white/30">
-                <span className="text-white/50 font-semibold">₹{PRICE}</span> · Limited to 150 seats · Instant confirmation
+                <span className="text-white/50 font-semibold">₹{PRICE}</span> · Limited to 120 seats · Instant confirmation
               </p>
             </div>
           </form>
