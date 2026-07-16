@@ -1,12 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, clientKey } from '@/lib/security/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
 // Set DEVAGENTS_GOOGLE_SCRIPT_URL in your .env.local / Vercel environment variables
 const DEVAGENTS_SCRIPT_URL = process.env.DEVAGENTS_GOOGLE_SCRIPT_URL || ''
 
+// Max accepted size for the base64 payment screenshot data URL (~4MB
+// of raw image once base64 overhead is accounted for). Guards against
+// oversized-payload abuse of both this route and the Apps Script.
+const MAX_SCREENSHOT_CHARS = 6 * 1024 * 1024
+
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 registrations per minute per IP.
+    const limit = rateLimit(`devagents:${clientKey(request)}`, 5, 60 * 1000)
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please wait a moment and try again.' },
+        { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+      )
+    }
+
     const body = await request.json()
 
     // ----------------------------------------------------------------
@@ -73,6 +88,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'paymentScreenshot must be a Base64 image Data URL (data:image/...)' },
         { status: 400 }
+      )
+    }
+
+    if (paymentScreenshot.length > MAX_SCREENSHOT_CHARS) {
+      return NextResponse.json(
+        { error: 'Payment screenshot is too large. Please upload an image under 4MB.' },
+        { status: 413 }
       )
     }
 

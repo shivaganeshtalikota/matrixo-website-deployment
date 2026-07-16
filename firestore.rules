@@ -1,104 +1,135 @@
 rules_version = '2';
+
+// ============================================================================
+// ⚠️  PRE-DEPLOY CHECKLIST — READ BEFORE `firebase deploy --only firestore:rules`
+// ----------------------------------------------------------------------------
+// This revision closes a privilege-escalation hole: previously ANY authenticated
+// account (including a regular student who signed up on matrixo.in — the same
+// Firebase project the employee portal uses) could read and write every
+// employee-portal collection (attendance, tasks, discussions, leave, meetings,
+// notifications) and could even self-promote to employee by writing
+// /Employees/{their-uid}. Those collections are now gated behind isEmployee().
+//
+// isEmployee() checks exists(/Employees/{request.auth.uid}). This is correct for
+// the app's PRIMARY path, which keys employee docs by auth uid. BEFORE DEPLOYING,
+// confirm no active employee relies on the legacy email-fallback (a doc whose ID
+// is NOT their auth uid) — such an account would lose portal access. Verify with:
+//   Firestore console → Employees → confirm every doc ID equals its user's auth UID.
+// Re-key any mismatches (or provision them server-side via the Admin SDK) first.
+// ============================================================================
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     // Check if user is logged in
     function isAuthenticated() {
       return request.auth != null;
+    }
+
+    // Check if the caller is a provisioned employee (doc keyed by auth uid)
+    function isEmployee() {
+      return isAuthenticated() &&
+             exists(/databases/$(database)/documents/Employees/$(request.auth.uid));
     }
 
     // ================================================
     // SYSTEM CONFIG COLLECTION (Work Mode, etc.)
     // ================================================
     match /systemConfig/{configId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
-    // PERSONAL TODOS COLLECTION (NEW)
+    // PERSONAL TODOS COLLECTION (employee-only)
     // ================================================
     match /personalTodos/{todoId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // EMPLOYEES COLLECTION
+    // Public read (team page). Writes restricted to existing employees
+    // so a random authenticated user can no longer self-promote by
+    // creating /Employees/{their-uid}. New employees are provisioned by
+    // an existing employee/admin or via the Admin SDK.
     // ================================================
     match /Employees/{employeeId} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // ATTENDANCE COLLECTION
     // ================================================
     match /attendance/{attendanceId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // HOLIDAYS COLLECTION
     // ================================================
     match /holidays/{holidayId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // CALENDAR EVENTS COLLECTION
     // ================================================
     match /calendarEvents/{eventId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // TASKS COLLECTION
     // ================================================
     match /tasks/{taskId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // DISCUSSIONS COLLECTION
     // ================================================
     match /discussions/{discussionId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // ACTIVITY LOGS COLLECTION
     // ================================================
     match /activityLogs/{logId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // NOTIFICATIONS COLLECTION (legacy)
     // ================================================
     match /notifications/{notificationId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
-    // USER NOTIFICATIONS COLLECTION (per-user)
+    // USER NOTIFICATIONS COLLECTION (per-employee)
+    // Read/update/delete are employee-only. Public creation is retained
+    // ONLY for application notifications so unauthenticated applicants can
+    // notify staff of a new submission — and only with type == 'application'.
     // ================================================
     match /userNotifications/{notificationId} {
-      allow read: if isAuthenticated();
-      // Allow authenticated writes + public creates for application notifications
-      allow create: if isAuthenticated() || request.resource.data.type == 'application';
-      allow update, delete: if isAuthenticated();
+      allow read: if isEmployee();
+      allow create: if isEmployee() || request.resource.data.type == 'application';
+      allow update, delete: if isEmployee();
     }
 
     // ================================================
-    // VIBECODE REGISTRATIONS COLLECTION
+    // VIBECODE REGISTRATIONS COLLECTION (regular users)
     // ================================================
     match /vibecode_registrations/{registrationId} {
       // Allow authenticated users to create registrations
@@ -140,12 +171,6 @@ service cloud.firestore {
     // ================================================
     // CAREERS SYSTEM - ROLES COLLECTION
     // ================================================
-    // Helper function to check if user is an employee
-    function isEmployee() {
-      return isAuthenticated() && 
-             exists(/databases/$(database)/documents/Employees/$(request.auth.uid));
-    }
-
     match /roles/{roleId} {
       // Anyone can read roles (public careers page reads open roles, employees can read all)
       allow read: if true;
@@ -159,68 +184,66 @@ service cloud.firestore {
     match /applications/{applicationId} {
       // Anyone can create an application (public apply)
       allow create: if true;
-      // Authenticated users who are employees can read and update applications
-      // Note: Employee verification is enforced at the app level since
-      // employee documents may not always be keyed by auth UID
-      allow read, update: if isAuthenticated();
+      // Only employees can read and update applications
+      allow read, update: if isEmployee();
       // No one can delete applications
       allow delete: if false;
     }
 
     // ================================================
-    // HIDDEN MEETINGS COLLECTION (admin-only write)
+    // HIDDEN MEETINGS COLLECTION
     // ================================================
     match /hiddenMeetings/{meetingId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // REMOVED MEETINGS COLLECTION (per-user removal)
     // ================================================
     match /removedMeetings/{meetingId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // MEETING TASK STATUS COLLECTION
     // ================================================
     match /meetingTaskStatus/{taskId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // PUSH SUBSCRIPTIONS COLLECTION (Web Push)
     // ================================================
     match /pushSubscriptions/{subscriptionId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // MEETING NOTIFIED COLLECTION (auto-notification tracking)
     // ================================================
     match /meetingNotified/{meetingId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // MEETING CUSTOM TASKS COLLECTION (admin-added tasks)
     // ================================================
     match /meetingCustomTasks/{taskId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================
     // LEAVE REQUESTS COLLECTION
     // ================================================
     match /leaveRequests/{requestId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow read: if isEmployee();
+      allow write: if isEmployee();
     }
 
     // ================================================

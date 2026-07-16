@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import webPush from 'web-push'
 
 export const dynamic = 'force-dynamic'
@@ -13,10 +13,26 @@ if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
 /**
  * GET /api/push/test
  * Sends a test push notification to ALL registered push subscriptions.
- * Uses the client-side Firestore REST API to read subscriptions.
+ *
+ * DIAGNOSTIC ONLY. Because it fans out to every device, it is gated
+ * behind a secret. Set PUSH_TEST_SECRET in the environment and call
+ * with `?secret=...` or an `x-push-test-secret` header. If the secret
+ * is unset, the endpoint is disabled entirely.
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const expected = process.env.PUSH_TEST_SECRET || ''
+    if (!expected) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    }
+    const provided =
+      request.nextUrl.searchParams.get('secret') ||
+      request.headers.get('x-push-test-secret') ||
+      ''
+    if (provided !== expected) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
       return NextResponse.json({ error: 'VAPID keys not configured' }, { status: 500 })
     }

@@ -2,11 +2,15 @@ import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { db } from '@/lib/firebaseConfig'
 import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore'
+import { randomInt } from 'crypto'
+import { isValidEmail } from '@/lib/security/sanitize'
+import { rateLimit, clientKey } from '@/lib/security/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
 function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString()
+  // Cryptographically secure 6-digit code (avoid Math.random for secrets)
+  return randomInt(100000, 1000000).toString()
 }
 
 export async function POST(request: Request) {
@@ -14,8 +18,32 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { email, action, otp: inputOtp } = body
 
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    if (!isValidEmail(email)) {
+      return NextResponse.json({ error: 'A valid email is required' }, { status: 400 })
+    }
+
+    // Rate limit both the sending and verifying paths. Sending is
+    // capped hard per-IP AND per-target-email so the endpoint cannot
+    // be used to bomb a victim's inbox or burn the Resend quota.
+    const emailKey = email.toLowerCase()
+    if (action !== 'verify') {
+      const ipLimit = rateLimit(`otp-send-ip:${clientKey(request)}`, 5, 10 * 60 * 1000)
+      const toLimit = rateLimit(`otp-send-to:${emailKey}`, 3, 10 * 60 * 1000)
+      if (!ipLimit.allowed || !toLimit.allowed) {
+        const retry = Math.max(ipLimit.retryAfterSeconds, toLimit.retryAfterSeconds)
+        return NextResponse.json(
+          { error: 'Too many verification requests. Please wait before requesting another code.' },
+          { status: 429, headers: { 'Retry-After': String(retry) } }
+        )
+      }
+    } else {
+      const verifyLimit = rateLimit(`otp-verify:${clientKey(request)}`, 10, 10 * 60 * 1000)
+      if (!verifyLimit.allowed) {
+        return NextResponse.json(
+          { error: 'Too many attempts. Please wait and try again.' },
+          { status: 429, headers: { 'Retry-After': String(verifyLimit.retryAfterSeconds) } }
+        )
+      }
     }
 
     // action can be 'send' or 'verify'

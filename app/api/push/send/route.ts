@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import webPush from 'web-push'
+import { rateLimit, clientKey } from '@/lib/security/rateLimit'
 
 export const dynamic = 'force-dynamic'
+
+// Defense-in-depth caps. NOTE: this endpoint is still callable by any
+// client because the notification flow invokes it from the browser with
+// subscriptions in the body (see lib/notificationUtils.ts). The correct
+// fix is to verify a Firebase ID token and resolve subscriptions
+// server-side via the Admin SDK so callers cannot target arbitrary
+// devices with arbitrary payloads. Until then these limits blunt abuse.
+const MAX_SUBSCRIPTIONS = 500
+const MAX_TITLE_LEN = 200
+const MAX_BODY_LEN = 1000
 
 // Configure VAPID details
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
@@ -50,6 +61,15 @@ interface SubscriptionDoc {
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit per IP to cap fan-out abuse.
+    const limit = rateLimit(`push-send:${clientKey(request)}`, 30, 60 * 1000)
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests.' },
+        { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+      )
+    }
+
     if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
       return NextResponse.json(
         { error: 'VAPID keys not configured' },
@@ -70,11 +90,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!payload || !payload.title) {
+    if (subscriptions.length > MAX_SUBSCRIPTIONS) {
+      return NextResponse.json(
+        { error: 'Too many subscriptions in a single request' },
+        { status: 400 }
+      )
+    }
+
+    if (!payload || typeof payload.title !== 'string' || !payload.title.trim()) {
       return NextResponse.json(
         { error: 'Invalid payload' },
         { status: 400 }
       )
+    }
+
+    // Cap free-text fields so a caller cannot ship huge payloads.
+    payload.title = payload.title.slice(0, MAX_TITLE_LEN)
+    if (typeof payload.body === 'string') {
+      payload.body = payload.body.slice(0, MAX_BODY_LEN)
     }
 
     // Prepare the push payload
