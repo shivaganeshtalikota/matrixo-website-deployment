@@ -268,7 +268,9 @@ service cloud.firestore {
     //   - no deletes (audit trail)
     // ================================================
     match /subscriptions/{subId} {
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // Owner reads their own; employees read all (to verify payments).
+      allow read: if isEmployee()
+                  || (isAuthenticated() && resource.data.userId == request.auth.uid);
       allow create: if isAuthenticated()
                     && request.resource.data.userId == request.auth.uid
                     && request.resource.data.status == 'pending';

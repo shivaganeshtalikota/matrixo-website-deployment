@@ -16,6 +16,8 @@ import {
   where,
   getDocs,
   addDoc,
+  updateDoc,
+  doc,
   onSnapshot,
 } from 'firebase/firestore'
 import { Subscription, ProductId, SubscriptionStatus } from './types'
@@ -117,6 +119,63 @@ export async function createPurchaseRequest(params: {
   }
   const ref = await addDoc(collection(db, SUBSCRIPTIONS), payload)
   return ref.id
+}
+
+// ---- Admin / employee operations (guarded by isEmployee() in rules) ----
+
+/**
+ * Live feed of subscriptions by status for the admin verification panel.
+ * Employees can read all subscriptions per the security rules.
+ */
+export function subscribeByStatus(
+  status: SubscriptionStatus,
+  cb: (subs: Subscription[]) => void
+): () => void {
+  const q = query(collection(db, SUBSCRIPTIONS), where('status', '==', status))
+  return onSnapshot(
+    q,
+    (snap) => {
+      const subs = snap.docs
+        .map((d) => ({ id: d.id, ...(d.data() as Subscription) }))
+        .sort((a, b) => b.createdAt - a.createdAt)
+      cb(subs)
+    },
+    (error) => {
+      console.error('[entitlements] admin subscribe failed:', error)
+      cb([])
+    }
+  )
+}
+
+/**
+ * Approves a pending payment: grants the entitlement. Only employees can
+ * perform this (enforced by rules). `expiresAt` omitted = lifetime.
+ */
+export async function approveSubscription(
+  subId: string,
+  verifiedBy: string,
+  opts?: { expiresAt?: number; note?: string }
+): Promise<void> {
+  await updateDoc(doc(db, SUBSCRIPTIONS, subId), {
+    status: 'active' as SubscriptionStatus,
+    activatedAt: Date.now(),
+    verifiedBy,
+    ...(opts?.expiresAt ? { expiresAt: opts.expiresAt } : {}),
+    ...(opts?.note ? { note: opts.note } : {}),
+  })
+}
+
+/** Rejects a payment claim (bad/duplicate UTR). Only employees. */
+export async function rejectSubscription(
+  subId: string,
+  verifiedBy: string,
+  note?: string
+): Promise<void> {
+  await updateDoc(doc(db, SUBSCRIPTIONS, subId), {
+    status: 'rejected' as SubscriptionStatus,
+    verifiedBy,
+    ...(note ? { note } : {}),
+  })
 }
 
 /**

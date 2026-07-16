@@ -22,6 +22,7 @@ import {
   FaTimes,
   FaExclamationTriangle,
   FaUserShield,
+  FaReceipt,
   FaTasks,
   FaComments,
   FaChevronDown,
@@ -54,6 +55,7 @@ import AdminPanel from '@/components/employee-portal/AdminPanel'
 import NotificationBell from '@/components/employee-portal/NotificationBell'
 import EventQRScanner from '@/components/employee-portal/EventQRScanner'
 import JobPostings from '@/components/employee-portal/JobPostings'
+import SubscriptionAdmin from '@/components/employee-portal/SubscriptionAdmin'
 import { ProfileInfo, employeeToProfileData } from '@/components/employee-portal/ui'
 
 // ============================================
@@ -415,11 +417,24 @@ function TopNavbar({
                 <>
                   <div className="w-px h-6 bg-white/10 mx-1" />
                   <button
+                    onClick={() => setActiveTab('subscriptions')}
+                    className={`
+                      flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 font-medium text-sm whitespace-nowrap
+                      ${activeTab === 'subscriptions'
+                        ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+                        : 'text-emerald-400/80 hover:text-emerald-400 hover:bg-emerald-500/10'
+                      }
+                    `}
+                  >
+                    <FaReceipt className="text-sm shrink-0" />
+                    <span>Payments</span>
+                  </button>
+                  <button
                     onClick={() => setActiveTab('admin')}
                     className={`
                       flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 font-medium text-sm whitespace-nowrap
-                      ${activeTab === 'admin' 
-                        ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-lg shadow-amber-500/30' 
+                      ${activeTab === 'admin'
+                        ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-lg shadow-amber-500/30'
                         : 'text-amber-400/80 hover:text-amber-400 hover:bg-amber-500/10'
                       }
                     `}
@@ -611,11 +626,28 @@ function TopNavbar({
                 
                 {isAdmin && (
                   <button
+                    onClick={() => { setActiveTab('subscriptions'); setMobileMenuOpen(false) }}
+                    className={`
+                      flex items-center gap-2.5 px-4 py-3 rounded-xl transition-all font-medium text-sm
+                      ${activeTab === 'subscriptions'
+                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
+                        : darkMode
+                          ? 'text-emerald-400/70 hover:text-emerald-400 hover:bg-emerald-500/10 border border-transparent'
+                          : 'text-emerald-600/80 hover:text-emerald-600 hover:bg-emerald-500/10 border border-transparent'
+                      }
+                    `}
+                  >
+                    <FaReceipt />
+                    Payments
+                  </button>
+                )}
+                {isAdmin && (
+                  <button
                     onClick={() => { setActiveTab('admin'); setMobileMenuOpen(false) }}
                     className={`
-                      flex items-center gap-2.5 px-4 py-3 rounded-xl transition-all font-medium text-sm col-span-2
-                      ${activeTab === 'admin' 
-                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/20' 
+                      flex items-center gap-2.5 px-4 py-3 rounded-xl transition-all font-medium text-sm
+                      ${activeTab === 'admin'
+                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/20'
                         : darkMode
                           ? 'text-amber-400/70 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent'
                           : 'text-amber-600/80 hover:text-amber-600 hover:bg-amber-500/10 border border-transparent'
@@ -1578,6 +1610,7 @@ function Dashboard() {
             {activeTab === 'event-checkin' && <EventQRScanner />}
             {activeTab === 'profile' && <ProfileTab />}
             {activeTab === 'job-postings' && isAdmin && <JobPostings />}
+            {activeTab === 'subscriptions' && isAdmin && <SubscriptionAdmin />}
             {activeTab === 'admin' && isAdmin && <AdminPanel />}
           </motion.div>
         </AnimatePresence>
