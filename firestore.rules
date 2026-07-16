@@ -316,6 +316,21 @@ service cloud.firestore {
     }
 
     // ================================================
+    // EVENT TICKETS COLLECTION (surfaced in the user dashboard)
+    // Owner reads their own tickets; employees read all (check-in/admin).
+    // A user may create their own ticket; status changes (confirm/cancel)
+    // are employee-side; no deletes (audit).
+    // ================================================
+    match /event_tickets/{ticketId} {
+      allow read: if isEmployee()
+                  || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid;
+      allow update: if isEmployee();
+      allow delete: if false;
+    }
+
+    // ================================================
     // IMPACTVAULT ACCESS COLLECTION (RBAC for the analytics dashboard)
     // A user may read their OWN access record (to resolve their role);
     // only employees/admins may grant or change access.
