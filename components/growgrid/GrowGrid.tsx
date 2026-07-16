@@ -29,6 +29,7 @@ import {
 } from '@/lib/growgrid/firestore-service'
 import { GrowGridProgressDoc, levelFromXP, xpIntoLevel, XP_PER_LEVEL } from '@/lib/growgrid/types'
 import { subscribeToEntitlement } from '@/lib/entitlements/service'
+import { mintPathCredential } from '@/lib/playcred/service'
 import UpgradeModal from '@/components/premium/UpgradeModal'
 
 const ICONS = { code: FaCode, palette: FaPalette, chart: FaChartLine, mic: FaMicrophone, rocket: FaRocket }
@@ -117,8 +118,19 @@ export default function GrowGrid() {
     const nextProgress = Math.round((nextChecked / lessonCount) * 100)
     setBusyModule(moduleId)
     try {
-      await setModuleProgress(user.uid, moduleId, nextProgress)
+      const updated = await setModuleProgress(user.uid, moduleId, nextProgress)
       if (nextProgress >= 100) toast.success('Module complete! XP awarded 🎉')
+
+      // Mint a PlayCred credential when the whole path is finished.
+      const pathDone = currentPath.modules.every(
+        (m) => updated.moduleProgress[m.id]?.status === 'completed'
+      )
+      if (pathDone) {
+        const cred = await mintPathCredential(user.uid, user.displayName || '', currentPath.id)
+        if (cred) {
+          toast.success(`🏆 Credential earned: ${cred.title}`, { duration: 6000 })
+        }
+      }
     } catch {
       toast.error('Could not save progress.')
     } finally {

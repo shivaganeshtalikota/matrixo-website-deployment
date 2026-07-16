@@ -278,6 +278,23 @@ service cloud.firestore {
     }
 
     // ================================================
+    // PLAYCRED CREDENTIALS COLLECTION
+    // Public read so anyone can verify a credential via its link.
+    // A user may create only their OWN credential (userId match) and
+    // credentials are immutable (no update/delete) so the integrity
+    // hash always reflects the issued record.
+    // NOTE: issuance is currently client-side; the documented hardening
+    // is to move minting to an Admin-SDK server route that validates
+    // GrowGrid completion and signs the credential.
+    // ================================================
+    match /playcred_credentials/{credId} {
+      allow read: if true;
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // ================================================
     // SKILLDNA USERS COLLECTION
     // ================================================
     match /skillDNA_users/{userId} {
