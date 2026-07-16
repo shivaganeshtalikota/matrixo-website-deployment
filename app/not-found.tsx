@@ -1,11 +1,31 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FaHome, FaRocket, FaCompass, FaBug } from 'react-icons/fa'
 import HeadingHighlight from '@/components/HeadingHighlight'
 
+interface FloatEl {
+  left: number
+  duration: number
+  emoji: string
+}
+
 export default function NotFound() {
+  // Randomized decorations are generated AFTER mount so server and client
+  // markup match (Math.random() during render causes hydration mismatches).
+  const [floats, setFloats] = useState<FloatEl[]>([])
+  useEffect(() => {
+    setFloats(
+      Array.from({ length: 6 }, (_, i) => ({
+        left: Math.random() * 100,
+        duration: 3 + Math.random() * 2,
+        emoji: i % 3 === 0 ? '🚀' : i % 3 === 1 ? '💻' : '🎯',
+      }))
+    )
+  }, [])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-950 dark:via-blue-950 dark:to-purple-950 flex items-center justify-center px-6 py-24">
       <div className="max-w-4xl mx-auto text-center">
@@ -50,36 +70,20 @@ export default function NotFound() {
           </div>
         </motion.div>
 
-        {/* Floating Elements Animation */}
+        {/* Floating Elements Animation (client-only, post-mount) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(6)].map((_, i) => {
-            // Calculate random values once during render
-            const randomX = Math.random() * 100;
-            const randomDuration = 3 + Math.random() * 2;
-            
-            return (
-              <motion.div
-                key={i}
-                className="absolute text-4xl md:text-6xl"
-                style={{ left: `${randomX}%` }}
-                initial={{ 
-                  y: '100vh',
-                  opacity: 0.1
-                }}
-                animate={{ 
-                  y: [null, '-20vh'],
-                  opacity: [0.1, 0.3, 0.1]
-                }}
-                transition={{ 
-                  duration: randomDuration,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              >
-                {i % 3 === 0 ? '🚀' : i % 3 === 1 ? '💻' : '🎯'}
-              </motion.div>
-            );
-          })}
+          {floats.map((f, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-4xl md:text-6xl"
+              style={{ left: `${f.left}%` }}
+              initial={{ y: '100vh', opacity: 0.1 }}
+              animate={{ y: [null, '-20vh'], opacity: [0.1, 0.3, 0.1] }}
+              transition={{ duration: f.duration, repeat: Infinity, repeatType: 'reverse' }}
+            >
+              {f.emoji}
+            </motion.div>
+          ))}
         </div>
 
         {/* Action Buttons */}
