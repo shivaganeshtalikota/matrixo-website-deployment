@@ -247,6 +247,35 @@ service cloud.firestore {
     }
 
     // ================================================
+    // GROWGRID PROGRESS COLLECTION (owner-only)
+    // Doc id == user uid. Only the owner may read or write their
+    // learning progress. XP/level are derived client-side but are not
+    // security-sensitive (no entitlement is granted from this doc).
+    // ================================================
+    match /growgrid_progress/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create, update: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    // ================================================
+    // SUBSCRIPTIONS COLLECTION (premium entitlements)
+    // Manual-UPI + verification model:
+    //   - a user may CREATE a claim for THEMSELVES, and only in the
+    //     'pending' state (they cannot self-grant 'active')
+    //   - a user may READ their own subscriptions
+    //   - only employees may update (verify -> active/rejected)
+    //   - no deletes (audit trail)
+    // ================================================
+    match /subscriptions/{subId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'pending';
+      allow update, delete: if isEmployee();
+    }
+
+    // ================================================
     // SKILLDNA USERS COLLECTION
     // ================================================
     match /skillDNA_users/{userId} {
