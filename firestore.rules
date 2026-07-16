@@ -295,6 +295,27 @@ service cloud.firestore {
     }
 
     // ================================================
+    // MENTORMATRIX SESSIONS COLLECTION
+    // A user creates & reads their own session requests. Employees
+    // (and mentors, admin-side) may update status to confirm/complete.
+    // Users may cancel their own request; no hard deletes (audit).
+    // ================================================
+    match /mentormatrix_sessions/{sessionId} {
+      allow read: if isEmployee()
+                  || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.status == 'requested';
+      // Owner may only move their own session to 'cancelled'; employees
+      // may set any status.
+      allow update: if isEmployee()
+                    || (isAuthenticated()
+                        && resource.data.userId == request.auth.uid
+                        && request.resource.data.status == 'cancelled');
+      allow delete: if false;
+    }
+
+    // ================================================
     // SKILLDNA USERS COLLECTION
     // ================================================
     match /skillDNA_users/{userId} {
