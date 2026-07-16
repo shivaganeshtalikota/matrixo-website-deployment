@@ -316,6 +316,23 @@ service cloud.firestore {
     }
 
     // ================================================
+    // IMPACTVAULT ACCESS COLLECTION (RBAC for the analytics dashboard)
+    // A user may read their OWN access record (to resolve their role);
+    // only employees/admins may grant or change access.
+    //
+    // ARCHITECTURE NOTE: institution-wide analytics aggregate many
+    // students' skillDNA_users docs, which are (correctly) owner-only for
+    // privacy. Client-side aggregation therefore CANNOT read other
+    // students' SkillDNA. Full ImpactVault aggregation must run
+    // server-side via the Admin SDK (privileged, privacy-preserving) —
+    // do NOT relax the skillDNA_users rules to enable it.
+    // ================================================
+    match /impactvault_access/{userId} {
+      allow read: if isEmployee() || (isAuthenticated() && request.auth.uid == userId);
+      allow write: if isEmployee();
+    }
+
+    // ================================================
     // SKILLDNA USERS COLLECTION
     // ================================================
     match /skillDNA_users/{userId} {
