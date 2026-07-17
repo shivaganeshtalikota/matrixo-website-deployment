@@ -3,19 +3,35 @@ rules_version = '2';
 // ============================================================================
 // ⚠️  PRE-DEPLOY CHECKLIST — READ BEFORE `firebase deploy --only firestore:rules`
 // ----------------------------------------------------------------------------
-// This revision closes a privilege-escalation hole: previously ANY authenticated
-// account (including a regular student who signed up on matrixo.in — the same
-// Firebase project the employee portal uses) could read and write every
-// employee-portal collection (attendance, tasks, discussions, leave, meetings,
-// notifications) and could even self-promote to employee by writing
-// /Employees/{their-uid}. Those collections are now gated behind isEmployee().
+// This is the RECONCILED, authoritative ruleset. It merges:
+//   (a) the security hardening + all new product collections, and
+//   (b) the collections that only existed in the previously-live rules
+//       (eventAttendance, events, contactSubmissions, colleges,
+//        collegeRequests, countries/states/districts).
+// It also FIXES a compile error in the previously-deployed rules, which
+// referenced isEmployee() in the subscriptions block without defining it
+// (Firestore rejects undefined-function rulesets on deploy).
 //
-// isEmployee() checks exists(/Employees/{request.auth.uid}). This is correct for
-// the app's PRIMARY path, which keys employee docs by auth uid. BEFORE DEPLOYING,
-// confirm no active employee relies on the legacy email-fallback (a doc whose ID
-// is NOT their auth uid) — such an account would lose portal access. Verify with:
-//   Firestore console → Employees → confirm every doc ID equals its user's auth UID.
-// Re-key any mismatches (or provision them server-side via the Admin SDK) first.
+// Hardening summary — these collections were tightened from the old
+// "any authenticated user" to employee-only (isEmployee()): all portal
+// collections (attendance/tasks/discussions/holidays/calendar/meetings/
+// leave/systemConfig/personalTodos/pushSubscriptions/notifications),
+// Employees WRITE (stops self-promotion), roles WRITE, applications
+// read/update, eventAttendance, events WRITE, colleges WRITE,
+// collegeRequests read/update, contactSubmissions read.
+//
+// BEFORE DEPLOYING, confirm no active employee relies on the legacy
+// email-fallback (an Employees doc whose ID is NOT their auth uid) — such
+// an account would lose portal access. isEmployee() checks
+// exists(/Employees/{request.auth.uid}). Verify in the Firestore console:
+// every Employees doc ID must equal its user's auth UID. Re-key mismatches
+// (or provision via the Admin SDK) first.
+//
+// KNOWN GAP (not fixed here on purpose): the send-otp route writes an
+// `EmailOTPs` collection via the client SDK. There is deliberately NO rule
+// for it — a client-readable rule would let anyone read OTP codes and
+// bypass verification. Move OTP issuance/verification to an Admin-SDK
+// server route instead (do not add a permissive EmailOTPs rule).
 // ============================================================================
 
 service cloud.firestore {
@@ -346,6 +362,61 @@ service cloud.firestore {
       allow read: if isEmployee() || (isAuthenticated() && request.auth.uid == userId);
       allow write: if isEmployee();
     }
+
+    // ================================================
+    // EVENT ATTENDANCE COLLECTION (QR scanner check-in) — portal-only
+    // ================================================
+    match /eventAttendance/{attendanceId} {
+      allow read: if isEmployee();
+      allow write: if isEmployee();
+    }
+
+    // ================================================
+    // EVENTS COLLECTION (portal event management / QR event list)
+    // Authenticated read (app may list); only employees manage.
+    // ================================================
+    match /events/{eventId} {
+      allow read: if isAuthenticated();
+      allow write: if isEmployee();
+    }
+
+    // ================================================
+    // CONTACT SUBMISSIONS COLLECTION
+    // Public create (contact form); only staff read; immutable.
+    // ================================================
+    match /contactSubmissions/{submissionId} {
+      allow create: if true;
+      allow read: if isEmployee();
+      allow update, delete: if false;
+    }
+
+    // ================================================
+    // COLLEGES COLLECTION (approved directory)
+    // Public read (registration dropdown); only staff add/edit so the
+    // directory can't be polluted by arbitrary users.
+    // ================================================
+    match /colleges/{collegeId} {
+      allow read: if true;
+      allow write: if isEmployee();
+    }
+
+    // ================================================
+    // COLLEGE REQUESTS COLLECTION
+    // Any signed-in user may submit a request; staff review/approve.
+    // ================================================
+    match /collegeRequests/{requestId} {
+      allow create: if isAuthenticated();
+      allow read, update: if isEmployee();
+      allow delete: if false;
+    }
+
+    // ================================================
+    // LOCATION REFERENCE DATA (public read, no client write)
+    // Seeded via the Admin SDK scripts; never written from the client.
+    // ================================================
+    match /countries/{countryId} { allow read: if true; allow write: if false; }
+    match /states/{stateId}      { allow read: if true; allow write: if false; }
+    match /districts/{districtId} { allow read: if true; allow write: if false; }
 
     // ================================================
     // SKILLDNA USERS COLLECTION
