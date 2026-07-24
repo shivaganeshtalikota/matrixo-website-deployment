@@ -16,13 +16,13 @@ import {
 } from 'react-icons/fa'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import HeadingHighlight from '@/components/HeadingHighlight'
 import { useAuth } from '@/lib/AuthContext'
 import { Mentor, MentorSession } from '@/lib/mentormatrix/types'
 import { MENTORS, MENTOR_CATEGORIES, matchScore } from '@/lib/mentormatrix/content'
 import { subscribeToSessions, requestSession, isActiveSession } from '@/lib/mentormatrix/service'
 import { subscribeToEntitlement } from '@/lib/entitlements/service'
 import UpgradeModal from '@/components/premium/UpgradeModal'
+import { BetaShell } from '@/components/beta/BetaShell'
 
 const FREE_SESSION_LIMIT = 1
 
@@ -102,26 +102,15 @@ export default function MentorMatrix() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-950 dark:via-blue-950/10 dark:to-indigo-950/10 py-20">
-      <div className="container-custom px-6 max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-2 rounded-full mb-4">
-            <FaUserTie className="animate-bounce" />
-            <span className="font-bold">MentorMatrix™ Network</span>
-            {entitled && (
-              <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                <FaCrown className="text-amber-200" /> Plus
-              </span>
-            )}
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            <HeadingHighlight text="Find Your Perfect Mentor" />
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            AI-matched mentorship connecting you with experienced industry mentors
-          </p>
-        </motion.div>
+    <BetaShell
+      accent="from-blue-500 to-indigo-500"
+      badgeIcon={<FaUserTie className="animate-bounce" />}
+      badgeLabel="MentorMatrix™ Network"
+      title="Find Your Perfect Mentor"
+      subtitle="AI-matched mentorship connecting you with experienced industry mentors"
+      premium={entitled}
+      premiumLabel="Plus"
+    >
 
         {/* Stats (real, derived from roster + your bookings) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -268,7 +257,6 @@ export default function MentorMatrix() {
             </motion.div>
           ))}
         </div>
-      </div>
 
       {/* Booking modal */}
       <AnimatePresence>
@@ -285,7 +273,7 @@ export default function MentorMatrix() {
       </AnimatePresence>
 
       <UpgradeModal product="mentormatrix" open={showUpgrade} onClose={() => setShowUpgrade(false)} />
-    </div>
+    </BetaShell>
   )
 }
 
