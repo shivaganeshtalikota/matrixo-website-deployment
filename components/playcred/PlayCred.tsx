@@ -18,12 +18,12 @@ import {
 } from 'react-icons/fa'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import HeadingHighlight from '@/components/HeadingHighlight'
 import { useAuth } from '@/lib/AuthContext'
 import { PlayCredCredential, CredentialRarity } from '@/lib/playcred/types'
 import { subscribeToCredentials } from '@/lib/playcred/service'
 import { subscribeToEntitlement } from '@/lib/entitlements/service'
 import UpgradeModal from '@/components/premium/UpgradeModal'
+import { BetaShell } from '@/components/beta/BetaShell'
 
 const ICONS = { trophy: FaTrophy, award: FaAward, star: FaStar, medal: FaMedal, certificate: FaCertificate, shield: FaShieldAlt }
 
@@ -121,26 +121,15 @@ export default function PlayCred() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 dark:from-gray-950 dark:via-yellow-950/10 dark:to-orange-950/10 py-20">
-      <div className="container-custom px-6 max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-2 rounded-full mb-4">
-            <FaTrophy className="animate-bounce" />
-            <span className="font-bold">PlayCred™ Verified Credentials</span>
-            {entitled && (
-              <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                <FaCrown className="text-amber-200" /> Pro
-              </span>
-            )}
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            <HeadingHighlight text="Your Verified Achievements" />
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            Tamper-evident, matriXO-issued credentials you earn by completing real learning paths — shareable and publicly verifiable.
-          </p>
-        </motion.div>
+    <BetaShell
+      accent="from-yellow-500 to-orange-500"
+      badgeIcon={<FaTrophy className="animate-bounce" />}
+      badgeLabel="PlayCred™ Verified Credentials"
+      title="Your Verified Achievements"
+      subtitle="Tamper-evident, matriXO-issued credentials you earn by completing real learning paths — shareable and publicly verifiable."
+      premium={entitled}
+      premiumLabel="Pro"
+    >
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
@@ -316,9 +305,8 @@ export default function PlayCred() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
 
       <UpgradeModal product="playcred" open={showUpgrade} onClose={() => setShowUpgrade(false)} />
-    </div>
+    </BetaShell>
   )
 }

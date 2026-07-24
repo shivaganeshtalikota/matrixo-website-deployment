@@ -31,6 +31,7 @@ import { GrowGridProgressDoc, levelFromXP, xpIntoLevel, XP_PER_LEVEL } from '@/l
 import { subscribeToEntitlement } from '@/lib/entitlements/service'
 import { mintPathCredential } from '@/lib/playcred/service'
 import UpgradeModal from '@/components/premium/UpgradeModal'
+import { BetaShell } from '@/components/beta/BetaShell'
 
 const ICONS = { code: FaCode, palette: FaPalette, chart: FaChartLine, mic: FaMicrophone, rocket: FaRocket }
 const difficultyColors = {
@@ -169,27 +170,14 @@ export default function GrowGrid() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-blue-950/20 py-20">
-      <div className="container-custom px-6 max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-2 rounded-full mb-4">
-            <FaRocket className="animate-bounce" />
-            <span className="font-bold">GrowGrid™ Learning Paths</span>
-            {entitled && (
-              <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                <FaCrown className="text-amber-300" /> Premium
-              </span>
-            )}
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            <HeadingHighlight text="Your Adaptive Learning Journey" />
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            Personalized micro-modules that adapt to your pace and style
-          </p>
-        </motion.div>
-
+    <BetaShell
+      accent="from-indigo-500 to-purple-500"
+      badgeIcon={<FaRocket className="animate-bounce" />}
+      badgeLabel="GrowGrid™ Learning Paths"
+      title="Your Adaptive Learning Journey"
+      subtitle="Personalized micro-modules that adapt to your pace and style"
+      premium={entitled}
+    >
         {/* User Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           <StatCard delay={0.1} icon={<FaTrophy className="text-3xl text-yellow-500" />} value={`Level ${stats.level}`} label="Current Level">
@@ -398,10 +386,9 @@ export default function GrowGrid() {
             })}
           </div>
         </motion.div>
-      </div>
 
       <UpgradeModal product="growgrid" open={showUpgrade} onClose={() => setShowUpgrade(false)} />
-    </div>
+    </BetaShell>
   )
 }
 
