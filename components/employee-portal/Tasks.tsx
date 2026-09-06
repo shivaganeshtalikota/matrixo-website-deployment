@@ -4,9 +4,9 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  FaTasks, 
-  FaPlus, 
+import {
+  FaTasks,
+  FaPlus,
   FaEdit,
   FaTrash,
   FaComment,
@@ -87,7 +87,7 @@ function MentionInput({
 
   const suggestions = useMemo(() => {
     const query = searchQuery.toLowerCase()
-    
+
     if (dropdownType === 'user') {
       // Show ALL employees - only exclude username "Admin"
       return employees.filter(e => {
@@ -95,8 +95,8 @@ function MentionInput({
         if (name === 'admin') return false
         if (!query) return true
         return (e.name || '').toLowerCase().includes(query) ||
-               (e.employeeId || '').toLowerCase().includes(query) ||
-               (e.department || '').toLowerCase().includes(query)
+          (e.employeeId || '').toLowerCase().includes(query) ||
+          (e.department || '').toLowerCase().includes(query)
       })
     } else {
       // Show ALL departments
@@ -125,10 +125,10 @@ function MentionInput({
     const newValue = e.target.value
     const cursorPos = e.target.selectionStart || 0
     onChange(newValue)
-    
+
     let foundTrigger = -1
     let triggerChar = ''
-    
+
     for (let i = cursorPos - 1; i >= 0; i--) {
       const char = newValue[i]
       if (char === ' ' || char === '\n') break
@@ -138,7 +138,7 @@ function MentionInput({
         break
       }
     }
-    
+
     if (foundTrigger >= 0) {
       const query = newValue.slice(foundTrigger + 1, cursorPos)
       setSearchQuery(query)
@@ -149,7 +149,7 @@ function MentionInput({
       setSelectedIndex(0)
       return
     }
-    
+
     setShowDropdown(false)
     setTriggerIndex(-1)
   }
@@ -183,35 +183,35 @@ function MentionInput({
 
   const selectMention = (mention: string) => {
     if (triggerIndex < 0) return
-    
+
     const symbol = dropdownType === 'user' ? '@' : '#'
     const beforeTrigger = value.slice(0, triggerIndex)
     const cursorPos = textareaRef.current?.selectionStart || value.length
     const afterCursor = value.slice(cursorPos)
-    
+
     const mentionNoSpaces = mention.replace(/\s+/g, '')
     const newValue = beforeTrigger + symbol + mentionNoSpaces + ' ' + afterCursor
     onChange(newValue)
-    
+
     const newCursorPos = beforeTrigger.length + symbol.length + mentionNoSpaces.length + 1
     setTimeout(() => {
       textareaRef.current?.setSelectionRange(newCursorPos, newCursorPos)
       textareaRef.current?.focus()
     }, 0)
-    
+
     setShowDropdown(false)
     setTriggerIndex(-1)
   }
 
   const handleSubmit = () => {
     if (!value.trim()) return
-    
+
     const userMentionPattern = /@(\w+)/g
     const deptMentionPattern = /#(\w+)/g
-    
+
     const userMentions: string[] = []
     const deptMentions: string[] = []
-    
+
     let match
     while ((match = userMentionPattern.exec(value)) !== null) {
       userMentions.push(match[1].trim())
@@ -219,16 +219,16 @@ function MentionInput({
     while ((match = deptMentionPattern.exec(value)) !== null) {
       deptMentions.push(match[1].trim())
     }
-    
+
     const mentionIds = userMentions.map(name => {
-      const emp = employees.find(e => 
+      const emp = employees.find(e =>
         (e.name || '').toLowerCase() === name.toLowerCase() ||
         (e.name || '').toLowerCase().replace(/\s/g, '').includes(name.toLowerCase().replace(/\s/g, '')) ||
         (e.employeeId || '').toLowerCase() === name.toLowerCase()
       )
       return emp?.employeeId
     }).filter(Boolean) as string[]
-    
+
     onSubmit(mentionIds, deptMentions)
   }
 
@@ -241,7 +241,7 @@ function MentionInput({
         setShowDropdown(false)
       }
     }
-    
+
     if (showDropdown) {
       document.addEventListener('mousedown', handleClickOutside)
       return () => document.removeEventListener('mousedown', handleClickOutside)
@@ -271,9 +271,8 @@ function MentionInput({
           <button
             key={emp.employeeId}
             onClick={() => selectMention(emp.name)}
-            className={`w-full flex items-center gap-3 px-3 py-2 transition-colors text-left ${
-              index === selectedIndex ? 'bg-[#2563EB]/10 border-l-2 border-[#2563EB]' : 'hover:bg-[#F1F5F9] dark:hover:bg-neutral-700'
-            }`}
+            className={`w-full flex items-center gap-3 px-3 py-2 transition-colors text-left ${index === selectedIndex ? 'bg-[#2563EB]/10 border-l-2 border-[#2563EB]' : 'hover:bg-[#F1F5F9] dark:hover:bg-neutral-700'
+              }`}
           >
             <Avatar src={getEmpProfileImage(emp.profileImage, emp.employeeId)} name={emp.name} size="sm" showBorder={false} />
             <div className="flex-1 min-w-0">
@@ -287,9 +286,8 @@ function MentionInput({
           <button
             key={dept}
             onClick={() => selectMention(dept)}
-            className={`w-full flex items-center gap-3 px-3 py-2 transition-colors text-left ${
-              index === selectedIndex ? 'bg-[#2563EB]/10 border-l-2 border-[#2563EB]' : 'hover:bg-[#F1F5F9] dark:hover:bg-neutral-700'
-            }`}
+            className={`w-full flex items-center gap-3 px-3 py-2 transition-colors text-left ${index === selectedIndex ? 'bg-[#2563EB]/10 border-l-2 border-[#2563EB]' : 'hover:bg-[#F1F5F9] dark:hover:bg-neutral-700'
+              }`}
           >
             <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
               <span className="text-amber-500 dark:text-amber-400 text-sm">#</span>
@@ -315,7 +313,7 @@ function MentionInput({
         rows={2}
         className="w-full px-3 py-2 bg-[#F8FAFC] dark:bg-neutral-800 border border-[rgba(15,23,42,0.08)] dark:border-neutral-700 rounded-xl text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/50 resize-y text-sm"
       />
-      
+
       {mounted && dropdownContent && createPortal(dropdownContent, document.body)}
 
       <div className="flex items-center justify-between mt-2">
@@ -363,7 +361,9 @@ const INTERN_SPECIALIZATIONS = [
   'Content & Curriculum Development',
   'Product Research & Innovation',
   'Operations & Project Management',
-  'Marketing & Brand Strategy'
+  'Marketing & Brand Strategy',
+  'Product Tester',
+  'Product and Technical Solution'
 ]
 
 // Normalize text for flexible intern specialization matching
@@ -443,7 +443,7 @@ function TaskModal({
 
     setLoading(true)
     try {
-      const assignedToNames = form.assignedTo.map(id => 
+      const assignedToNames = form.assignedTo.map(id =>
         employees.find(e => e.employeeId === id)?.name || id
       )
 
@@ -461,12 +461,12 @@ function TaskModal({
 
       // Conditionally add optional fields ONLY if they have valid values
       const taskPayload: any = { ...basePayload }
-      
+
       // Only include dueDate if it has a value
       if (form.dueDate) {
         taskPayload.dueDate = form.dueDate
       }
-      
+
       // Only include specialization for Intern department AND if it has a value
       if (form.department === 'Intern' && form.specialization) {
         taskPayload.specialization = form.specialization
@@ -512,17 +512,17 @@ function TaskModal({
   const departments = useMemo(() => {
     return ['Management', 'Intern']
   }, [])
-  
+
   // Filter employees by selected department and specialization (for Interns)
   const filteredEmployees = useMemo(() => {
     let result = employees
-    
+
     // Filter by department if selected
     if (form.department) {
       if (form.department === 'Intern') {
         // For Intern department, use universal intern detection (handles trailing spaces in Firebase)
         result = result.filter(emp => isIntern(emp))
-        
+
         // If specialization is selected, filter by designation (normalized match)
         if (form.specialization) {
           const normalizedSpec = normalizeSpecText(form.specialization)
@@ -537,7 +537,7 @@ function TaskModal({
         result = result.filter(emp => emp.department === form.department)
       }
     }
-    
+
     return result
   }, [employees, form.department, form.specialization])
 
@@ -651,8 +651,8 @@ function TaskModal({
                   onClick={() => toggleAssignee(emp.employeeId)}
                   className={`
                     w-full flex items-center gap-3 p-2 rounded-lg transition-colors text-left
-                    ${form.assignedTo.includes(emp.employeeId) 
-                      ? 'bg-primary-500/20 border border-primary-500/50' 
+                    ${form.assignedTo.includes(emp.employeeId)
+                      ? 'bg-primary-500/20 border border-primary-500/50'
                       : 'hover:bg-[#F1F5F9] dark:hover:bg-neutral-700'
                     }
                   `}
@@ -740,7 +740,7 @@ function TaskDetailModal({
 
   const handleAddComment = async (mentions: string[], mentionedDepartments: string[]) => {
     if (!newComment.trim()) return
-    
+
     setSubmitting(true)
     try {
       await addTaskComment(task.id!, newComment, mentions, mentionedDepartments)
@@ -755,7 +755,7 @@ function TaskDetailModal({
 
   const handleDeleteComment = async (commentId: string) => {
     if (!confirm('Delete this comment?')) return
-    
+
     try {
       await deleteTaskComment(task.id!, commentId)
       toast.success('Comment deleted')
@@ -766,7 +766,7 @@ function TaskDetailModal({
 
   const handleDeleteTask = async () => {
     if (!confirm('Are you sure you want to delete this task? This action cannot be undone.')) return
-    
+
     setDeleting(true)
     try {
       await deleteTask(task.id!)
@@ -807,7 +807,7 @@ function TaskDetailModal({
     return parts.map((part, i) => {
       if (part.startsWith('@')) {
         const mentionName = part.slice(1)
-        const emp = employees.find(e => 
+        const emp = employees.find(e =>
           (e.name || '').toLowerCase().replace(/\s/g, '') === mentionName.toLowerCase() ||
           (e.employeeId || '').toLowerCase() === mentionName.toLowerCase()
         )
@@ -843,8 +843,8 @@ function TaskDetailModal({
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant={
                   task.priority === 'urgent' ? 'error' :
-                  task.priority === 'high' ? 'warning' :
-                  task.priority === 'medium' ? 'info' : 'default'
+                    task.priority === 'high' ? 'warning' :
+                      task.priority === 'medium' ? 'info' : 'default'
                 }>
                   {(priorityConfig[task.priority] || priorityConfig.medium).label}
                 </Badge>
@@ -860,7 +860,7 @@ function TaskDetailModal({
               </div>
               <h2 className="text-xl font-bold text-[#0F172A] dark:text-white">{task.title}</h2>
             </div>
-            
+
             {canDelete && (
               <Button
                 variant="danger"
@@ -886,7 +886,7 @@ function TaskDetailModal({
               </Button>
             )}
           </div>
-          
+
           {task.description && (
             <div className="mt-3">
               <RichTextRenderer content={task.description} />
@@ -935,7 +935,7 @@ function TaskDetailModal({
                   {config.label}
                 </Button>
               ))}
-              
+
               {/* Approval Badge/Button - Show for review (pending) or completed (approved) */}
               {task.status === 'review' && task.approvalStatus === 'pending' && (
                 <>
@@ -956,7 +956,7 @@ function TaskDetailModal({
                   )}
                 </>
               )}
-              
+
               {task.status === 'completed' && task.approvalStatus === 'approved' && (
                 <Badge variant="success" className="flex items-center gap-1">
                   <FaCheckCircle className="text-xs" />
@@ -973,7 +973,7 @@ function TaskDetailModal({
             <FaComment />
             Comments ({task.comments?.length || 0})
           </h3>
-          
+
           <div className="space-y-3 max-h-96 overflow-y-auto mb-4">
             {task.comments?.length === 0 && (
               <p className="text-[#64748B] dark:text-neutral-500 text-sm text-center py-4">No comments yet</p>
@@ -1031,26 +1031,25 @@ function TaskDetailModal({
                         {Object.entries(comment.reactions).map(([emoji, userIds]) => {
                           const hasReacted = userIds.includes(employee?.employeeId || '')
                           const reactedUsers = userIds.map(id => employees.find(e => e.employeeId === id)).filter(Boolean)
-                          
+
                           return (
-                            <div 
-                              key={emoji} 
+                            <div
+                              key={emoji}
                               className="relative"
                               onMouseEnter={() => setHoveredReaction(`${comment.id}_${emoji}`)}
                               onMouseLeave={() => setHoveredReaction(null)}
                             >
                               <button
                                 onClick={() => task.id && toggleTaskCommentReaction(task.id, comment.id, emoji)}
-                                className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-all ${
-                                  hasReacted 
-                                    ? 'bg-[#2563EB]/10 border border-[#2563EB]/50 text-[#2563EB] dark:bg-primary-500/20 dark:border-primary-500/50 dark:text-primary-300' 
+                                className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-all ${hasReacted
+                                    ? 'bg-[#2563EB]/10 border border-[#2563EB]/50 text-[#2563EB] dark:bg-primary-500/20 dark:border-primary-500/50 dark:text-primary-300'
                                     : 'bg-[#F1F5F9] border border-[rgba(15,23,42,0.08)] text-[#64748B] hover:bg-[#E2E8F0] dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700'
-                                }`}
+                                  }`}
                               >
                                 <span className="text-sm">{emoji}</span>
                                 <span className="text-xs font-medium">{userIds.length}</span>
                               </button>
-                              
+
                               {/* Hover Popup */}
                               <AnimatePresence>
                                 {hoveredReaction === `${comment.id}_${emoji}` && reactedUsers.length > 0 && (
@@ -1096,7 +1095,7 @@ function TaskDetailModal({
                         <FaSmile className="text-xs" />
                         React
                       </button>
-                      
+
                       {/* Emoji Picker */}
                       <AnimatePresence>
                         {showReactionPicker === comment.id && (
@@ -1165,18 +1164,18 @@ function TaskDetailModal({
 // TASK CARD COMPONENT
 // ============================================
 
-function TaskCard({ 
-  task, 
+function TaskCard({
+  task,
   onClick,
   isHighlighted
-}: { 
+}: {
   task: Task
   onClick: () => void
   isHighlighted: boolean
 }) {
   // Defensive checks for task data
   if (!task) return null
-  
+
   const priority = task.priority || 'medium'
   const config = priorityConfig[priority] || priorityConfig.medium
   const PriorityIcon = config?.icon || FaFlag
@@ -1187,8 +1186,8 @@ function TaskCard({
       onClick={onClick}
       className={`
         p-3 sm:p-4 rounded-lg sm:rounded-xl border cursor-pointer transition-all
-        ${isHighlighted 
-          ? 'bg-[#2563EB]/10 border-[#2563EB]/50 ring-2 ring-[#2563EB]/30' 
+        ${isHighlighted
+          ? 'bg-[#2563EB]/10 border-[#2563EB]/50 ring-2 ring-[#2563EB]/30'
           : 'bg-[#F8FAFC] dark:bg-neutral-800/50 border-[rgba(15,23,42,0.06)] dark:border-neutral-700 hover:border-[rgba(15,23,42,0.15)] dark:hover:border-neutral-600'
         }
         ${task.department === 'Management' ? 'border-l-4 border-l-amber-500' : ''}
@@ -1196,11 +1195,11 @@ function TaskCard({
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <h3 className="font-medium text-[#0F172A] dark:text-white line-clamp-2">{task.title || 'Untitled Task'}</h3>
-        <Badge 
+        <Badge
           variant={
             task.priority === 'urgent' ? 'error' :
-            task.priority === 'high' ? 'warning' :
-            task.priority === 'medium' ? 'info' : 'default'
+              task.priority === 'high' ? 'warning' :
+                task.priority === 'medium' ? 'info' : 'default'
           }
           size="sm"
         >
@@ -1233,13 +1232,12 @@ function TaskCard({
             <Badge size="sm" variant="info">Fathom</Badge>
           )}
         </div>
-        
+
         <div className="flex items-center gap-3 text-[#64748B] dark:text-neutral-500 text-sm">
           {task.dueDate && (
-            <span className={`flex items-center gap-1 ${
-              new Date(task.dueDate) < new Date() && task.status !== 'completed' 
+            <span className={`flex items-center gap-1 ${new Date(task.dueDate) < new Date() && task.status !== 'completed'
                 ? 'text-red-500 dark:text-red-400' : ''
-            }`}>
+              }`}>
               <FaClock className="text-xs" />
               {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </span>
@@ -1290,7 +1288,7 @@ export function Tasks({ selectedTaskId, onTaskOpened, showOnlyMyTasks = false }:
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  
+
   // Filters
   const [filterPriority, setFilterPriority] = useState<string>('')
   const [filterStatus, setFilterStatus] = useState<string>('')
@@ -1337,13 +1335,13 @@ export function Tasks({ selectedTaskId, onTaskOpened, showOnlyMyTasks = false }:
   // Filter and sort tasks
   const filteredTasks = useMemo(() => {
     if (!tasks || !Array.isArray(tasks)) return []
-    
+
     let result = [...tasks]
 
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
-      result = result.filter(task => 
+      result = result.filter(task =>
         task?.title?.toLowerCase()?.includes(query) ||
         task?.description?.toLowerCase()?.includes(query) ||
         task?.assignedToNames?.some(name => name?.toLowerCase()?.includes(query))
@@ -1427,7 +1425,7 @@ export function Tasks({ selectedTaskId, onTaskOpened, showOnlyMyTasks = false }:
     }
 
     return result
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks, searchQuery, filterPriority, filterStatus, filterAssignee, filterRole, filterSource, showMyTasks, employee, employees, filterDate])
 
   const clearFilters = () => {
@@ -1459,7 +1457,7 @@ export function Tasks({ selectedTaskId, onTaskOpened, showOnlyMyTasks = false }:
             {hasActiveFilters && ' (filtered)'}
           </p>
         </div>
-        
+
         <Button icon={<FaPlus />} onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto">
           Create Task
         </Button>
@@ -1606,8 +1604,8 @@ export function Tasks({ selectedTaskId, onTaskOpened, showOnlyMyTasks = false }:
         <EmptyState
           icon={<FaTasks className="text-2xl" />}
           title={hasActiveFilters ? 'No tasks match your filters' : 'No tasks yet'}
-          description={hasActiveFilters 
-            ? 'Try adjusting your filters or search query' 
+          description={hasActiveFilters
+            ? 'Try adjusting your filters or search query'
             : 'Create your first task to get started'
           }
           action={
